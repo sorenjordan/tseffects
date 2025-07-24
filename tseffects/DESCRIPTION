@@ -1,0 +1,19 @@
+Package: tsinteractions
+Title: Robust Dynamic Inferences from Single-Equation Time Series Models with Interactions
+Version: 0.0.1
+Authors@R: c(person("Soren", "Jordan", email = "sorenjordanpols@gmail.com", role = c("aut", "cre", "cph")), person("Garrett N. Vande Kamp", email = "garrettvandekamp@uga.edu", role = c("aut")))
+Maintainer: Soren Jordan <sorenjordanpols@gmail.com>
+Description: While scholars are increasingly interested in estimating relationships between dynamic variables that have effects conditional on the values of each other (interactive effects), the literature is largely silent on two key points. The first is how to calculate traditional measures of dynamic effects, like long- and short-run effects, in the presence of dynamic conditional relationships. The second is how to visualize those effects in substantively useful ways for readers. This package allows for the graphical exploration of conditional effects from interactions in time series.
+Imports: car, ggplot2, colorspace
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Depends: R (>= 3.5.0)
+License: GPL (>=2)
+Encoding: UTF-8
+LazyData: true
+BuildManual: yes
+RoxygenNote: 7.2.3
+VignetteBuilder: knitr
+Config/testthat/edition: 3

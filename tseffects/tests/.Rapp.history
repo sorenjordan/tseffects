@@ -1,0 +1,13 @@
+?scale_fill_continuous_diverging
+library(ggplot2)
+?scale_fill_continuous_diverging
+load("/Users/scj0014/Dropbox/Garrett-Soren/Interactions in time series/R/tsinteractions/data/presapp.rda")
+toy.ts.simulation.data
+load("/Users/scj0014/Dropbox/Garrett-Soren/Interactions in time series/R/tsinteractions/data/presapp.rda")
+approval
+presapp <- approval
+presapp
+save(presapp, "/Users/scj0014/Dropbox/Garrett-Soren/Interactions in time series/R/tsinteractions/data/presapp.rda")
+?save
+save(presapp, "/Users/scj0014/Dropbox/Garrett-Soren/Interactions in time series/R/tsinteractions/data/")
+save(presapp, "/Users/scj0014/Dropbox/Garrett-Soren/Interactions in time series/R/tsinteractions/data")

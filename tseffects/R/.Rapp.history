@@ -1,0 +1,4 @@
+? deltaMethod
+library(car)
+? deltaMethod
+?vcov
