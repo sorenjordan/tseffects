@@ -2,6 +2,8 @@
 # 7/22/2025
 # Authors: Soren Jordan, Garrett N. Vande Kamp, Reshi Rajan
 
+stupid
+
 # TO DO (next version):
 #   Somehow test whether someone is using ts.effect.plot when they are also specifying an interaction
 #   Include ts.effects.plot
