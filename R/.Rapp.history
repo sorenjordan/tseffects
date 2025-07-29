@@ -2,3 +2,5 @@
 library(car)
 ? deltaMethod
 ?vcov
+install.packaes("tidyverse")
+install.packages("tidyverse")

@@ -1,5 +1,5 @@
 ---
-title: "An Introduction to tseffects: Robust Dynamic Inferences from Single-Equation Time Series Models (with Interactions)"
+title: "An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)"
 author: "Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -23,7 +23,7 @@ ADL models are simple to estimate; this is what makes them attractive. Once thes
 
 Second: these inferences are rarely causal. While some have developed frameworks for causal inference using alternative dynamic models [@Blackwell2013], little work recognizes the potential of the A[R]DL model itself to provide causal inferences. [@gvkjr] begin to fill this gap by specifying the conditions under which the ADL model provides causal inferences, but these inferences too are difficult to calculate. 
 
-`ts.effects` solves both problems. To show how, we first re-introduce the ADL and GECM models and define typical effects calcualted from these models. We then apply those effects to each of the unique problems outlined above.
+`tseffects` solves both problems. To show how, we first re-introduce the ADL and GECM models and define typical effects calcualted from these models. We then apply those effects to each of the unique problems outlined above.
 
 # The ADL/GECM model
 
@@ -78,8 +78,8 @@ The first is `pte.calculator`. Like its name implies, this calculates the tradit
 
 ```{r}
 library(tseffects)
-ADL1.2.ptes <- pte.calculator(x.vrbl = c("mood" = 0, "l1.mood" = 1, "l2.mood" = 2), 
-               y.vrbl = c("l1.policy" = 1),
+ADL1.2.ptes <- pte.calculator(x.vrbl = c("mood" = 0, "l1_mood" = 1, "l2_mood" = 2), 
+               y.vrbl = c("l1_policy" = 1),
                limit = 5)
 ```
 
@@ -96,8 +96,8 @@ GDTE.calculator(d.x = 0, d.y = 0, n = -1, limit = 5, pte = ADL1.2.ptes)
 Recall that we might want to generalize our inferences beyond simple ADLs with both variables in levels. For exposition, assume that `mood` was integrated, so, to balance the ADL, it needed to be entered in differences. The user does this and enters $x$ variables as `d.mood`, `l1.d.mood`, and `l2.d.mood`. `pte.calculator` would look like
 
 ```{r}
-ADL1.2.d.ptes <- pte.calculator(x.vrbl = c("d.mood" = 0, "l1.d.mood" = 1, "l2.d.mood" = 2), 
-               y.vrbl = c("l1.policy" = 1),
+ADL1.2.d.ptes <- pte.calculator(x.vrbl = c("d_mood" = 0, "l1_d_mood" = 1, "l2_d_mood" = 2), 
+               y.vrbl = c("l1_policy" = 1),
                limit = 5)
 ```
 
@@ -143,11 +143,11 @@ We'll use the toy time series data included with the package to illustrate the f
 data(toy.ts.interaction.data)
 
 # Fit an ADL(1, 1)
-model.adl <- lm(y ~ l.1.y + x + l.1.x, data = toy.ts.interaction.data)
+model.adl <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
 
 test.pulse <- ts.ci.adl.plot(model = model.adl,
-                                   x.vrbl = c("x" = 0, "l.1.x" = 1), 
-                                   y.vrbl = c("l.1.y" = 1),
+                                   x.vrbl = c("x" = 0, "l_1_x" = 1), 
+                                   y.vrbl = c("l_1_y" = 1),
                                    d.x = 0, 
                                    d.y = 0,
                                    te.type = "pulse", 
@@ -163,8 +163,8 @@ This recovers the pulse treatment effect. We can also observe the formulae and a
 
 ```{r}
 test.pulse2 <- ts.ci.adl.plot(model = model.adl,
-                                   x.vrbl = c("x" = 0, "l.1.x" = 1), 
-                                   y.vrbl = c("l.1.y" = 1),
+                                   x.vrbl = c("x" = 0, "l_1_x" = 1), 
+                                   y.vrbl = c("l_1_y" = 1),
                                    d.x = 0, 
                                    d.y = 0,
                                    te.type = "ste", 
@@ -184,15 +184,15 @@ Imagine that the $x$ variable was actually integrated, so, for balance, it was e
 data(toy.ts.interaction.data)
 
 # Fit an ADL(1, 1)
-model.adl.diffs <- lm(y ~ l.1.y + d.x + l.1.d.x, data = toy.ts.interaction.data)
+model.adl.diffs <- lm(y ~ l_1_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
 ```
 
 To observe the causal effects of a pulse treatment history applied to $x$ *in levels*, we would run
 
 ```{r}
 ts.ci.adl.plot(model = model.adl.diffs,
-                                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                                   y.vrbl = c("l.1.y" = 1),
+                                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                                   y.vrbl = c("l_1_y" = 1),
                                    d.x = 1, 
                                    d.y = 0,
                                    te.type = "pte", 
@@ -206,8 +206,8 @@ ts.ci.adl.plot(model = model.adl.diffs,
 
 ```{r}
 ts.ci.adl.plot(model = model.adl.diffs,
-                                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                                   y.vrbl = c("l.1.y" = 1),
+                                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                                   y.vrbl = c("l_1_y" = 1),
                                    d.x = 1, 
                                    d.y = 0,
                                    te.type = "pte", 
@@ -223,7 +223,7 @@ The same changes could be made to `inferences.y` (if it  were modeled in differe
 
 ```{r}
 # Fit a GECM(1, 1)
-model.gecm <- lm(d.y ~ l.1.y + l.1.d.y + l.1.x + d.x + l.1.d.x, data = toy.ts.interaction.data)
+model.gecm <- lm(d_y ~ l_1_y + l_1_d_y + l_1_x + d_x + l_1_d_x, data = toy.ts.interaction.data)
 ```
 
 Since both the $x$ and $y$ variables appear in levels and differences, we need to differentiate them. `ts.ci.gecm.plot` does this by separating them into two forms
@@ -240,13 +240,13 @@ Since both the $x$ and $y$ variables appear in levels and differences, we need t
 The orders of differencing of `y.vrbl` and `y.d.vrbl` (as well as `x.vrbl` and `x.d.vrbl`) must be separated by only one order. From here, all of the other arguments are the same. (Unlike in `ts.ci.gecm.plot`, `inferences.x` and `inferences.y` must be in levels, given the dual nature of the variables in the model.) For `model.gecm`, the syntax would be
 
 ```{r}
-gecm.pulse <- ts.ci.gecm.plot(model = model,
-                                   x.vrbl = c("l.1.x" = 1), 
-                                   y.vrbl = c("l.1.y" = 1),
+gecm.pulse <- ts.ci.gecm.plot(model = model.gecm,
+                                   x.vrbl = c("l_1_x" = 1), 
+                                   y.vrbl = c("l_1_y" = 1),
                                    x.vrbl.d.x = 0, 
                                    y.vrbl.d.y = 0,
-                                   x.d.vrbl = c("d.x" = 0, "l.1.d.x" = 1),
-                                   y.d.vrbl = c("l.1.d.y" = 1),
+                                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                   y.d.vrbl = c("l_1_d_y" = 1),
                                    x.d.vrbl.d.x = 1,
                                    y.d.vrbl.d.y = 1,
                                    te.type = "pulse", 
@@ -255,7 +255,6 @@ gecm.pulse <- ts.ci.gecm.plot(model = model,
                                    h.limit = 20, 
                                    return.plot = TRUE, 
                                    return.formulae = TRUE)
-#' names(test.pulse)
 ```
 
 Examining the formulae show that the conversion from GECM coefficients to ADL coefficients is automatic. As before, if we wanted a different treatment history, we would just adjust `te.type` to apply a different treatment history to $x$ in levels.

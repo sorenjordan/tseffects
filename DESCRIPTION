@@ -1,19 +1,20 @@
-Package: tsinteractions
-Title: Robust Dynamic Inferences from Single-Equation Time Series Models with Interactions
-Version: 0.0.1
-Authors@R: c(person("Soren", "Jordan", email = "sorenjordanpols@gmail.com", role = c("aut", "cre", "cph")), person("Garrett N. Vande Kamp", email = "garrettvandekamp@uga.edu", role = c("aut")))
+Package: tseffects
+Title: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)
+Version: 0.1.2
+Authors@R: c(person("Soren", "Jordan", email = "sorenjordanpols@gmail.com", role = c("aut", "cre", "cph")), person("Garrett N. Vande Kamp", email = "garrettvandekamp@uga.edu", role = c("aut")), person("Reshi Rajan", email = "rrajan@tamu.edu", role = c("aut")))
 Maintainer: Soren Jordan <sorenjordanpols@gmail.com>
-Description: While scholars are increasingly interested in estimating relationships between dynamic variables that have effects conditional on the values of each other (interactive effects), the literature is largely silent on two key points. The first is how to calculate traditional measures of dynamic effects, like long- and short-run effects, in the presence of dynamic conditional relationships. The second is how to visualize those effects in substantively useful ways for readers. This package allows for the graphical exploration of conditional effects from interactions in time series.
-Imports: car, ggplot2, colorspace
+Description: Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences in three forms: causal inferences from ADL models, traditional time series quantities of interest (short- and long-run effects), and dynamic conditional relationships.
+BugReports: https://github.com/sorenjordan/tseffects/issues
+Imports: mpoly, car, ggplot2, sandwich, stats, utils
 Suggests: 
     knitr,
     rmarkdown,
+	vdiffr,
     testthat (>= 3.0.0)
 Depends: R (>= 3.5.0)
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
 BuildManual: yes
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
-Config/testthat/edition: 3

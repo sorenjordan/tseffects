@@ -1,45 +1,12 @@
-# required for package
-library(mpoly)
-library(car)
-library(ggplot2)
-library(see)
-library(colorspace)
-library(stats)
-library(sandwich)
-
-# required for tester
-library(tidyverse)
-library(dynamac)
-library(lmtest)
-library(lattice)
-library(ggpubr)
-library(vdiffr)
-
-source("C:/Users/reshi/Dropbox/03 Research/TS Interactions/R/tseffects-nextversion-draft.R")
-load("C:/Users/reshi/Dropbox/03 Research/TS Interactions/R/tseffects/data/toy.ts.interaction.data.rda")
-toy.ts.interaction.data$d.y <- dshift(toy.ts.interaction.data$y)
-toy.ts.interaction.data$d.2.y <- dshift(toy.ts.interaction.data$d.y)
-toy.ts.interaction.data$l.d.2.y <- lshift(toy.ts.interaction.data$d.2.y, 1)
-
-toy.ts.interaction.data$l.1.d.y <- lshift(toy.ts.interaction.data$d.y, 1)
-toy.ts.interaction.data$l.2.d.y <- lshift(toy.ts.interaction.data$d.y, 2)
-toy.ts.interaction.data$l.3.d.y <- lshift(toy.ts.interaction.data$d.y, 3)
-
-toy.ts.interaction.data$d.x <- dshift(toy.ts.interaction.data$x)
-toy.ts.interaction.data$l.1.d.x <- lshift(toy.ts.interaction.data$d.x, 1)
-toy.ts.interaction.data$l.2.d.x <- lshift(toy.ts.interaction.data$d.x, 2)
-toy.ts.interaction.data$l.3.d.x <- lshift(toy.ts.interaction.data$d.x, 3)
-
-test_that("Warnings are issued correctly", {
-  
-  # run a model to use for warnings
-  model <- lm(d.2.y ~ l.d.2.y + d.x + l.1.d.x, data = toy.ts.interaction.data)
+test_that("Errors are issued correctly", {  
+  # run a model to use for errors
+  model <- lm(d_2_y ~ l_1_d_2_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
   
   expect_error( # no x.vrbl
-    # Function
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   #x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   #x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 1, 
                    d.y = 2,
                    te.type = "pulse", 
@@ -48,15 +15,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+                   
+    # Expected output
     "Variables in effects term \\(x and y\\) must be specified through x.vrbl and y.vrbl"
   ) 
   
   expect_error( # no y.vrbl
-    # Function
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   # y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   # y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 1, 
                    d.y = 2,
                    te.type = "pulse", 
@@ -65,15 +33,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+                   
+    # Expected output
     "Variables in effects term \\(x and y\\) must be specified through x.vrbl and y.vrbl"
   )
   
   expect_error( # no d.x
-    # Function
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    # d.x = 1, 
                    d.y = 2,
                    te.type = "pulse", 
@@ -82,15 +51,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "Order of differencing of variables in treatment effect terms must be specified"
   )
   
   expect_error( # no d.y
-    # Function
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 1, 
                    # d.y = 2,
                    te.type = "pulse", 
@@ -99,15 +69,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "Order of differencing of variables in treatment effect terms must be specified"
   )
   
-  expect_error( # whole number differences in x
-    # Function
+  expect_error( # d.x must be integer
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 1.82, 
                    d.y = 2,
                    te.type = "pulse", 
@@ -116,15 +87,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "Order of differencing of variables in treatment effect terms \\(d.x"
   )
   
-  expect_error( # whole number differences in y
-    # Function
+  expect_error( # d.y must be integer
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 1, 
                    d.y = 2.89,
                    te.type = "pulse", 
@@ -133,32 +105,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "Order of differencing of variables in treatment effect terms \\(d.x"
   )
-  
-  # expect_error( # treatment effect correctly specified
-  #   # Function
-  #   ts.ci.adl.plot(model = model, 
-  #                  x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-  #                  y.vrbl = c("l.d.2.y" = 1),
-  #                  d.x = 1, 
-  #                  d.y = 2,
-  #                  # te.type = "pulse", 
-  #                  inferences.y = "differences", 
-  #                  inferences.x = "differences",
-  #                  h.limit = 5, 
-  #                  return.plot = TRUE, 
-  #                  return.formulae = TRUE),
-  #   # Expected Error
-  #   "Treatment effect type \\(te.type\\) must be" 
-  #   )
-  
-  expect_error( # inference type specified - y
-    # Function
+    
+  expect_error( # invalid inference type specified - y
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 1, 
                    d.y = 2,
                    te.type = "pulse", 
@@ -167,15 +123,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "Invalid inferences.y. The counterfactual response for y" 
   )
 
-  expect_error( # inference type specified - x
-    # Function
+  expect_error( # invalid inference type specified - x
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 1, 
                    d.y = 2,
                    te.type = "pulse", 
@@ -184,15 +141,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "Invalid inferences.x. The counterfactual treatment" 
   )
   
-  expect_error( # inference type correctly specified
-    # Function
+  expect_error( # inference type mismatch: d.y/inferences differences
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "pulse", 
@@ -201,15 +159,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "The counterfactual response for y cannot be in" 
   )
   
-  expect_error( # inference type correctly specified
-    # Function
+  expect_error( # inference type mismatch: d.x/inferences differences
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "pulse", 
@@ -218,15 +177,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "The counterfactual response for x cannot be in a higher" 
   )
   
-  expect_error( # te.type makes sense
-    # Function
+  expect_error( # te.type is accepted input
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "the Master", 
@@ -235,15 +195,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "Invalid te.type. te.type must be one of pte \\(pulse\\) or ste \\(step\\)" 
   )
   
-  expect_error( # x vrbl is named
-    # Function
+  expect_error( # x vrbl not named vector
+    # Function output
     ts.ci.adl.plot(model = model, 
                    x.vrbl = c(0,1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "pulse", 
@@ -252,15 +213,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "x.vrbl should be a named vector"
   )
   
-  expect_error( # x vrbl values not given
-    # Function
+  expect_error( # x vrbl vector has no values
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x", "l.1.d.x"),
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x", "l_1_d_x"),
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "pulse", 
@@ -269,14 +231,15 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "x.vrbl should be a named vector"
   )
  
-  expect_error( # y vrbl not named
-    # Function
+  expect_error( # y vrbl not named vector
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
                    y.vrbl = c(1),
                    d.x = 0, 
                    d.y = 0,
@@ -286,15 +249,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "y.vrbl should be a named vector"
   )
   
-  expect_error( # x vrbl values not given
-    # Function
+  expect_error( # y vrbl values not given
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c(0,1),
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y"),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "pulse", 
@@ -303,15 +267,16 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
-    "x.vrbl should be a named vector"
+
+    # Expected output
+    "y.vrbl should be a named vector"
   )
   
-  expect_error( # x vrbl values not given
-    # Function
+  expect_error( # x vrbl not in the model
+    # Function output
     ts.ci.adl.plot(model = model, 
                    x.vrbl = c("Time Lord" = 0, "Time Lady" = 1),
-                   y.vrbl = c("l.d.2.y" = 1),
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "pte", 
@@ -320,14 +285,15 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "x.vrbl not present in estimated model"
   )
   
-  expect_error( # y.vrbl values missing
-    # Function
+  expect_error( # y.vrbl not in the model
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
+                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
                    y.vrbl = c("Time Tot" = 1),
                    d.x = 1, 
                    d.y = 2,
@@ -337,17 +303,24 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
-    # Expected Error
+
+    # Expected output
     "y.vrbl not present in estimated model" 
   )
+})
+
+
+test_that("Warning for . issued correctly", {
   
-  model_warning <- lm(d.2.y ~ l.d.2.y + d.x + l.1.d.x, data = toy.ts.interaction.data)
+  toy.ts.interaction.data$d.x <- toy.ts.interaction.data$d_x
+  
+  model_warning <- lm(d_2_y ~ l_1_d_2_y + d.x + l_1_d_x, data = toy.ts.interaction.data)
   
   expect_warning( # Changing _ to . 
-    # Function
+    # Function output
     ts.ci.adl.plot(model = model_warning, 
-                   x.vrbl = c("d.x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.d.2.y" = 1),
+                   x.vrbl = c("d.x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_2_y" = 1),
                    d.x = 0, 
                    d.y = 0,
                    te.type = "pulse", 
@@ -356,553 +329,650 @@ test_that("Warnings are issued correctly", {
                    h.limit = 5, 
                    return.plot = TRUE, 
                    return.formulae = TRUE),
+
     # Expected warning
     "Variable names containing . replaced with \\_"
   )
-  
-  model <- lm(d.y ~ l.1.d.y + x + l.1.d.x, data = toy.ts.interaction.data)
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1 - 0 + 0 = pulse
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 0, 
-                               d.y = 0,
-                               te.type = "pulse", 
-                               inferences.y = "levels", 
-                               inferences.x = "levels",
-                               h.limit = 3, 
-                               return.plot = TRUE,
-                               return.formulae = TRUE)
-  
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 0 + 0 = step 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 0, 
-                               d.y = 0,
-                               te.type = "step", 
-                               inferences.y = "levels", 
-                               inferences.x = "levels",
-                               h.limit = 3, 
-                               return.plot = TRUE,
-                               return.formulae = TRUE)
-  
-  expect_equal( # y=1, x={0,1}, x.z = 1, h=3, pulse, is correct value 
-    # Function
-    
-    model_test_pulse$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x"
-  )   
-  
-  expect_equal( 
-    # Function
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 0, 0, 0)
-  )   
-  
-  expect_equal( # y=1, x={0,1}, x.z = 1, h=3, pulse, is correct value 
-    # Function
-    model_test_step$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x")
-  
-    expect_equal( 
-      # Function
-      model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-      # position = 4 bc counter starts at h = 0
-      # Expected output
-      c(1, 1, 1, 1)
-    )   
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1 - 0 + 0 = pulse
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 0, 
-                               d.y = 1,
-                               te.type = "pulse", 
-                               inferences.y = "differences", 
-                               inferences.x = "levels",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 0 + 0 = step
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 0, 
-                               d.y = 1,
-                               te.type = "step", 
-                               inferences.y = "differences", 
-                               inferences.x = "levels",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  expect_equal( # y=1, x={0,1}, x.z = 1, h=3, pulse, is correct value 
-    # Function
-    
-    model_test_pulse$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x"
-  )
-  
-  expect_equal( 
-    # Function
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 0, 0, 0)
-  )   
-  
-  expect_equal( # y=1, x={0,1}, x.z = 1, h=3, step, is correct value 
-    # Function
-    
-    model_test_step$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x"
-    )
-  
-  expect_equal( 
-    # Function
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 1, 1, 1)
-  ) 
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1 - 0 + 1 = step
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 0, 
-                               d.y = 1,
-                               te.type = "pulse", 
-                               inferences.y = "levels", 
-                               inferences.x = "levels",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 0 + 1 = trend
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 0, 
-                               d.y = 1,
-                               te.type = "step", 
-                               inferences.y = "levels", 
-                               inferences.x = "levels",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  expect_equal( # y=1, x={0,1}, h=3, pulse, is correct value 
-    # Function
-    
-    model_test_pulse$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x"
-  )
-  
-  expect_equal( 
-    # Function
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 1, 1, 1)
-  ) 
-  
-  expect_equal( # y=1, x={0,1}, h=3, step, is correct value 
-    # Function
-    
-    model_test_step$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  2 * l_1_d_y * l_1_d_x  +  2 * l_1_d_y**2 * x  +  3 * l_1_d_x  +  3 * l_1_d_y * x  +  4 * x"
-    )
-  
-  expect_equal( 
-    # Function
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 2, 3, 4)
-  ) 
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1 - 0 + 0  = pulse
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 1, 
-                               d.y = 0,
-                               te.type = "pulse", 
-                               inferences.y = "levels", 
-                               inferences.x = "differences",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 0 + 0 = step 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 1, 
-                               d.y = 0,
-                               te.type = "step", 
-                               inferences.y = "levels", 
-                               inferences.x = "differences",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  expect_equal( # y=1, x={0,1}, h=3, pulse, is correct value 
-    # Function
-    
-    model_test_pulse$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x"
-  )
-  
-  expect_equal( 
-    # Function
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 0, 0, 0)
-  ) 
-  
-  expect_equal( # y=1, x={0,1}, h=3, step, is correct value 
-    # Function
-    
-    model_test_step$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x"
-  )
-  
-  expect_equal( 
-    # Function
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 1, 1, 1)
-  ) 
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1 - 1 + 0 = TIF
-                                   x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                                   y.vrbl = c("l.1.d.y" = 1),
-                                   d.x = 1, 
-                                   d.y = 0,
-                                   te.type = "pulse", 
-                                   inferences.y = "levels", 
-                                   inferences.x = "levels",
-                                   h.limit = 3, 
-                                   return.plot = TRUE, 
-                                   return.formulae = TRUE)
-  
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 1 + 0 = pulse
-                                   x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                                   y.vrbl = c("l.1.d.y" = 1),
-                                   d.x = 1, 
-                                   d.y = 0,
-                                   te.type = "step", 
-                                   inferences.y = "levels", 
-                                   inferences.x = "levels",
-                                   h.limit = 3, 
-                                   return.plot = TRUE, 
-                                   return.formulae = TRUE)
-  
-  expect_equal( # y=1, x={0,1}, h=3, pulse, is correct value 
-    # Function
-    
-    model_test_pulse$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  -  l_1_d_y * l_1_d_x  -  l_1_d_y**2 * x"
-  )
-  
-  expect_equal( 
-    # Function
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, -1, 0, 0)
-  ) 
-  
-  expect_equal( # y=1, x={0,1}, h=3, step, is correct value 
-    # Function
-    
-    model_test_step$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x"
-    )
-  
-  expect_equal( 
-    # Function
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 0, 0, 0)
-  ) 
-  
-  model <- lm(d.y ~ l.1.d.y + x + l.1.d.x, data = toy.ts.interaction.data)
+})
 
-  model_test_pulse <- ts.ci.adl.plot(model = model, # - 1 - 1 + 1 = pulse
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
+
+test_that("mpoly formulae are correct (d.x = 0; d.y = 0)", { 
+  model <- lm(d_y ~ l_1_d_y + x + l_1_d_x, data = toy.ts.interaction.data)
+
+  ####################################################################################
+  # ADL(1,1), both inferences in levels, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 0, 
+                               d.y = 0,
+                               te.type = "pulse", 
+                               inferences.y = "levels", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 0, 
+                               d.y = 0,
+                               te.type = "step", 
+                               inferences.y = "levels", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
+    model_test_pulse$formulae[['h = 3']],
+
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
+    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
+    
+    # Expected output
+    c(1, 0, 0, 0)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
+    
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x "
+  )
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
+  
+    # Expected output
+    c(1, 1, 1, 1)
+  )   
+})
+
+
+test_that("mpoly formulae are correct (d.x = 0; d.y = 1)", { 
+  model <- lm(d_y ~ l_1_d_y + x + l_1_d_x, data = toy.ts.interaction.data)
+
+  ####################################################################################
+  # ADL(1,1), y inferences in differences, x inferences in levels, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 0, 
+                               d.y = 1,
+                               te.type = "pulse", 
+                               inferences.y = "differences", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 0, 
+                               d.y = 1,
+                               te.type = "step", 
+                               inferences.y = "differences", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
+    model_test_pulse$formulae[['h = 3']],
+
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
+    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
+    
+    # Expected output
+    c(1, 0, 0, 0)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
+    
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x "
+  )
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
+  
+    # Expected output
+    c(1, 1, 1, 1)
+  )  
+
+  ####################################################################################
+  # ADL(1,1), both inferences in levels, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 0, 
+                               d.y = 1,
+                               te.type = "pulse", 
+                               inferences.y = "levels", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 0, 
+                               d.y = 1,
+                               te.type = "step", 
+                               inferences.y = "levels", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
+    model_test_pulse$formulae[['h = 3']],
+
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
+    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
+    
+    # Expected output
+    c(1, 1, 1, 1)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
+    
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  2 * l_1_d_y * l_1_d_x  +  2 * l_1_d_y**2 * x  +  3 * l_1_d_x  +  3 * l_1_d_y * x  +  4 * x "
+  )
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
+  
+    # Expected output
+    c(1, 2, 3, 4)
+  )  
+})
+
+
+test_that("mpoly formulae are correct (d.x = 1; d.y = 0)", { 
+  model <- lm(d_y ~ l_1_d_y + x + l_1_d_x, data = toy.ts.interaction.data)
+
+  ####################################################################################
+  # ADL(1,1), y inferences in levels, x inferences in differences, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 1, 
+                               d.y = 0,
+                               te.type = "pulse", 
+                               inferences.y = "levels", 
+                               inferences.x = "differences",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 1, 
+                               d.y = 0,
+                               te.type = "step", 
+                               inferences.y = "levels", 
+                               inferences.x = "differences",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
+    model_test_pulse$formulae[['h = 3']],
+
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
+    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
+    
+    # Expected output
+    c(1, 0, 0, 0)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
+    
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x "
+  )
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
+  
+    # Expected output
+    c(1, 1, 1, 1)
+  ) 
+
+
+  ####################################################################################
+  # ADL(1,1), both inferences in levels, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 1, 
+                               d.y = 0,
+                               te.type = "pulse", 
+                               inferences.y = "levels", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 1, 
+                               d.y = 0,
+                               te.type = "step", 
+                               inferences.y = "levels", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
+    model_test_pulse$formulae[['h = 3']],
+
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  -  l_1_d_y * l_1_d_x  -  l_1_d_y**2 * x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
+    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
+    
+    # Expected output
+    c(1, -1, 0, 0)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
+    
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x "
+  )
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
+  
+    # Expected output
+    c(1, 0, 0, 0)
+  )  
+})
+
+
+test_that("mpoly formulae are correct (d.x = 1; d.y = 1)", { 
+  model <- lm(d_y ~ l_1_d_y + x + l_1_d_x, data = toy.ts.interaction.data)
+
+  ####################################################################################
+  # ADL(1,1), y inferences in differences, x inferences in differences, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
                                d.x = 1, 
                                d.y = 1,
                                te.type = "pulse", 
                                inferences.y = "differences", 
                                inferences.x = "differences",
                                h.limit = 3, 
-                               return.plot = TRUE, 
+                               return.plot = TRUE,
                                return.formulae = TRUE)
   
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 1 + 1 = step
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
                                d.x = 1, 
                                d.y = 1,
                                te.type = "step", 
                                inferences.y = "differences", 
                                inferences.x = "differences",
                                h.limit = 3, 
-                               return.plot = TRUE, 
+                               return.plot = TRUE,
                                return.formulae = TRUE)
   
-  expect_equal( # y=1, x={0,1}, h=3, pulse, is correct value 
-    # Function
-    
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
     model_test_pulse$formulae[['h = 3']],
+
     # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x"
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
+    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
+    
+    # Expected output
+    c(1, 0, 0, 0)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
+    
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x "
   )
   
-  expect_equal( 
-    # Function
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
+  
+    # Expected output
+    c(1, 1, 1, 1)
+  ) 
+
+
+  ####################################################################################
+  # ADL(1,1), y inferences in differences, x inferences in levels, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 1, 
+                               d.y = 1,
+                               te.type = "pulse", 
+                               inferences.y = "differences", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
+                               d.x = 1, 
+                               d.y = 1,
+                               te.type = "step", 
+                               inferences.y = "differences", 
+                               inferences.x = "levels",
+                               h.limit = 3, 
+                               return.plot = TRUE,
+                               return.formulae = TRUE)
+  
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
+    model_test_pulse$formulae[['h = 3']],
+
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  -  l_1_d_y * l_1_d_x  -  l_1_d_y**2 * x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
     model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
+    
+    # Expected output
+    c(1, -1, 0, 0)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
+    
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x "
+  )
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
+  
     # Expected output
     c(1, 0, 0, 0)
   ) 
-  
-  expect_equal( # y=1, x={0,1}, h=3, step, is correct value 
-    # Function
-    
-    model_test_step$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x"
-    )
-  
-  expect_equal( 
-    # Function
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 1, 1, 1)
-  ) 
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1  - 1 + 0 = TIF
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 1, 
-                               d.y = 1,
-                               te.type = "pulse", 
-                               inferences.y = "differences", 
-                               inferences.x = "levels",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 0 + 0 = step
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 1, 
-                               d.y = 1,
-                               te.type = "step", 
-                               inferences.y = "differences", 
-                               inferences.x = "differences",
-                               h.limit = 3, 
-                               return.plot = TRUE, 
-                               return.formulae = TRUE)
-  
-  expect_equal( # y=1, x={0,1}, h=3, pulse, is correct value 
-    # Function
-    
-    model_test_pulse$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  -  l_1_d_y * l_1_d_x  -  l_1_d_y**2 * x"
-  )
-  
-  expect_equal( 
-    # Function
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, -1, 0, 0)
-  ) 
-  
-  expect_equal( # y=1, x={0,1}, h=3, step, is correct value 
-    # Function
-    
-    model_test_step$formulae[['h = 3']],
-    # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x"
-  )
-  
-  expect_equal( 
-    # Function
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
-    # Expected output
-    c(1, 1, 1, 1)
-  ) 
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1 - 0 + 1 = step
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
+
+
+  ####################################################################################
+  # ADL(1,1), y inferences in levels, x inferences in differences, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
                                d.x = 1, 
                                d.y = 1,
                                te.type = "pulse", 
                                inferences.y = "levels", 
                                inferences.x = "differences",
                                h.limit = 3, 
-                               return.plot = TRUE, 
+                               return.plot = TRUE,
                                return.formulae = TRUE)
   
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 0 + 1 = trend 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
                                d.x = 1, 
                                d.y = 1,
                                te.type = "step", 
                                inferences.y = "levels", 
                                inferences.x = "differences",
                                h.limit = 3, 
-                               return.plot = TRUE, 
+                               return.plot = TRUE,
                                return.formulae = TRUE)
   
-  expect_equal( # y=1, x={0,1}, h=3, pulse, is correct value 
-    # Function
-    
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
     model_test_pulse$formulae[['h = 3']],
+
     # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x"
-  )
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x "
+  )   
   
-  expect_equal( 
-    # Function
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
     model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
+    
     # Expected output
     c(1, 1, 1, 1)
-  ) 
+  )   
   
-  expect_equal( # y=1, x={0,1}, h=3, step, is correct value 
-    # Function
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
     model_test_step$formulae[['h = 3']],
+    
     # Expected output
-    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  2 * l_1_d_y * l_1_d_x  +  2 * l_1_d_y**2 * x  +  3 * l_1_d_x  +  3 * l_1_d_y * x  +  4 * x"
-    )
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  2 * l_1_d_y * l_1_d_x  +  2 * l_1_d_y**2 * x  +  3 * l_1_d_x  +  3 * l_1_d_y * x  +  4 * x "
+  )
   
-  expect_equal( 
-    # Function
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
     model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-    # position = 4 bc counter starts at h = 0
+  
     # Expected output
     c(1, 2, 3, 4)
   ) 
-    
-  
-  model_test_pulse <- ts.ci.adl.plot(model = model, # -1 - 1 + 1 = pulse
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
+
+
+  ####################################################################################
+  # ADL(1,1), y inferences in levels, x inferences in levels, pulse and step
+  ####################################################################################  
+  model_test_pulse <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
                                d.x = 1, 
                                d.y = 1,
                                te.type = "pulse", 
                                inferences.y = "levels", 
                                inferences.x = "levels",
                                h.limit = 3, 
-                               return.plot = TRUE, 
+                               return.plot = TRUE,
                                return.formulae = TRUE)
   
-  model_test_step <- ts.ci.adl.plot(model = model, # 0 - 1 + 1 = step
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                               y.vrbl = c("l.1.d.y" = 1),
+  model_test_step <- ts.ci.adl.plot(model = model, 
+                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                               y.vrbl = c("l_1_d_y" = 1),
                                d.x = 1, 
                                d.y = 1,
                                te.type = "step", 
                                inferences.y = "levels", 
                                inferences.x = "levels",
                                h.limit = 3, 
-                               return.plot = TRUE, 
+                               return.plot = TRUE,
                                return.formulae = TRUE)
   
-    expect_equal( # y=1, x={0,1}, h=3, pulse, is correct value 
-      # Function
-      model_test_pulse$formulae[['h = 3']],
-      # Expected output
-      "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x"
-    )
+  expect_equal( # test whether formula matches for h = 3 (pulse)
+    # Function output    
+    model_test_pulse$formulae[['h = 3']],
+
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x "
+  )   
+  
+  expect_equal( # test whether the binomials are as expected for h = 3 (pulse)
+    # Function output   
+    # position = 4 because counter starts at h = 0 
+    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
     
-    expect_equal( 
-      # Function
-      model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print
-      # position = 4 bc counter starts at h = 0
-      # Expected output
-      c(1, 0, 0, 0)
-    ) 
+    # Expected output
+    c(1, 0, 0, 0)
+  )   
+  
+  expect_equal( # test whether formula matches for h = 3 (step) 
+    # Function output   
+    model_test_step$formulae[['h = 3']],
     
-    expect_equal( # y=1, x={0,1}, h=3, step, is correct value 
-      # Function
-      model_test_step$formulae[['h = 3']],
-      # Expected output
-      "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x"
+    # Expected output
+    "l_1_d_y**2 * l_1_d_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_d_x  +  l_1_d_y**2 * x  +  l_1_d_x  +  l_1_d_y * x  +  x "
   )
-    
-    expect_equal( 
-      # Function
-      model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
-      # position = 4 bc counter starts at h = 0
-      # Expected output
-      c(1, 1, 1, 1)
-    ) 
   
-  dim_store <- length(model_test_pulse$binomials)
-  make_expectation(dim_store == as.vector(as.integer(cbind( # Test dimensions
-    length(model_test_pulse$binomials),
-    length(model_test_pulse$binomials)))))
+  expect_equal( # test whether the binomials are as expected for h = 3 (step)
+    # Function output
+    # position = 4 because counter starts at h = 0 
+    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print
   
-  dim_store <- length(model_test_pulse$formulae)
-  make_expectation(dim_store == as.vector(as.integer(cbind( # Test dimensions
-    length(model_test_pulse$formulae),
-    length(model_test_pulse$formulae)))))
-  
+    # Expected output
+    c(1, 1, 1, 1)
+  ) 
+})
+
+
+test_that("Correct dimensions of output", { 
+  model <- lm(d_y ~ l_1_d_y + x + l_1_d_x, data = toy.ts.interaction.data)
+
+  # Three periods
+  the.h <- 3
   model_test <- ts.ci.adl.plot(model = model, 
-                                x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                                y.vrbl = c("l.1.d.y" = 1),
+                                x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                y.vrbl = c("l_1_d_y" = 1),
                                 d.x = 2, 
                                 d.y = 2,
                                 te.type = "step", 
                                 inferences.y = "levels", 
                                 inferences.x = "levels",
-                                h.limit = 3, 
+                                h.limit = the.h, 
                                 return.plot = TRUE, 
                                 return.formulae = TRUE,
                                 return.data = TRUE)
+
+  expect_equal( # test if the number of binomials is correct
+    # Function output
+    length(model_test$binomials),
+    
+    # Expected output
+    # account for h = 0
+    the.h + 1
+  )
   
-  make_expectation('GDTE' %in% names(model_test$estimates) &
-                     'Period' %in% names(model_test$estimates) &
-                     'SE' %in% names(model_test$estimates) & 
-                     'Lower' %in% names(model_test$estimates) & 
-                     'Upper' %in% names(model_test$estimates))
+  expect_equal( # test if the number of formulae is correct
+    # Function output
+    length(model_test$formulae),
+    
+    # Expected output
+    # account for h = 0
+    the.h + 1
+  )  
   
-  dim_store <- dim(model_test$estimates)
-  make_expectation(dim_store == as.vector(as.integer(cbind( # Test dimensions
-    length(model_test$estimates$Period),
-    length(model_test$estimates)))))
-  
+  expect_equal( # test the dimensions of the estimates
+    # Function output
+    dim(model_test$estimates),  
+
+    # Expected output
+    # rows is periods (limit + 1 for 0), 5 columns (Period, GDTE, SE, Lower, Upper)
+    c(the.h + 1, 5),  
+  )
+
+  expect_equal( # test the names of the estimates
+    # Function output
+    names(model_test$estimates),  
+
+    # Expected output
+    # rows is periods (limit + 1 for 0), 5 columns (Period, GDTE, SE, Lower, Upper)
+    c("Period", "GDTE", "SE", "Lower", "Upper"),  
+  )
+})
+
+
+test_that("Function returns objects correctly (including errors)", { 
+  model <- lm(d_y ~ l_1_d_y + x + l_1_d_x, data = toy.ts.interaction.data)
+
   expect_error( # No plot, estimates, formulae 
-    # Function
+    # Function output
     ts.ci.adl.plot(model = model, 
-                   x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                   y.vrbl = c("l.1.d.y" = 1),
+                   x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                   y.vrbl = c("l_1_d_y" = 1),
                    d.x = 2, 
                    d.y = 2,
                    te.type = "step", 
@@ -912,84 +982,124 @@ test_that("Warnings are issued correctly", {
                    return.plot = FALSE, 
                    return.formulae = FALSE,
                    return.data = FALSE),
-    # Expected Error
+                   
+    # Expected error
     "Return at least one of the plot, the data"
   )
-  #### Final Tests
-  model_test <- ts.ci.adl.plot(model = model, 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 2, d.y = 2,
-                               te.type = "step", 
-                               inferences.y = "levels", inferences.x = "levels",
-                               h.limit = 3, return.plot = TRUE, 
-                               return.formulae = TRUE, return.data = TRUE)
   
-  expect_true(all(c("plot", "estimates", "formulae") %in% names(model_test)))
-  
-  
-  model_test <- ts.ci.adl.plot(model = model, 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 2, d.y = 2,
-                               te.type = "step", 
-                               inferences.y = "levels", inferences.x = "levels",
-                               h.limit = 3, return.plot = TRUE, 
-                               return.formulae = FALSE, return.data = FALSE)
-  expect_false("formulae" %in% names(model_test))
-  
-  model_test <- ts.ci.adl.plot(model = model, 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 2, d.y = 2,
-                               te.type = "step", 
-                               inferences.y = "levels", inferences.x = "levels",
-                               h.limit = 3, return.plot = TRUE, 
-                               return.formulae = FALSE, return.data = FALSE)
-  expect_false(all(c("estimates", "formulae") %in% names(model_test)))
-  
-  model_test <- ts.ci.adl.plot(model = model, 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 2, d.y = 2,
-                               te.type = "step", 
-                               inferences.y = "levels", inferences.x = "levels",
-                               h.limit = 3, return.formulae = TRUE, return.data = TRUE,
-                               return.plot = FALSE)
-  expect_false(all(c("plot") %in% names(model_test)))
-  
-  model_test <- ts.ci.adl.plot(model = model, 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 2, d.y = 2,
-                               te.type = "step", 
-                               inferences.y = "levels", inferences.x = "levels",
-                               h.limit = 3, return.plot = TRUE, 
-                               return.formulae = FALSE, return.data = TRUE)
-  expect_false(all(c("formulae") %in% names(model_test)))
-  
-  model_test <- ts.ci.adl.plot(model = model, 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 2, d.y = 2,
-                               te.type = "step", 
-                               inferences.y = "levels", inferences.x = "levels",
-                               h.limit = 3, return.plot = TRUE, 
-                               return.formulae = TRUE, return.data = FALSE)
-  expect_false(all(c("estimates") %in% names(model_test)))
-  
-  model_test <- ts.ci.adl.plot(model = model, 
-                               x.vrbl = c("x" = 0, "l.1.d.x" = 1), y.vrbl = c("l.1.d.y" = 1),
-                               d.x = 2, d.y = 2,
-                               te.type = "step", 
-                               inferences.y = "levels", inferences.x = "levels",
-                               h.limit = 3, return.plot = FALSE, 
-                               return.formulae = FALSE, return.data = TRUE)
-  expect_false(all(c("plot", "formulae") %in% names(model_test)))
-  
-}
-)
+  model_test_allthree <- ts.ci.adl.plot(model = model, 
+                                x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                y.vrbl = c("l_1_d_y" = 1),
+                                d.x = 2, 
+                                d.y = 2,
+                                te.type = "step", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                h.limit = 3, 
+                                return.plot = TRUE, 
+                                return.formulae = TRUE,
+                                return.data = TRUE)
+
+  expect_true( # are all three objects returned?
+    # Function output
+    all(c("plot", "estimates", "formulae") %in% names(model_test_allthree))
+  )
+
+  model_test_justplot <- ts.ci.adl.plot(model = model, 
+                                x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                y.vrbl = c("l_1_d_y" = 1),
+                                d.x = 2, 
+                                d.y = 2,
+                                te.type = "step", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                h.limit = 3, 
+                                return.plot = TRUE, 
+                                return.formulae = FALSE,
+                                return.data = FALSE)
+
+  expect_false( # is formulae or estimates returned?
+    # Function output
+    all(c("estimates", "formulae") %in% names(model_test_justplot))
+  )
+
+  model_test_noplot <- ts.ci.adl.plot(model = model, 
+                                x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                y.vrbl = c("l_1_d_y" = 1),
+                                d.x = 2, 
+                                d.y = 2,
+                                te.type = "step", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                h.limit = 3, 
+                                return.plot = FALSE, 
+                                return.formulae = TRUE,
+                                return.data = TRUE)
+
+  expect_false( # is plot returned?
+    # Function output
+    all(c("plot") %in% names(model_test_noplot))
+  )
+
+  model_test_noformulae <- ts.ci.adl.plot(model = model, 
+                                x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                y.vrbl = c("l_1_d_y" = 1),
+                                d.x = 2, 
+                                d.y = 2,
+                                te.type = "step", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                h.limit = 3, 
+                                return.plot = TRUE, 
+                                return.formulae = FALSE,
+                                return.data = TRUE)
+
+  expect_false( # is formulae returned?
+    all(c("formulae") %in% names(model_test_noformulae))
+  )
+
+  model_test_nodata <- ts.ci.adl.plot(model = model, 
+                                x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                y.vrbl = c("l_1_d_y" = 1),
+                                d.x = 2, 
+                                d.y = 2,
+                                te.type = "step", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                h.limit = 3, 
+                                return.plot = TRUE, 
+                                return.formulae = TRUE,
+                                return.data = FALSE)
+
+  expect_false( # is data returned?
+    all(c("estimates") %in% names(model_test_nodata))
+  )
+
+  model_test_justdata <- ts.ci.adl.plot(model = model, 
+                                x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                y.vrbl = c("l_1_d_y" = 1),
+                                d.x = 2, 
+                                d.y = 2,
+                                te.type = "step", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                h.limit = 3, 
+                                return.plot = FALSE, 
+                                return.formulae = FALSE,
+                                return.data = TRUE)
+
+  expect_false( # is data returned?
+    all(c("plot", "formulae") %in% names(model_test_justdata))
+  )
+})
 
 test_that("Correct Plot", {
-  model <- lm(d.y ~ l.1.d.y + x + l.1.d.x, data = toy.ts.interaction.data)
+  local_edition(3)
+  model <- lm(d_y ~ l_1_d_y + x + l_1_d_x, data = toy.ts.interaction.data)
   
   p <- ts.ci.adl.plot(model = model, 
-                                   x.vrbl = c("x" = 0, "l.1.d.x" = 1), 
-                                   y.vrbl = c("l.1.d.y" = 1),
+                                   x.vrbl = c("x" = 0, "l_1_d_x" = 1), 
+                                   y.vrbl = c("l_1_d_y" = 1),
                                    d.x = 0, 
                                    d.y = 0,
                                    te.type = "pulse", 
@@ -1001,5 +1111,5 @@ test_that("Correct Plot", {
   expect_no_error(p) # Check for errors during plot generation
   expect_doppelganger("p", p) # Test the plot
   expect_snapshot("p")
-  
 })
+

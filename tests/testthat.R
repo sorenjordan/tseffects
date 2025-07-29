@@ -1,4 +1,5 @@
 library(testthat)
-library(tsinteractions)
+library(tseffects)
+library(vdiffr)
 
-test_check("tsinteractions")
+test_check("tseffects")

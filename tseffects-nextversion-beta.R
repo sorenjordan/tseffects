@@ -1,13 +1,12 @@
-# version 0.1.1.9001
-# 7/22/2025
+# version 0.1.2.9001
+# 7/25/2025
 # Authors: Soren Jordan, Garrett N. Vande Kamp, Reshi Rajan
-
-stupid
 
 # TO DO (next version):
 #   Somehow test whether someone is using ts.effect.plot when they are also specifying an interaction
 #   Include ts.effects.plot
 #   Include ts.interact.plot
+#   When more colors, update Imports: mpoly, car, ggplot2, sandwich, see, colorspace, stats, utils
 
 # CHANGES (since last CRAN):
 # 
@@ -38,8 +37,8 @@ stupid
 #' @source \doi{10.1111/psq.12594}
 #' @docType data
 #' @keywords datasets
-#' @usage data(presapp)
-#' @name presapp
+#' @usage data(approval)
+#' @name approval
 NULL
 
 # Datasets exported: 
@@ -51,37 +50,41 @@ NULL
 #' \describe{
 #'	 \item{time}{Indicator for time period}
 #'	 \item{x}{Contemporaneous x}
-#'	 \item{l.1.x}{First lag of x}
-#'	 \item{l.2.x}{Second lag of x}
-#'	 \item{l.3.x}{Third lag of x}
-#'	 \item{l.4.x}{Fourth lag of x}
-#'	 \item{l.5.x}{Fifth lag of x}
-#'	 \item{d.x}{First difference of x}
-#'	 \item{l.1.d.x}{First lag of first difference of x}
-#'	 \item{l.2.d.x}{Second lag of first difference of x}
+#'	 \item{l_1_x}{First lag of x}
+#'	 \item{l_2_x}{Second lag of x}
+#'	 \item{l_3_x}{Third lag of x}
+#'	 \item{l_4_x}{Fourth lag of x}
+#'	 \item{l_5_x}{Fifth lag of x}
+#'	 \item{d_x}{First difference of x}
+#'	 \item{l_1_d_x}{First lag of first difference of x}
+#'	 \item{l_2_d_x}{Second lag of first difference of x}
+#'	 \item{l_3_d_x}{Third lag of first difference of x}
 #'	 \item{z}{Contemporaneous z}
-#'	 \item{l.1.z}{First lag of z}
-#'	 \item{l.2.z}{Second lag of z}
-#'	 \item{l.3.z}{Third lag of z}
-#'	 \item{l.4.z}{Fourth lag of z}
-#'	 \item{l.5.z}{Fifth lag of z}
+#'	 \item{l_1_z}{First lag of z}
+#'	 \item{l_2_z}{Second lag of z}
+#'	 \item{l_3_z}{Third lag of z}
+#'	 \item{l_4_z}{Fourth lag of z}
+#'	 \item{l_5_z}{Fifth lag of z}
 #'	 \item{y}{Contemporaneous y}
-#'	 \item{l.1.y}{First lag of y}
-#'	 \item{l.2.y}{Second lag of y}
-#'	 \item{l.3.y}{Third lag of y}
-#'	 \item{l.4.y}{Fourth lag of y}
-#'	 \item{l.5.y}{Fifth lag of y}
-#'	 \item{d.y}{First difference of y}
-#'	 \item{l.1.d.y}{First lag of first difference of y}
-#'	 \item{x.z}{Interaction of contemporaneous x and z}
-#'	 \item{x.l.1.z}{Interaction of contemporaneous x and lagged z}
-#'	 \item{z.l.1.x}{Interaction of lagged x and contemporaneous z}
-#'	 \item{l.1.x.l.1.z}{Interaction of lagged x and lagged z}
+#'	 \item{l_1_y}{First lag of y}
+#'	 \item{l_2_y}{Second lag of y}
+#'	 \item{l_3_y}{Third lag of y}
+#'	 \item{l_4_y}{Fourth lag of y}
+#'	 \item{l_5_y}{Fifth lag of y}
+#'	 \item{d_y}{First difference of y}
+#'	 \item{l_1_d_y}{First lag of first difference of y}
+#'	 \item{l_2_d_y}{Second lag of first difference of y}
+#'	 \item{d_2_y}{Second difference of y}
+#'	 \item{l_1_d_2_y}{First lag of second difference of y}
+#'	 \item{x_z}{Interaction of contemporaneous x and z}
+#'	 \item{x_l_1_z}{Interaction of contemporaneous x and lagged z}
+#'	 \item{z_l_1_x}{Interaction of lagged x and contemporaneous z}
+#'	 \item{l_1_x_l_1_z}{Interaction of lagged x and lagged z}
 #' }
 #' @docType data
 #' @keywords datasets
-#' @usage data(simdata)
-#' @name simdata
+#' @usage data(toy.ts.interaction.data)
+#' @name toy.ts.interaction.data
 NULL
 
 
@@ -95,16 +98,14 @@ NULL
 #		see (for okabe-ito)
 #		colorspace (for grays)
 #		stats (for lm coef vcov)
+#		sandwich (for vcovHC)
+#		utils (for capture.output)
 #
 ## Functions included:
 # (1) pte.calculator
 # (2) GDTE.calculator
 # (3) ts.ci.adl.plot
 # (4) ts.ci.gecm.plot
-
-
-
-
 
 
 
@@ -117,7 +118,7 @@ NULL
 #' @param limit an integer for the number of periods to determine the PTE (beginning at 0)
 #' @return a list of limit + 1 \code{mpoly} formulae containing the PTE in each period
 #' @details
-#' \code{pte.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the PTE in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. It is used as a subfunction in both \code{ts.ci.adl.plot} and \code{ts.ci.gecm.plot}
+#' \code{pte.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the PTE in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. It is used as a subfunction in both \code{ts.ci.adl.plot} and \code{ts.ci.gecm.plot}. Note: \code{mpoly} does not allow variable names with a .; variables passed to \code{GDTE.calculator} should not include this character
 #' @importFrom mpoly mp
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords utilities
@@ -180,8 +181,9 @@ pte.calculator <- function(x.vrbl, y.vrbl, limit) {
 #' @param pte a list of PTEs used to construct the GDTE. We expect this will be provided by \code{pte.calculator}
 #' @return a list of limit + 1 \code{mpoly} formulae containing the GDTE in each period
 #' @details
-#' \code{GDTE.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the GDTE in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. It is used as a subfunction in both \code{ts.ci.adl.plot} and \code{ts.ci.gecm.plot}
+#' \code{GDTE.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the GDTE in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. It is used as a subfunction in both \code{ts.ci.adl.plot} and \code{ts.ci.gecm.plot}. Note: \code{mpoly} does not allow variable names with a .; variables passed to \code{GDTE.calculator} should not include this character
 #' @importFrom mpoly mp
+#' @importFrom utils capture.output
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords utilities
 #' @examples
@@ -270,16 +272,16 @@ GDTE.calculator <- function(d.x, d.y, n, limit, pte) {
 #' @importFrom mpoly mp
 #' @importFrom sandwich vcovHC
 #' @importFrom car deltaMethod
-#' @importFrom ggplot2 ggplot
+#' @import ggplot2
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords ADL plot
 #' @examples
 #' # ADL(1,1)
 #' # Use the toy data to run an ADL. No argument is made this is well specified; it is just expository 
-#' model <- lm(y ~ l.1.y + x + l.1.x, data = toy.ts.interaction.data)
+#' model <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
 #' test.pulse <- ts.ci.adl.plot(model = model,
-#'                                   x.vrbl = c("x" = 0, "l.1.x" = 1), 
-#'                                   y.vrbl = c("l.1.y" = 1),
+#'                                   x.vrbl = c("x" = 0, "l_1_x" = 1), 
+#'                                   y.vrbl = c("l_1_y" = 1),
 #'                                   d.x = 0, 
 #'                                   d.y = 0,
 #'                                   te.type = "pulse", 
@@ -291,13 +293,14 @@ GDTE.calculator <- function(d.x, d.y, n, limit, pte) {
 #' names(test.pulse)
 #' 
 #' # Using Cavari's (2019) approval model (without interactions)
-#' # Cavari's original model: APPROVE ~ APPROVE_ECONOMY + APPROVE_FOREIGN + MIP_MACROECONOMICS + MIP_FOREIGN + 
+#' # Cavari's original model: APPROVE ~ APPROVE_ECONOMY + APPROVE_FOREIGN + 
 #' #     APPROVE_L1 + PARTY_IN + PARTY_OUT + UNRATE + 
+#' #	     MIP_MACROECONOMICS + MIP_FOREIGN + 
 #' #     DIVIDEDGOV + ELECTION + HONEYMOON + as.factor(PRESIDENT)
 #' 
 #' cavari.model <- lm(APPROVE ~ APPROVE_ECONOMY + APPROVE_FOREIGN + MIP_MACROECONOMICS + MIP_FOREIGN +
 #'      APPROVE_L1 + PARTY_IN + PARTY_OUT + UNRATE + 
-#'      DIVIDEDGOV + ELECTION + HONEYMOON + as.factor(PRESIDENT), data = approve)
+#'      DIVIDEDGOV + ELECTION + HONEYMOON + as.factor(PRESIDENT), data = approval)
 #' 
 #' # What if there was a permanent, one-unit change in the salience of foreign affairs?
 #' cavari.step <- ts.ci.adl.plot(model = cavari.model,
@@ -311,6 +314,7 @@ GDTE.calculator <- function(d.x, d.y, n, limit, pte) {
 #'                                   h.limit = 20, 
 #'                                   return.plot = TRUE, 
 #'                                   return.formulae = TRUE)
+#' @export
 
 ts.ci.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NULL, d.y = NULL,
 	te.type = "pte", inferences.y = "levels", inferences.x = "levels",
@@ -483,10 +487,12 @@ ts.ci.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NUL
 	#	Delta^yd, " ", yvar, " (in ", infy, ")"), 
 	#	list(xd = original.d.x, xvar = names(x.vrbl)[1], infx = inferences.x,
 	#		yd = original.d.y, yvar = names(y.vrbl)[1], infy = inferences.y))
-
+	
+	# Set plotted variables to NULL initially or else R CMD gets confused by the data call
+	Period <- GDTE <- Lower <- Upper <- NULL
 	plot.out <- ggplot(data = dat.out, aes(x = Period, y = GDTE)) + 
 				geom_line(lwd = 1.2) + 
-				geom_ribbon(aes(ymin = Lower, ymax = Upper), color = "black", linetype = 1, alpha = 0.2) +
+				geom_ribbon(data = dat.out, aes(ymin = Lower, ymax = Upper), color = "black", linetype = 1, alpha = 0.2) +
 				geom_hline(yintercept = 0, lwd = 1) +
 				xlab("Number of Periods Since Treatment Onset (h)") +
 				# ylab("Generalized Dynamic Treatment Effect") +
@@ -571,20 +577,21 @@ ts.ci.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NUL
 #' @importFrom mpoly mp
 #' @importFrom sandwich vcovHC
 #' @importFrom car deltaMethod
-#' @importFrom ggplot2 ggplot
+#' @import ggplot2
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords GECM plot
 #' @examples
 #' # ADL(1,1)
-#' # Use the toy data to run a GECM. No argument is made this is well specified or even sensible; it is just expository
-#' model <- lm(d.y ~ l.1.y + l.1.x + l.1.d.y + d.x + l.1.d.x, data = toy.ts.interaction.data)
+#' # Use the toy data to run a GECM. No argument is made this 
+#' #  is well specified or even sensible; it is just expository
+#' model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
 #' test.pulse <- ts.ci.gecm.plot(model = model,
-#'                                   x.vrbl = c("l.1.x" = 1), 
-#'                                   y.vrbl = c("l.1.y" = 1),
+#'                                   x.vrbl = c("l_1_x" = 1), 
+#'                                   y.vrbl = c("l_1_y" = 1),
 #'                                   x.vrbl.d.x = 0, 
 #'                                   y.vrbl.d.y = 0,
-#'                                   x.d.vrbl = c("d.x" = 0, "l.1.d.x" = 1),
-#'                                   y.d.vrbl = c("l.1.d.y" = 1),
+#'                                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+#'                                   y.d.vrbl = c("l_1_d_y" = 1),
 #'                                   x.d.vrbl.d.x = 1,
 #'                                   y.d.vrbl.d.y = 1,
 #'                                   te.type = "pulse", 
@@ -594,6 +601,7 @@ ts.ci.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NUL
 #'                                   return.plot = TRUE, 
 #'                                   return.formulae = TRUE)
 #' names(test.pulse)
+#' @export
 
 ts.ci.gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, x.vrbl.d.x = NULL, y.vrbl.d.y = NULL,
 	x.d.vrbl = NULL, y.d.vrbl = NULL, x.d.vrbl.d.x = NULL, y.d.vrbl.d.y = NULL,
@@ -872,9 +880,11 @@ ts.ci.gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, x.vrbl.d
 	#	list(xd = original.d.x, xvar = names(x.vrbl)[1], infx = inferences.x,
 	#		yd = original.d.y, yvar = names(y.vrbl)[1], infy = inferences.y))
 
+	# Set plotted variables to NULL initially or else R CMD gets confused by the data call
+	Period <- GDTE <- Lower <- Upper <- NULL
 	plot.out <- ggplot(data = dat.out, aes(x = Period, y = GDTE)) + 
 				geom_line(lwd = 1.2) + 
-				geom_ribbon(aes(ymin = Lower, ymax = Upper), color = "black", linetype = 1, alpha = 0.2) +
+				geom_ribbon(data = dat.out, aes(ymin = Lower, ymax = Upper), color = "black", linetype = 1, alpha = 0.2) +
 				geom_hline(yintercept = 0, lwd = 1) +
 				xlab("Number of Periods Since Treatment Onset (h)") +
 				# ylab("Generalized Dynamic Treatment Effect") +
@@ -1021,6 +1031,7 @@ ts.ci.gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, x.vrbl.d
 #' @importFrom mpoly mp
 #' @importFrom car deltaMethod
 #' @importFrom sandwich vcovHC
+#' @importFrom utils capture.output
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshikesav Rajan
 #' @keywords interaction plot
 #' @examples
@@ -1317,6 +1328,7 @@ ts.effect.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL,
 #' @importFrom mpoly mp
 #' @importFrom car deltaMethod
 #' @importFrom sandwich vcovHC
+#' @importFrom utils capture.output
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshikesav Rajan
 #' @keywords interaction plot
 #' @examples
