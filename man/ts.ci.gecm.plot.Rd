@@ -91,7 +91,7 @@ test.pulse <- ts.ci.gecm.plot(model = model,
                                   te.type = "pulse", 
                                   inferences.y = "levels", 
                                   inferences.x = "levels",
-                                  h.limit = 20, 
+                                  h.limit = 10, 
                                   return.plot = TRUE, 
                                   return.formulae = TRUE)
 names(test.pulse)

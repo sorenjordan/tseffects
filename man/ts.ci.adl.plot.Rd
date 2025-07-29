@@ -98,7 +98,7 @@ cavari.step <- ts.ci.adl.plot(model = cavari.model,
                                   te.type = "ste", 
                                   inferences.y = "levels", 
                                   inferences.x = "levels",
-                                  h.limit = 20, 
+                                  h.limit = 10, 
                                   return.plot = TRUE, 
                                   return.formulae = TRUE)
 }

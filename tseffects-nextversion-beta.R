@@ -1,4 +1,4 @@
-# version 0.1.2.9001
+# version 0.1.3.9001
 # 7/25/2025
 # Authors: Soren Jordan, Garrett N. Vande Kamp, Reshi Rajan
 
@@ -311,7 +311,7 @@ GDTE.calculator <- function(d.x, d.y, n, limit, pte) {
 #'                                   te.type = "ste", 
 #'                                   inferences.y = "levels", 
 #'                                   inferences.x = "levels",
-#'                                   h.limit = 20, 
+#'                                   h.limit = 10, 
 #'                                   return.plot = TRUE, 
 #'                                   return.formulae = TRUE)
 #' @export
@@ -597,7 +597,7 @@ ts.ci.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NUL
 #'                                   te.type = "pulse", 
 #'                                   inferences.y = "levels", 
 #'                                   inferences.x = "levels",
-#'                                   h.limit = 20, 
+#'                                   h.limit = 10, 
 #'                                   return.plot = TRUE, 
 #'                                   return.formulae = TRUE)
 #' names(test.pulse)
