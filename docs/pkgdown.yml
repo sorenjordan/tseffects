@@ -3,4 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   tseffects-vignette: tseffects-vignette.html
-last_built: 2025-07-30T16:21Z
+last_built: 2025-07-30T16:37Z
+urls:
+  reference: https://sorenjordan.github.io/tseffects/reference
+  article: https://sorenjordan.github.io/tseffects/articles
