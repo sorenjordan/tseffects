@@ -4,7 +4,6 @@
 <!-- badges: start -->
 [![Version](https://www.r-pkg.org/badges/version/tseffects?color=black)](https://cran.r-project.org/package=tseffects)
 [![CRAN checks](https://badges.cranchecks.info/summary/tseffects.svg)](https://cran.r-project.org/web/checks/check_results_tseffects.html)
-[![License: GPL (>=2)](https://img.shields.io/badge/license-GPL (>=2)-blue.svg)](https://cran.r-project.org/web/licenses/GPL (>=2))
 [![codecov](https://codecov.io/github/sorenjordan/tseffects/graph/badge.svg?token=SD7T7UUCCP)](https://codecov.io/github/sorenjordan/tseffects)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tseffects)](https://cran.r-project.org/package=tseffects)
 <!-- badges: end -->
