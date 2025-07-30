@@ -2,11 +2,11 @@
 # tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)
 
 <!-- badges: start -->
-<!-- [![R-CMD-check](https://github.com/imehlhaff/PolarCAP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/imehlhaff/PolarCAP/actions/workflows/R-CMD-check.yaml) -->
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/tseffects)](https://CRAN.R-project.org/package=tseffects) -->
-<!-- [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tseffects)](https://cran.r-project.org/package=tseffects) -->
-<!-- [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) -->
-<!-- [![Codecov test coverage](https://codecov.io/gh/imehlhaff/PolarCAP/branch/master/graph/badge.svg)](https://app.codecov.io/gh/imehlhaff/PolarCAP?branch=master) -->
+[![Version](https://www.r-pkg.org/badges/version/tseffects?color=black)](https://cran.r-project.org/package=tseffects)
+[![CRAN checks](https://badges.cranchecks.info/summary/tseffects.svg)](https://cran.r-project.org/web/checks/check_results_tseffects.html)
+[![License: GPL (>=2)](https://img.shields.io/badge/license-GPL (>=2)-blue.svg)](https://cran.r-project.org/web/licenses/GPL (>=2))
+[![codecov](https://codecov.io/github/sorenjordan/tseffects/graph/badge.svg?token=SD7T7UUCCP)](https://codecov.io/github/sorenjordan/tseffects)
+[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tseffects)](https://cran.r-project.org/package=tseffects)
 <!-- badges: end -->
 
 <!-- <a href="https://imehlhaff.net/PolarCAP/"><img src="man/figures/logo.png" align="right" height="139" alt="PolarCAP website" /></a> -->
@@ -22,11 +22,11 @@ install.packages("tseffects")
 library(tseffects)
 ```
 
-## Usage
+## Usage: causal inferences
 
 Drawing causal inferences from ADL and GECM models is easy. From an ADL(1,1), just specify the independent and dependent variables, as well as the treatment history desired.
 
-```{r}
+```
 # ADL(1,1)
 # Use the toy data to run an ADL. No argument is made this is well specified; it is just expository
 model <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
