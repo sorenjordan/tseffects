@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: timeseries.bib
 vignette: >
-  %\VignetteIndexEntry{An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models}
+  %\VignetteIndexEntry{An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
