@@ -3,6 +3,7 @@
 # Authors: Soren Jordan, Garrett N. Vande Kamp, Reshi Rajan
 
 # TO DO (next version):
+#	Website: fix double icons; link to personal websites
 #   Somehow test whether someone is using ts.effect.plot when they are also specifying an interaction
 #   Include ts.effects.plot
 #   Include ts.interact.plot
