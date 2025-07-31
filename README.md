@@ -8,7 +8,7 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tseffects)](https://cran.r-project.org/package=tseffects)
 <!-- badges: end -->
 
-<a href="https://github.com/sorenjordan/tseffects/"><img src="man/figures/hex.png" align="right" width="150" height="150" alt="tseffects website" /></a>
+<a href="https://sorenjordan.github.io/tseffects/"><img src="man/figures/logo.png" align="right" width = "139" height="139" alt="tseffects website" /></a>
 
 Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences in three forms: causal inferences from ADL models, traditional time series quantities of interest (short- and long-run effects), and dynamic conditional relationships.
 
