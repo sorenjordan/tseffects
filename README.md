@@ -1,5 +1,5 @@
 
-# tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)
+# tseffects: Dynamic (Causal) Inferences from Time Series (with Interactions)
 
 <!-- badges: start -->
 [![Version](https://www.r-pkg.org/badges/version/tseffects?color=black)](https://cran.r-project.org/package=tseffects)
