@@ -1,4 +1,6 @@
 url: https://sorenjordan.github.io/tseffects/
 template:
   bootstrap: 5
-
+authors:
+  Soren Jordan:
+    href: "https://people.tamu.edu/~sorenjordan/index.html"

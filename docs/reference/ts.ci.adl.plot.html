@@ -153,9 +153,8 @@
 <span class="r-in"><span>                                  h.limit <span class="op">=</span> <span class="fl">20</span>, </span></span>
 <span class="r-in"><span>                                  return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span></span>
 <span class="r-in"><span>                                  return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ts.ci.adl.plot(model = model, x.vrbl = c(x = 0, l_1_x = 1), y.vrbl = c(l_1_y = 1),     d.x = 0, d.y = 0, te.type = "pulse", inferences.y = "levels",     inferences.x = "levels", h.limit = 20, return.plot = TRUE,     return.formulae = TRUE):</span> Order of differencing of variables in treatment effect terms must be specified through x.vrbl.d.order and y.vrbl.d.order</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">test.pulse</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'test.pulse' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot"      "formulae"  "binomials"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Using Cavari's (2019) approval model (without interactions)</span></span></span>
 <span class="r-in"><span><span class="co"># Cavari's original model: APPROVE ~ APPROVE_ECONOMY + APPROVE_FOREIGN + </span></span></span>
@@ -179,7 +178,7 @@
 <span class="r-in"><span>                                  h.limit <span class="op">=</span> <span class="fl">10</span>, </span></span>
 <span class="r-in"><span>                                  return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span></span>
 <span class="r-in"><span>                                  return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ts.ci.adl.plot(model = cavari.model, x.vrbl = c(MIP_FOREIGN = 0),     y.vrbl = c(APPROVE_L1 = 1), d.x = 0, d.y = 0, te.type = "ste",     inferences.y = "levels", inferences.x = "levels", h.limit = 10,     return.plot = TRUE, return.formulae = TRUE):</span> Order of differencing of variables in treatment effect terms must be specified through x.vrbl.d.order and y.vrbl.d.order</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Variable names containing . replaced with _</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -187,7 +186,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Soren Jordan, Garrett N. Vande Kamp, Reshi Rajan.</p>
+  <p>Developed by <a href="https://people.tamu.edu/~sorenjordan/index.html" class="external-link">Soren Jordan</a>, Garrett N. Vande Kamp, Reshi Rajan.</p>
 </div>
 
 <div class="pkgdown-footer-right">
