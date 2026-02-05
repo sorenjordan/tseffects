@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,6 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tseffects-vignette.html">An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)</a></li>
-  </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sorenjordan/tseffects/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -57,7 +53,7 @@
 
 
 <dt id="arg-limit">limit<a class="anchor" aria-label="anchor" href="#arg-limit"></a></dt>
-<dd><p>an integer for the number of periods to determine the PTE (beginning at 0)</p></dd>
+<dd><p>an integer for the number of periods (s) to determine the PTE (beginning at 0)</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -66,7 +62,7 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code>pte.calculator</code> does no calculation. It generates a list of <code>mpoly</code> formulae that contain variable names that represent the PTE in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. It is used as a subfunction in both <code>ts.ci.adl.plot</code> and <code>ts.ci.gecm.plot</code>. Note: <code>mpoly</code> does not allow variable names with a .; variables passed to <code>GDTE.calculator</code> should not include this character</p>
+    <p><code>pte.calculator</code> does no calculation. It generates a list of <code>mpoly</code> formulae that contain variable names that represent the PTE in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. It is used as a subfunction in both <code>GDTE.adl.plot</code> and <code>GDTE.gecm.plot</code>. Note: <code>mpoly</code> does not allow variable names with a .; variables passed to <code>GDTE.calculator</code> should not include this character</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -78,8 +74,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># ADL(1,1)</span></span></span>
 <span class="r-in"><span><span class="va">x.lags</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># lags of x</span></span></span>
 <span class="r-in"><span><span class="va">y.lags</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fl">5</span></span></span>
-<span class="r-in"><span><span class="va">PTEs</span> <span class="op">&lt;-</span> <span class="fu">pte.calculator</span><span class="op">(</span>x.vrbl <span class="op">=</span> <span class="va">x.lags</span>, y.vrbl <span class="op">=</span> <span class="va">y.lags</span>, limit <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="va">PTEs</span> <span class="op">&lt;-</span> <span class="fu">pte.calculator</span><span class="op">(</span>x.vrbl <span class="op">=</span> <span class="va">x.lags</span>, y.vrbl <span class="op">=</span> <span class="va">y.lags</span>, limit <span class="op">=</span> <span class="va">s</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">PTEs</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x </span>

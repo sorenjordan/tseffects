@@ -1,11 +1,11 @@
-test_that("Errors are issued correctly", {  
+test_that("GDTE.gecm.plot errors and warnings are issued correctly", {  
   
   # run a model to use for errors
   model <- lm(d_2_y ~ l_1_d_2_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
   
   expect_error( # no x.vrbl
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     # x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -17,17 +17,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Variables in treatment effects term \\(x and y\\) and lagged differences"
+    "Variables in treatment effect terms \\(x and y\\) and lagged differences"
   ) 
   
   expect_error( # no y.vrbl
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     #y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -39,17 +39,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Variables in treatment effects term \\(x and y\\) and lagged differences"
+    "Variables in treatment effect terms \\(x and y\\) and lagged differences"
   )
   
   expect_error( # no x.d.vrbl
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -61,17 +61,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Variables in treatment effects term \\(x and y\\) and lagged differences"
+    "Variables in treatment effect terms \\(x and y\\) and lagged differences"
   ) 
   
   expect_error( # no y.d.vrbl
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -83,17 +83,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "lagged differences must be specified through x.vrbl, y.vrbl, x.d.vrbl, and y.d.vrbl for a GECM"
+    "Variables in treatment effect terms \\(x and y\\) and lagged differences"
   )
 
   expect_error( # no x.vrbl.d.x
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     # x.vrbl.d.x = 0, 
@@ -105,17 +105,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Order of differencing of variables in treatment effects term"  
+    "Order of differencing of variables in treatment effect terms"  
   ) 
   
   expect_error( # no y.vrbl.d.y
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -127,17 +127,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Order of differencing of variables in treatment effects term"  
+    "Order of differencing of variables in treatment effect terms"  
   )
   
   expect_error( # no x.d.vrbl.d.x
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -149,17 +149,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Order of differencing of variables in lagged differences \\(x and y\\) must be specified through x.d.vrbl.d.x"
+    "Order of differencing of variables in lagged differences in treatment effect must"    
   ) 
   
   expect_error( # no y.d.vrbl.d.y
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -171,61 +171,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Order of differencing of variables in lagged differences \\(x and y\\) must be specified through x.d.vrbl.d.x"
+    "Order of differencing of variables in lagged differences in treatment effect must"    
   )
-  
-  expect_error( # x.d.vrbl.d.x must be integer
-    # Function output
-    ts.ci.gecm.plot(model = model, 
-                    x.vrbl = c("l_x" = 1), 
-                    y.vrbl = c("l_y" = 1),
-                    x.vrbl.d.x = 0, 
-                    y.vrbl.d.y = 0,
-                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                    y.d.vrbl = c("l_1_d_y" = 1),
-                    x.d.vrbl.d.x = 1.24, 
-                    y.d.vrbl.d.y = 1,
-                    te.type = "pte", 
-                    inferences.y = "levels", 
-                    inferences.x = "levels",
-                    h.limit = 2, 
-                    return.plot = TRUE, 
-                    return.formulae = TRUE),
 
-    # Expected output
-    "Order of differencing of variables in lagged differences \\(x.d.vrbl.d.x and y.d.vrbl.d.y\\) must be an integer"  
-  )
-  
-  expect_error( # y.d.vrbl.d.y must be integer
-    # Function output
-    ts.ci.gecm.plot(model = model, 
-                    x.vrbl = c("l_x" = 1), 
-                    y.vrbl = c("l_y" = 1),
-                    x.vrbl.d.x = 0, 
-                    y.vrbl.d.y = 0,
-                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                    y.d.vrbl = c("l_1_d_y" = 1),
-                    x.d.vrbl.d.x = 1, 
-                    y.d.vrbl.d.y = 3.14,
-                    te.type = "pte", 
-                    inferences.y = "levels", 
-                    inferences.x = "levels",
-                    h.limit = 2, 
-                    return.plot = TRUE, 
-                    return.formulae = TRUE),
-
-    # Expected output
-    "Order of differencing of variables in lagged differences \\(x.d.vrbl.d.x and y.d.vrbl.d.y\\) must be an integer"
-  )
-  
   expect_error( # x.vrbl.d.x must be integer
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0.753654, 
@@ -237,17 +193,17 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Order of differencing of variables in treatment effects term \\(x.vrbl.d.x and y.vrbl.d.y\\) must be an"  
+    "Order of differencing of variables in treatment effect term \\(x.vrbl.d.x and y.vrbl.d.y\\)"  
   )
   
   expect_error( # y.vrbl.d.y must be integer
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -259,17 +215,61 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
     # Expected output
-    "Order of differencing of variables in treatment effects term \\(x.vrbl.d.x and y.vrbl.d.y\\) must be an"  
+    "Order of differencing of variables in treatment effect term \\(x.vrbl.d.x and y.vrbl.d.y\\)"  
+  )
+    
+  expect_error( # x.d.vrbl.d.x must be integer
+    # Function output
+    GDTE.gecm.plot(model = model, 
+                    x.vrbl = c("l_x" = 1), 
+                    y.vrbl = c("l_y" = 1),
+                    x.vrbl.d.x = 0, 
+                    y.vrbl.d.y = 0,
+                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    y.d.vrbl = c("l_1_d_y" = 1),
+                    x.d.vrbl.d.x = 1.24, 
+                    y.d.vrbl.d.y = 1,
+                    te.type = "pte", 
+                    inferences.y = "levels", 
+                    inferences.x = "levels",
+                    s.limit = 2, 
+                    return.plot = TRUE, 
+                    return.formulae = TRUE),
+
+    # Expected output
+    "Order of differencing of variables in lagged differences in treatment effect term \\(x.d.vrbl.d.x"  
   )
   
+  expect_error( # y.d.vrbl.d.y must be integer
+    # Function output
+    GDTE.gecm.plot(model = model, 
+                    x.vrbl = c("l_x" = 1), 
+                    y.vrbl = c("l_y" = 1),
+                    x.vrbl.d.x = 0, 
+                    y.vrbl.d.y = 0,
+                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    y.d.vrbl = c("l_1_d_y" = 1),
+                    x.d.vrbl.d.x = 1, 
+                    y.d.vrbl.d.y = 3.14,
+                    te.type = "pte", 
+                    inferences.y = "levels", 
+                    inferences.x = "levels",
+                    s.limit = 2, 
+                    return.plot = TRUE, 
+                    return.formulae = TRUE),
+
+    # Expected output
+    "Order of differencing of variables in lagged differences in treatment effect term \\(x.d.vrbl.d.x"  
+  )
+
   expect_error( # x vrbl not named vector
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c(1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -281,7 +281,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -291,7 +291,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # x vrbl vector has no values
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x"), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -303,7 +303,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -313,7 +313,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # y vrbl not named vector
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c(1),
                     x.vrbl.d.x = 0, 
@@ -325,7 +325,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
  
@@ -335,7 +335,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # y vrbl vector has no values
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y"),
                     x.vrbl.d.x = 0, 
@@ -347,7 +347,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -357,7 +357,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # x.d.vrbl not named vector
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -369,7 +369,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -379,7 +379,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # x.d.vrbl vrbl vector has no values
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -391,7 +391,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -401,7 +401,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # y.d.vrbl not named vector
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -413,7 +413,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -423,7 +423,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # y.d.vrbl vrbl vector has no values
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -435,7 +435,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -445,7 +445,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # x.d.vrbl.d.order-x.vrbl.d.order: difference of ordering exceeds 1
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -457,7 +457,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -467,7 +467,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # y.d.vrbl.d.order-y.vrbl.d.order: difference of ordering exceeds 1
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -479,7 +479,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -487,9 +487,75 @@ test_that("Errors are issued correctly", {
     "In a GECM, the variable in differences should"
   )
   
+  expect_error( # does GECM include more than first lag of x?
+    # Function output
+    GDTE.gecm.plot(model = model, 
+                    x.vrbl = c("l_x" = 1, "l_2_x" = 2), 
+                    y.vrbl = c("l_y" = 1),
+                    x.vrbl.d.x = 0, 
+                    y.vrbl.d.y = 0,
+                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    y.d.vrbl = c("l_1_d_y" = 1),
+                    x.d.vrbl.d.x = 1, 
+                    y.d.vrbl.d.y = 1,
+                    te.type = "pte", 
+                    inferences.y = "levels", 
+                    inferences.x = "levels",
+                    s.limit = 2, 
+                    return.plot = TRUE, 
+                    return.formulae = TRUE),
+    
+    # Expected error
+    "In a GECM, include only the first lag of the variable"
+  )
+    
   expect_error( # does GECM include more than first lag of y?
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
+                    x.vrbl = c("l_x" = 1), 
+                    y.vrbl = c("l_y" = 1, "l_2_y" = 2),
+                    x.vrbl.d.x = 0, 
+                    y.vrbl.d.y = 0,
+                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    y.d.vrbl = c("l_1_d_y" = 1),
+                    x.d.vrbl.d.x = 1, 
+                    y.d.vrbl.d.y = 1,
+                    te.type = "pte", 
+                    inferences.y = "levels", 
+                    inferences.x = "levels",
+                    s.limit = 2, 
+                    return.plot = TRUE, 
+                    return.formulae = TRUE),
+    
+    # Expected error
+    "In a GECM, include only the first lag of the variable"
+  )
+
+  expect_error( # does GECM include more than first lag of x?
+    # Function output
+    GDTE.gecm.plot(model = model, 
+                    x.vrbl = c("l_x" = 2), 
+                    y.vrbl = c("l_y" = 1),
+                    x.vrbl.d.x = 0, 
+                    y.vrbl.d.y = 0,
+                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    y.d.vrbl = c("l_1_d_y" = 1),
+                    x.d.vrbl.d.x = 1, 
+                    y.d.vrbl.d.y = 1,
+                    te.type = "pte", 
+                    inferences.y = "levels", 
+                    inferences.x = "levels",
+                    s.limit = 2, 
+                    return.plot = TRUE, 
+                    return.formulae = TRUE),
+    
+    # Expected error
+    "In a GECM, include only the first lag of the variable"
+  )
+  
+  expect_error( # does GECM include more than first lag of y?
+    # Function output
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_x" = 1), 
                     y.vrbl = c("l_y" = 2),
                     x.vrbl.d.x = 0, 
@@ -501,73 +567,7 @@ test_that("Errors are issued correctly", {
                     te.type = "pte", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
-                    return.plot = TRUE, 
-                    return.formulae = TRUE),
-    
-    # Expected error
-    "In a GECM, include only the first lag of the variable"
-  )
-  
-  expect_error( # does GECM include more than first lag of x?
-    # Function output
-    ts.ci.gecm.plot(model = model, 
-                    x.vrbl = c("l_x" = 9), 
-                    y.vrbl = c("l_y" = 1),
-                    x.vrbl.d.x = 0, 
-                    y.vrbl.d.y = 0,
-                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                    y.d.vrbl = c("l_1_d_y" = 1),
-                    x.d.vrbl.d.x = 1, 
-                    y.d.vrbl.d.y = 1,
-                    te.type = "pte", 
-                    inferences.y = "levels", 
-                    inferences.x = "levels",
-                    h.limit = 2, 
-                    return.plot = TRUE, 
-                    return.formulae = TRUE),
-    
-    # Expected error
-    "In a GECM, include only the first lag of the variable"
-  )
-  
-  expect_error( # does GECM include more than first lag of x?
-    # Function output
-    ts.ci.gecm.plot(model = model, 
-                    x.vrbl = c("l_x" = 0, "d_x" = 1), 
-                    y.vrbl = c("l_y" = 1),
-                    x.vrbl.d.x = 0, 
-                    y.vrbl.d.y = 0,
-                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                    y.d.vrbl = c("l_1_d_y" = 1),
-                    x.d.vrbl.d.x = 1, 
-                    y.d.vrbl.d.y = 1,
-                    te.type = "pte", 
-                    inferences.y = "levels", 
-                    inferences.x = "levels",
-                    h.limit = 2, 
-                    return.plot = TRUE, 
-                    return.formulae = TRUE),
-    
-    # Expected error
-    "In a GECM, include only the first lag of the variable"
-  )
-  
-  expect_error( # does GECM include more than first lag of y?
-    # Function output
-    ts.ci.gecm.plot(model = model, 
-                    x.vrbl = c("l_x" = 0), 
-                    y.vrbl = c("l_y" = 1, "l_1_d_y" = 2),
-                    x.vrbl.d.x = 0, 
-                    y.vrbl.d.y = 0,
-                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                    y.d.vrbl = c("l_1_d_y" = 1),
-                    x.d.vrbl.d.x = 1, 
-                    y.d.vrbl.d.y = 1,
-                    te.type = "pte", 
-                    inferences.y = "levels", 
-                    inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
     
@@ -575,75 +575,53 @@ test_that("Errors are issued correctly", {
     "In a GECM, include only the first lag of the variable"
   )
 
- expect_error( # te.type is accepted input
+  expect_error( # invalid inferences.x
     # Function output
-      ts.ci.gecm.plot(model = model, 
-                      x.vrbl = c("l_x" = 1), 
-                      y.vrbl = c("l_y" = 1),
-                      x.vrbl.d.x = 0, 
-                      y.vrbl.d.y = 0,
-                      x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                      y.d.vrbl = c("l_1_d_y" = 1),
-                      x.d.vrbl.d.x = 1, 
-                      y.d.vrbl.d.y = 1,
-                      te.type = "Daleks", 
-                      inferences.y = "levels", 
-                      inferences.x = "levels",
-                      h.limit = 2, 
-                      return.plot = TRUE, 
-                      return.formulae = TRUE),
-      
-      # Expected error
-      "Invalid te.type. te.type must be one of pte \\(pulse\\) or ste \\(step\\)"
-  )
+    GDTE.gecm.plot(model = model, 
+                    x.vrbl = c("l_x" = 1), 
+                    y.vrbl = c("l_y" = 1),
+                    x.vrbl.d.x = 0, 
+                    y.vrbl.d.y = 0,
+                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    y.d.vrbl = c("l_1_d_y" = 1),
+                    x.d.vrbl.d.x = 1, 
+                    y.d.vrbl.d.y = 1,
+                    te.type = "pte", 
+                    inferences.y = "differences", 
+                    inferences.x = "levels",
+                    s.limit = 2, 
+                    return.plot = TRUE, 
+                    return.formulae = TRUE),
     
-  expect_error( # are inferences for y requested in levels?
-    # Function output
-      ts.ci.gecm.plot(model = model, 
-                      x.vrbl = c("l_x" = 1), 
-                      y.vrbl = c("l_y" = 1),
-                      x.vrbl.d.x = 0, 
-                      y.vrbl.d.y = 0,
-                      x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                      y.d.vrbl = c("l_1_d_y" = 1),
-                      x.d.vrbl.d.x = 1, 
-                      y.d.vrbl.d.y = 1,
-                      te.type = "ste", 
-                      inferences.y = "New Jersey", 
-                      inferences.x = "levels",
-                      h.limit = 2, 
-                      return.plot = TRUE, 
-                      return.formulae = TRUE),
-     
-      # Expected error
-      "In a GECM, causal inferences regarding the treatment effect of x on y are automatically recovered in" 
+    # Expected error
+    "In a GECM, inferences regarding the counterfactual treatment of x"
   )
-  
-  expect_error( # are inferences for y requested in levels?
+
+  expect_error( # invalid inferences.y
     # Function output
-      ts.ci.gecm.plot(model = model, 
-                      x.vrbl = c("l_x" = 1), 
-                      y.vrbl = c("l_y" = 1),
-                      x.vrbl.d.x = 0, 
-                      y.vrbl.d.y = 0,
-                      x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                      y.d.vrbl = c("l_1_d_y" = 1),
-                      x.d.vrbl.d.x = 1, 
-                      y.d.vrbl.d.y = 1,
-                      te.type = "ste", 
-                      inferences.y = "levels", 
-                      inferences.x = "Pennsylvania",
-                      h.limit = 2, 
-                      return.plot = TRUE, 
-                      return.formulae = TRUE),
-      
-      # Expected error
-      "In a GECM, causal inferences regarding the treatment effect of x on y are automatically recovered in"
+    GDTE.gecm.plot(model = model, 
+                    x.vrbl = c("l_x" = 1), 
+                    y.vrbl = c("l_y" = 1),
+                    x.vrbl.d.x = 0, 
+                    y.vrbl.d.y = 0,
+                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    y.d.vrbl = c("l_1_d_y" = 1),
+                    x.d.vrbl.d.x = 1, 
+                    y.d.vrbl.d.y = 1,
+                    te.type = "pte", 
+                    inferences.y = "levels", 
+                    inferences.x = "differences",
+                    s.limit = 2, 
+                    return.plot = TRUE, 
+                    return.formulae = TRUE),
+    
+    # Expected error
+    "In a GECM, inferences regarding the counterfactual treatment of x"
   )
-  
+
   expect_error( # invalid se.type
     # Function output
-      ts.ci.gecm.plot(model = model, 
+      GDTE.gecm.plot(model = model, 
                       x.vrbl = c("l_x" = 1), 
                       y.vrbl = c("l_y" = 1),
                       x.vrbl.d.x = 0, 
@@ -655,7 +633,7 @@ test_that("Errors are issued correctly", {
                       te.type = "ste", 
                       inferences.y = "levels", 
                       inferences.x = "levels",
-                      h.limit = 2, 
+                      s.limit = 2, 
                       return.plot = TRUE, 
                       return.formulae = TRUE,
                       se.type = "Cyberman"),
@@ -666,7 +644,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # x.vrbl not in model
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("weeping angel" = 1), 
                     y.vrbl = c("l_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -678,7 +656,7 @@ test_that("Errors are issued correctly", {
                     te.type = "ste", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
     
@@ -688,7 +666,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # x.d.vrbl not in model
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_1_d_x" = 1), 
                     y.vrbl = c("l_1_d_2_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -700,7 +678,7 @@ test_that("Errors are issued correctly", {
                     te.type = "ste", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
     
@@ -710,7 +688,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # y.vrbl not in model
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_1_d_x" = 1), 
                     y.vrbl = c("androzani" = 1),
                     x.vrbl.d.x = 0, 
@@ -722,7 +700,7 @@ test_that("Errors are issued correctly", {
                     te.type = "ste", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
     
@@ -732,7 +710,7 @@ test_that("Errors are issued correctly", {
   
   expect_error( # y.d.vrbl not in model
     # Function output
-    ts.ci.gecm.plot(model = model, 
+    GDTE.gecm.plot(model = model, 
                     x.vrbl = c("l_1_d_x" = 1), 
                     y.vrbl = c("l_1_d_2_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -744,15 +722,61 @@ test_that("Errors are issued correctly", {
                     te.type = "ste", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
     
     # Expected error
     "y.d.vrbl not present in estimated model" 
   )
-})
 
+  model <- lm(d_y ~ l_1_x + l_1_y + d_x + l_1_d_x + l_1_d_y, data = toy.ts.interaction.data)
+  
+  expect_error( # te.type is invalid word
+    # Function output
+      GDTE.gecm.plot(model = model, 
+                      x.vrbl = c("l_1_x" = 1), 
+                      y.vrbl = c("l_1_y" = 1),
+                      x.vrbl.d.x = 0, 
+                      y.vrbl.d.y = 0,
+                      x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                      y.d.vrbl = c("l_1_d_y" = 1),
+                      x.d.vrbl.d.x = 1, 
+                      y.d.vrbl.d.y = 1,
+                      te.type = "Daleks", 
+                      inferences.y = "levels", 
+                      inferences.x = "levels",
+                      s.limit = 2, 
+                      return.plot = TRUE, 
+                      return.formulae = TRUE),
+      
+      # Expected error
+      "Invalid te.type. te.type must be one of pte \\(pulse\\) or ste \\(step\\)"
+  )
+
+  expect_error( # te.type is not integer
+    # Function output
+      GDTE.gecm.plot(model = model, 
+                      x.vrbl = c("l_1_x" = 1), 
+                      y.vrbl = c("l_1_y" = 1),
+                      x.vrbl.d.x = 0, 
+                      y.vrbl.d.y = 0,
+                      x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                      y.d.vrbl = c("l_1_d_y" = 1),
+                      x.d.vrbl.d.x = 1, 
+                      y.d.vrbl.d.y = 1,
+                      te.type = 3.5, 
+                      inferences.y = "levels", 
+                      inferences.x = "levels",
+                      s.limit = 2, 
+                      return.plot = TRUE, 
+                      return.formulae = TRUE),
+      
+      # Expected error
+      "Invalid te.type. te.type must be one of pte \\(pulse\\) or ste \\(step\\)"
+  )
+  
+})
 
 test_that("Warning for . issued correctly", {
   
@@ -762,7 +786,7 @@ test_that("Warning for . issued correctly", {
   
   expect_warning( # Changing _ to . 
     # Function
-    ts.ci.gecm.plot(model = model_warning, 
+    GDTE.gecm.plot(model = model_warning, 
                     x.vrbl = c("l_1_d_x" = 1), 
                     y.vrbl = c("l_1_d_2_y" = 1),
                     x.vrbl.d.x = 0, 
@@ -774,7 +798,7 @@ test_that("Warning for . issued correctly", {
                     te.type = "ste", 
                     inferences.y = "levels", 
                     inferences.x = "levels",
-                    h.limit = 2, 
+                    s.limit = 2, 
                     return.plot = TRUE, 
                     return.formulae = TRUE),
 
@@ -791,9 +815,9 @@ test_that("mpoly formulae are correct (GECM(1,1))", {
   ####################################################################################
   # GECM(1,1), both inferences in levels, pulse and step
   ####################################################################################
-  the.h <- 2
+  the.s <- 2
   
-  model_test_pte <- ts.ci.gecm.plot(model = model, 
+  model_test_pte <- GDTE.gecm.plot(model = model, 
                                 x.vrbl = c("l_1_x" = 1), 
                                 y.vrbl = c("l_1_y" = 1),
                                 x.vrbl.d.x = 0, 
@@ -805,12 +829,12 @@ test_that("mpoly formulae are correct (GECM(1,1))", {
                                 te.type = "pte", 
                                 inferences.y = "levels", 
                                 inferences.x = "levels",
-                                h.limit = the.h, 
+                                s.limit = the.s, 
                                 return.plot = TRUE, 
                                 return.formulae = TRUE,
                                 return.data = TRUE)
   
-  model_test_ste <- ts.ci.gecm.plot(model = model, 
+  model_test_ste <- GDTE.gecm.plot(model = model, 
                                     x.vrbl = c("l_1_x" = 1), 
                                     y.vrbl = c("l_1_y" = 1),
                                     x.vrbl.d.x = 0, 
@@ -822,28 +846,71 @@ test_that("mpoly formulae are correct (GECM(1,1))", {
                                     te.type = "ste", 
                                     inferences.y = "levels", 
                                     inferences.x = "levels",
-                                    h.limit = the.h, 
+                                    s.limit = the.s, 
                                     return.plot = TRUE, 
                                     return.formulae = TRUE,
                                     return.data = TRUE)
-  
-  
-  
-  expect_equal( # test whether formula matches for h = 2 (pulse)
+
+  expect_equal( # test whether formula matches for s = 2 (pulse)
     # Function output    
-    model_test_pte$formulae[['h = 2']],
+    model_test_pte$formulae[['s = 2']],
     
     # Expected output
     "l_1_y * l_1_x  +  l_1_y * l_1_d_x  +  l_1_y**2 * d_x  +  2 * l_1_y * d_x * l_1_d_y  +  l_1_x * l_1_d_y  +  l_1_d_x * l_1_d_y  +  d_x * l_1_d_y**2  +  l_1_x  +  l_1_y * d_x "
   )   
   
-  expect_equal( # test whether formula matches for h = 2 (step)
+  expect_equal( # test whether formula matches for s = 2 (step)
     # Function output    
-    model_test_ste$formulae[['h = 2']],
+    model_test_ste$formulae[['s = 2']],
 
     # Expected output
     "l_1_y * l_1_x  +  l_1_y * l_1_d_x  +  l_1_y**2 * d_x  +  2 * l_1_y * d_x * l_1_d_y  +  l_1_x * l_1_d_y  +  l_1_d_x * l_1_d_y  +  d_x * l_1_d_y**2  +  2 * l_1_x  +  2 * l_1_y * d_x  +  l_1_d_x  +  d_x * l_1_d_y  +  d_x "
   )
+})
+
+
+test_that("Correct dimensions of output", { 
+  
+  model <- lm(d_y ~ l_1_x + l_1_y + d_x + l_1_d_x + l_1_d_y, data = toy.ts.interaction.data)
+
+  ####################################################################################
+  # GECM(1,1), both inferences in levels, pulse and step
+  ####################################################################################
+  the.s <- 2
+  
+  model_test_pte <- GDTE.gecm.plot(model = model, 
+                                x.vrbl = c("l_1_x" = 1), 
+                                y.vrbl = c("l_1_y" = 1),
+                                x.vrbl.d.x = 0, 
+                                y.vrbl.d.y = 0,
+                                x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                                y.d.vrbl = c("l_1_d_y" = 1),
+                                x.d.vrbl.d.x = 1, 
+                                y.d.vrbl.d.y = 1,
+                                te.type = "pte", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                s.limit = the.s, 
+                                return.plot = TRUE, 
+                                return.formulae = TRUE,
+                                return.data = TRUE)
+
+  model_test_ste <- GDTE.gecm.plot(model = model, 
+                                    x.vrbl = c("l_1_x" = 1), 
+                                    y.vrbl = c("l_1_y" = 1),
+                                    x.vrbl.d.x = 0, 
+                                    y.vrbl.d.y = 0,
+                                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                                    y.d.vrbl = c("l_1_d_y" = 1),
+                                    x.d.vrbl.d.x = 1, 
+                                    y.d.vrbl.d.y = 1,
+                                    te.type = "ste", 
+                                    inferences.y = "levels", 
+                                    inferences.x = "levels",
+                                    s.limit = the.s, 
+                                    return.plot = TRUE, 
+                                    return.formulae = TRUE,
+                                    return.data = TRUE)
   
   expect_equal( # test the names of the estimates (pulse)
     # Function output
@@ -869,7 +936,7 @@ test_that("mpoly formulae are correct (GECM(1,1))", {
 
     # Expected output
     # rows is periods (limit + 1 for 0), 5 columns (Period, GDTE, SE, Lower, Upper)
-    c(the.h + 1, 5),  
+    c(the.s + 1, 5),  
   )
 
   expect_equal( # test the dimensions of the estimates (step)
@@ -878,7 +945,7 @@ test_that("mpoly formulae are correct (GECM(1,1))", {
 
     # Expected output
     # rows is periods (limit + 1 for 0), 5 columns (Period, GDTE, SE, Lower, Upper)
-    c(the.h + 1, 5),  
+    c(the.s + 1, 5),  
   )
 })
 
@@ -886,9 +953,9 @@ test_that("mpoly formulae are correct (GECM(1,1))", {
 test_that("Function returns objects correctly (including errors)", { 
 
   model <- lm(d_y ~ l_1_x + l_1_y + d_x + l_1_d_x + l_1_d_y, data = toy.ts.interaction.data)
-	  
-  #### Final Tests 
-  model_test_allthree <- ts.ci.gecm.plot(model = model, 
+
+  expect_error( # are all three objects returned?
+    model_test_allthree <- GDTE.gecm.plot(model = model, 
                                 x.vrbl = c("l_1_x" = 1), 
                                 y.vrbl = c("l_1_y" = 1),
                                 x.vrbl.d.x = 0, 
@@ -900,7 +967,28 @@ test_that("Function returns objects correctly (including errors)", {
                                 te.type = "ste", 
                                 inferences.y = "levels", 
                                 inferences.x = "levels",
-                                h.limit = 2, 
+                                s.limit = 2, 
+                                return.plot = FALSE, 
+                                return.formulae = FALSE,
+                                return.data = FALSE),
+
+    # Function output
+    "Return at least one of the plot, the data"
+  )  
+	  
+  model_test_allthree <- GDTE.gecm.plot(model = model, 
+                                x.vrbl = c("l_1_x" = 1), 
+                                y.vrbl = c("l_1_y" = 1),
+                                x.vrbl.d.x = 0, 
+                                y.vrbl.d.y = 0,
+                                x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                                y.d.vrbl = c("l_1_d_y" = 1),
+                                x.d.vrbl.d.x = 1, 
+                                y.d.vrbl.d.y = 1,
+                                te.type = "ste", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                s.limit = 2, 
                                 return.plot = TRUE, 
                                 return.formulae = TRUE,
                                 return.data = TRUE)
@@ -909,8 +997,9 @@ test_that("Function returns objects correctly (including errors)", {
     # Function output
     all(c("plot", "estimates", "formulae") %in% names(model_test_allthree))
   )  
-  
-  model_test_noformulae <- ts.ci.gecm.plot(model = model, 
+
+
+  model_test_justplot <- GDTE.gecm.plot(model = model, 
                                 x.vrbl = c("l_1_x" = 1), 
                                 y.vrbl = c("l_1_y" = 1),
                                 x.vrbl.d.x = 0, 
@@ -922,28 +1011,7 @@ test_that("Function returns objects correctly (including errors)", {
                                 te.type = "ste", 
                                 inferences.y = "levels", 
                                 inferences.x = "levels",
-                                h.limit = 2,
-                                return.formulae = FALSE, 
-                                return.plot = TRUE,
-                                return.data = TRUE)
-
-  expect_false( # is formulae returned?
-    all(c("formulae") %in% names(model_test_noformulae))
-  )
-
-  model_test_justplot <- ts.ci.gecm.plot(model = model, 
-                                x.vrbl = c("l_1_x" = 1), 
-                                y.vrbl = c("l_1_y" = 1),
-                                x.vrbl.d.x = 0, 
-                                y.vrbl.d.y = 0,
-                                x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                                y.d.vrbl = c("l_1_d_y" = 1),
-                                x.d.vrbl.d.x = 1, 
-                                y.d.vrbl.d.y = 1,
-                                te.type = "ste", 
-                                inferences.y = "levels", 
-                                inferences.x = "levels",
-                                h.limit = 2,
+                                s.limit = 2,
                                 return.formulae = FALSE, 
                                 return.plot = TRUE,
                                 return.data = FALSE)
@@ -953,7 +1021,7 @@ test_that("Function returns objects correctly (including errors)", {
     all(c("estimates", "formulae") %in% names(model_test_justplot))
   )
     
-  model_test_noplot <- ts.ci.gecm.plot(model = model, 
+  model_test_noplot <- GDTE.gecm.plot(model = model, 
                                 x.vrbl = c("l_1_x" = 1), 
                                 y.vrbl = c("l_1_y" = 1),
                                 x.vrbl.d.x = 0, 
@@ -965,7 +1033,7 @@ test_that("Function returns objects correctly (including errors)", {
                                 te.type = "ste", 
                                 inferences.y = "levels", 
                                 inferences.x = "levels",
-                                h.limit = 2,
+                                s.limit = 2,
                                 return.plot = FALSE, 
                                 return.data = TRUE,
                                 return.formulae = TRUE)
@@ -974,8 +1042,8 @@ test_that("Function returns objects correctly (including errors)", {
     # Function output
     all(c("plot") %in% names(model_test_noplot))
   )
-    
-  model_test_nodata <- ts.ci.gecm.plot(model = model, 
+
+  model_test_noformulae <- GDTE.gecm.plot(model = model, 
                                 x.vrbl = c("l_1_x" = 1), 
                                 y.vrbl = c("l_1_y" = 1),
                                 x.vrbl.d.x = 0, 
@@ -987,7 +1055,28 @@ test_that("Function returns objects correctly (including errors)", {
                                 te.type = "ste", 
                                 inferences.y = "levels", 
                                 inferences.x = "levels",
-                                h.limit = 2, 
+                                s.limit = 2,
+                                return.formulae = FALSE, 
+                                return.plot = TRUE,
+                                return.data = TRUE)
+
+  expect_false( # is formulae returned?
+    all(c("formulae") %in% names(model_test_noformulae))
+  )
+
+  model_test_nodata <- GDTE.gecm.plot(model = model, 
+                                x.vrbl = c("l_1_x" = 1), 
+                                y.vrbl = c("l_1_y" = 1),
+                                x.vrbl.d.x = 0, 
+                                y.vrbl.d.y = 0,
+                                x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                                y.d.vrbl = c("l_1_d_y" = 1),
+                                x.d.vrbl.d.x = 1, 
+                                y.d.vrbl.d.y = 1,
+                                te.type = "ste", 
+                                inferences.y = "levels", 
+                                inferences.x = "levels",
+                                s.limit = 2, 
                                 return.formulae = TRUE, 
                                 return.plot = TRUE,
                                 return.data = FALSE)
@@ -996,7 +1085,7 @@ test_that("Function returns objects correctly (including errors)", {
     all(c("estimates") %in% names(model_test_nodata))
   )
     
-  model_test_justdata <- ts.ci.gecm.plot(model = model, 
+  model_test_justdata <- GDTE.gecm.plot(model = model, 
                                 x.vrbl = c("l_1_x" = 1), 
                                 y.vrbl = c("l_1_y" = 1),
                                 x.vrbl.d.x = 0, 
@@ -1008,7 +1097,7 @@ test_that("Function returns objects correctly (including errors)", {
                                 te.type = "ste", 
                                 inferences.y = "levels", 
                                 inferences.x = "levels",
-                                h.limit = 2, 
+                                s.limit = 2, 
                                 return.formulae = FALSE, 
                                 return.plot = FALSE,
                                 return.data = TRUE)
@@ -1018,11 +1107,11 @@ test_that("Function returns objects correctly (including errors)", {
   )
 })
 
-test_that("Correct Plots", {
+test_that("Correct Plot: GDTE.gecm.plot", {
   local_edition(3)
   	
   model <- lm(d_y ~ l_1_x + l_1_y + d_x + l_1_d_x + l_1_d_y, data = toy.ts.interaction.data)
-  p <- ts.ci.gecm.plot(model = model, 
+  one <- GDTE.gecm.plot(model = model, 
                        x.vrbl = c("l_1_x" = 1), 
                        y.vrbl = c("l_1_y" = 1),
                        x.vrbl.d.x = 0, 
@@ -1034,15 +1123,15 @@ test_that("Correct Plots", {
                        te.type = "pte", 
                        inferences.y = "levels", 
                        inferences.x = "levels",
-                       h.limit = 2,  
+                       s.limit = 2,  
                        return.formulae = FALSE, 
                        return.plot =  TRUE,
                        return.data = FALSE)
-  expect_no_error(p) 
-  expect_doppelganger("p", p)
-  expect_snapshot("p")
+  expect_no_error(one) 
+  expect_doppelganger("gdtegecmpulse", one)
+  expect_snapshot("gdtegecmpulse")
   
-  q <- ts.ci.gecm.plot(model = model, 
+  two <- GDTE.gecm.plot(model = model, 
                        x.vrbl = c("l_1_x" = 1), 
                        y.vrbl = c("l_1_y" = 1),
                        x.vrbl.d.x = 0, 
@@ -1054,11 +1143,11 @@ test_that("Correct Plots", {
                        te.type = "ste", 
                        inferences.y = "levels", 
                        inferences.x = "levels",
-                       h.limit = 2,  
+                       s.limit = 2,  
                        return.formulae = FALSE, 
                        return.plot =  TRUE,
                        return.data = FALSE)
-  expect_no_error(q) 
-  expect_doppelganger("q", q)
-  expect_snapshot("q")
+  expect_no_error(two) 
+  expect_doppelganger("gdtegecmstep", two)
+  expect_snapshot("gdtegecmstep")
 })

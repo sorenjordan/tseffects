@@ -1,21 +1,50 @@
-test_that("PTE generates correct equations (ADL)", {
+test_that("pulse.calculator generates correct equations (ADL)", {
 
   ####################################################################################
-  # ADL (1,1) testing if PTE matches for h = 3 in formula sheet
+  # ADL (1,0) testing if PTE matches for s = 3 in formula sheet
+  ####################################################################################
+  x.lags <- c("x" = 0, "l_1_x" = 1, "l_2_x" = 2, "l_3_x" = 3) # lags of x
+  y.lags <- NULL
+  s <- 5 # limit 
+  s.test <- 3 # period to test
+  
+  pte.test <- pulse.calculator(x.vrbl = x.lags,
+                 y.vrbl = y.lags, 
+                 limit = s)
+  
+  expect_equal( # test whether formula matches for s = 3
+	# Function output
+    # Increment s.test because counter starts at s = 0
+	print(pte.test[[s.test+1]]), # to get mpoly obj as character, you need to print
+
+    # Expected output
+    'l_3_x'
+  )   
+  
+  expect_equal( # test if length of returned formulae is correct for limit = 5
+	# Function output    
+    length(pte.test), # counter goes from s = 0 to s = 5
+    
+    # Expected output
+    s+1
+  )  
+  
+  ####################################################################################
+  # ADL (1,1) testing if PTE matches for s = 3 in formula sheet
   ####################################################################################
   x.lags <- c("x" = 0, "l_1_x" = 1) # lags of x
   y.lags <- c("l_1_y" = 1)
-  h <- 5 # limit 
-  h.test <- 3 # period to test
+  s <- 5 # limit 
+  s.test <- 3 # period to test
   
-  pte.test <- pte.calculator(x.vrbl = x.lags,
+  pte.test <- pulse.calculator(x.vrbl = x.lags,
                  y.vrbl = y.lags, 
-                 limit = h)
+                 limit = s)
   
-  expect_equal( # test whether formula matches for h = 3
+  expect_equal( # test whether formula matches for s = 3
 	# Function output
-    # Increment h.test because counter starts at h = 0
-	print(pte.test[[h.test+1]]), # to get mpoly obj as character, you need to print
+    # Increment s.test because counter starts at s = 0
+	print(pte.test[[s.test+1]]), # to get mpoly obj as character, you need to print
 
     # Expected output
     'l_1_y^2 l_1_x  +  l_1_y^3 x'
@@ -23,29 +52,29 @@ test_that("PTE generates correct equations (ADL)", {
   
   expect_equal( # test if length of returned formulae is correct for limit = 5
 	# Function output    
-    length(pte.test), # counter goes from h = 0 to h=5
+    length(pte.test), # counter goes from s = 0 to s = 5
     
     # Expected output
-    h+1
+    s+1
   )  
   
  
   ####################################################################################
-  # ADL (2,1) with non-consecutive lags of y testing if PTE matches for h = 5 in formula sheet
+  # ADL (2,1) with non-consecutive lags of y testing if PTE matches for s = 5 in formula sheet
   ####################################################################################
   x.lags <- c("l_1_x" = 1) # lags of x
   y.lags <- c("l_2_y" = 2)
-  h <- 5 # limit 
-  h.test <- 5 # period to test
+  s <- 5 # limit 
+  s.test <- 5 # period to test
   
-  pte.test <- pte.calculator(x.vrbl = x.lags,
+  pte.test <- pulse.calculator(x.vrbl = x.lags,
                  y.vrbl = y.lags, 
-                 limit = h)
+                 limit = s)
   
-  expect_equal( # test whether formula matches, h = 5
+  expect_equal( # test whether formula matches, s = 5
 	# Function output
-    # Increment h.test because counter starts at h = 0
-    print(pte.test[[h.test+1]]), # to get mpoly obj as character, you need to print
+    # Increment s.test because counter starts at s = 0
+    print(pte.test[[s.test+1]]), # to get mpoly obj as character, you need to print
     
     # Expected output
     'l_2_y^2 l_1_x'
@@ -53,16 +82,43 @@ test_that("PTE generates correct equations (ADL)", {
 
   expect_equal( # test if length of returned formulae is correct for ADL(1,1), limit = 5
 	# Function output
-    length(pte.test), # counter goes from h = 0 to h=5
+    length(pte.test), # counter goes from s = 0 to s = 5
 
     # Expected output
-    h+1
+    s+1
+  )
+  
+  x.lags <- c("x" = 0, "l_2_x" = 2) # lags of x
+  y.lags <- c("l_1_y" = 1)
+  s <- 5 # limit 
+  s.test <- 3 # period to test
+  
+  pte.test <- pulse.calculator(x.vrbl = x.lags,
+                 y.vrbl = y.lags, 
+                 limit = s)
+  
+  expect_equal( # test whether formula matches, s = 5
+	# Function output
+    # Increment s.test because counter starts at s = 0
+    print(pte.test[[s.test+1]]), # to get mpoly obj as character, you need to print
+    
+    # Expected output
+    'l_1_y l_2_x  +  l_1_y^3 x'
+  )   
+
+  expect_equal( # test if length of returned formulae is correct for ADL(1,1), limit = 5
+	# Function output
+    length(pte.test), # counter goes from s = 0 to s = 5
+
+    # Expected output
+    s+1
   ) 
+  
 })
 
 
 
-test_that("PTE generates correct equations (GECM)", {
+test_that("pulse.calculator generates correct equations (GECM)", {
 		
     ####################################################################################
 	#  GECM(1,1) in first differences
@@ -75,7 +131,7 @@ test_that("PTE generates correct equations (GECM)", {
 	y.d.lags <- c("l_1_d_y" = 1)
 	x.d.vrbl.d.x <- 1
 	y.d.vrbl.d.y <- 1
-	h <- 2 # limit h = 2 because GECMs are stupid complicated
+	s <- 2 # limit h = 2 because GECMs are stupid complicated
 	
 	# Straight from the GECM code: make the lags into a list, accounting for differences in the periods
 	x.vrbl.helper <- 1:max(x.lags)
@@ -161,15 +217,15 @@ test_that("PTE generates correct equations (GECM)", {
 	}
 	
 	# calculate the ptes
-	pte.test <- pte.calculator(x.vrbl = x.vrbl.adl,
+	pte.test <- pulse.calculator(x.vrbl = x.vrbl.adl,
                  y.vrbl = y.vrbl.adl, 
-                 limit = h)
+                 limit = s)
 	
 	
-	expect_equal( # test whether formula matches for GECM(1,1), h = 2
+	expect_equal( # test whether formula matches for GECM(1,1), s = 2
  	  # Function output
-  	  # Increment h because counter starts at h = 0
-      print(pte.test[[h+1]]), # to get mpoly obj as character, you need to print
+  	  # Increment h because counter starts at s = 0
+      print(pte.test[[s+1]]), # to get mpoly obj as character, you need to print
   	    	  
   	  # Expected output
   	  'l_y l_x  +  l_1_d_x l_y  +  l_y^2 d_x  +  2 l_y d_x l_1_d_y  +  l_x l_1_d_y  +  l_1_d_x l_1_d_y  +  d_x l_1_d_y^2  +  l_x  +  l_y d_x'
