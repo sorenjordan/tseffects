@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Dynamic (Causal) Inferences from Time Series (with Interactions) • tseffects</title>
+<title>Dynamic Inferences from Time Series (with Interactions) • tseffects</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -15,9 +15,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Dynamic (Causal) Inferences from Time Series (with Interactions)">
-<meta name="description" content="Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) (see De Boef and Keele 2008 &lt;doi:10.1111/j.1540-5907.2007.00307.x&gt;) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences in three forms: causal inferences from ADL models, traditional time series quantities of interest (short- and long-run effects), and dynamic conditional relationships.">
-<meta property="og:description" content="Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) (see De Boef and Keele 2008 &lt;doi:10.1111/j.1540-5907.2007.00307.x&gt;) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences in three forms: causal inferences from ADL models, traditional time series quantities of interest (short- and long-run effects), and dynamic conditional relationships.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Dynamic Inferences from Time Series (with Interactions)">
+<meta name="description" content="Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences. These tools apply to traditional time-series quantities of interest: especially instantaneous effects for any period and cumulative effects for any period (including the long-run effect). They also allow for a variety of shock histories to be applied to the independent variable (beyond just a one-time, one-unit increase) as well as the recovery of inferences in levels for shocks applies to (in)dependent variables in differences (what we call the Generalized Dynamic Response Function). These effects are also available for the general conditional dynamic model advocated by Warner, Vande Kamp, and Jordan (2026 &lt;doi:10.1017/psrm.2026.10087&gt;). We also provide the actual formulae for these effects.">
+<meta property="og:description" content="Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences. These tools apply to traditional time-series quantities of interest: especially instantaneous effects for any period and cumulative effects for any period (including the long-run effect). They also allow for a variety of shock histories to be applied to the independent variable (beyond just a one-time, one-unit increase) as well as the recovery of inferences in levels for shocks applies to (in)dependent variables in differences (what we call the Generalized Dynamic Response Function). These effects are also available for the general conditional dynamic model advocated by Warner, Vande Kamp, and Jordan (2026 &lt;doi:10.1017/psrm.2026.10087&gt;). We also provide the actual formulae for these effects.">
 <meta property="og:image" content="https://sorenjordan.github.io/tseffects/logo.png">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/tseffects-vignette.html">An Introduction to tseffects: Dynamic Inferences from Time Series (with Interactions)</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -53,12 +59,13 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="tseffects-dynamic-causal-inferences-from-time-series-with-interactions">tseffects: Dynamic (Causal) Inferences from Time Series (with Interactions)<a class="anchor" aria-label="anchor" href="#tseffects-dynamic-causal-inferences-from-time-series-with-interactions"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="tseffects-dynamic-inferences-from-time-series-with-interactions">tseffects: Dynamic Inferences from Time Series (with Interactions)<a class="anchor" aria-label="anchor" href="#tseffects-dynamic-inferences-from-time-series-with-interactions"></a>
 </h1>
 </div>
 <!-- badges: start -->
 
-<p>Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences in three forms: causal inferences from ADL models, traditional time series quantities of interest (short- and long-run effects), and dynamic conditional relationships.</p>
+<p>Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences. These tools apply to traditional time-series quantities of interest: especially instantaneous effects for any period and cumulative effects for any period (including the long-run effect). They also allow for a variety of shock histories to be applied to the independent variable (beyond just a one-time, one-unit increase) as well as the recovery of inferences in levels for shocks applies to (in)dependent variables in differences (what we call the Generalized Dynamic Response Function). These effects are also available for the general conditional dynamic model advocated by Warner, Vande Kamp, and Jordan (2026 <a href="doi:https://doi.org/10.1017/psrm.2026.10087" class="external-link uri">doi:https://doi.org/10.1017/psrm.2026.10087</a>). We also provide the actual formulae for these effects.</p>
+<p>Two ultra-simple examples are shown below: see the vignette and manual for many, many more!</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -67,25 +74,38 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sorenjordan.github.io/tseffects/">tseffects</a></span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="usage-causal-inferences">Usage: causal inferences<a class="anchor" aria-label="anchor" href="#usage-causal-inferences"></a>
+<h2 id="usage-effects-in-levels">Usage: effects in levels<a class="anchor" aria-label="anchor" href="#usage-effects-in-levels"></a>
 </h2>
-<p>Drawing causal inferences from ADL and GECM models is easy. From an ADL(1,1), just specify the independent and dependent variables, as well as the treatment history desired.</p>
-<pre><code># ADL(1,1)
-# Use the toy data to run an ADL. No argument is made this is well specified; it is just expository
-model &lt;- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
-test.pulse &lt;- GDTE.adl.plot(model = model,
-x.vrbl = c("x" = 0, "l_1_x" = 1),
-y.vrbl = c("l_1_y" = 1),
-d.x = 0,
-d.y = 0,
-te.type = "pulse",
-inferences.y = "levels",
-inferences.x = "levels",
-h.limit = 20,
-return.plot = TRUE,
-return.formulae = TRUE
-return.data = TRUE
-)</code></pre>
+<p>Drawing inferences from ADL and GECM models is easy. From an ADL(1,1), just specify the independent and dependent variables, as well as the treatment history desired.</p>
+<pre><code><span><span class="co"># ADL(1,1)</span></span>
+<span><span class="co"># Use the toy data to run an ADL. No argument is made this is well specified; it is just expository</span></span>
+<span><span class="va">model.toydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">l_1_x</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/GDRF.adl.plot.html">GDRF.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>,</span>
+<span>x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>d.x <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>d.y <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>shock.history <span class="op">=</span> <span class="st">"pulse"</span>,</span>
+<span>inferences.y <span class="op">=</span> <span class="st">"levels"</span>,</span>
+<span>inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
+<span>s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="usage-conditional-relationships">Usage: conditional relationships<a class="anchor" aria-label="anchor" href="#usage-conditional-relationships"></a>
+</h2>
+<p>If we want to interpret the same style of effects from an interactive model, we just specify the interaction and its terms.</p>
+<pre><code><span><span class="co"># ADL(1,1)</span></span>
+<span><span class="co"># Use the toy data to run an ADL. No argument is made this is well specified; it is just expository</span></span>
+<span><span class="va">model.toydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">l_1_x</span> <span class="op">+</span> <span class="va">z</span> <span class="op">+</span> <span class="va">l_1_z</span> <span class="op">+</span></span>
+<span><span class="va">x_z</span> <span class="op">+</span> <span class="va">l_1_x_z</span> <span class="op">+</span></span>
+<span><span class="va">x_l_1_z</span> <span class="op">+</span> <span class="va">l_1_x_l_1_z</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_z"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>z.vals <span class="op">=</span> <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span>,</span>
+<span>effect.type <span class="op">=</span> <span class="st">"impulse"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"z.lines"</span>,</span>
+<span>s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
 <!-- ## Citation
 
 To cite ```tseffects``` in publications and working papers, please use:
@@ -110,6 +130,7 @@ For BibTeX users:
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=tseffects" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/sorenjordan/tseffects/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/sorenjordan/tseffects/issues" class="external-link">Report a bug</a></li>
 </ul>
@@ -145,7 +166,7 @@ For BibTeX users:
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=tseffects" class="external-link"><img src="https://www.r-pkg.org/badges/version/tseffects?color=black" alt="Version"></a></li>
 <li><a href="https://cran.r-project.org/web/checks/check_results_tseffects.html" class="external-link"><img src="https://badges.cranchecks.info/summary/tseffects.svg" alt="CRAN checks"></a></li>
-<li><a href="https://codecov.io/github/sorenjordan/tseffects" class="external-link"><img src="https://codecov.io/github/sorenjordan/tseffects/graph/badge.svg?token=SD7T7UUCCP" alt="codecov"></a></li>
+<li><a href="https://app.codecov.io/github/sorenjordan/tseffects" class="external-link"><img src="https://codecov.io/github/sorenjordan/tseffects/graph/badge.svg?token=SD7T7UUCCP" alt="codecov"></a></li>
 <li><a href="https://cran.r-project.org/package=tseffects" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tseffects" alt="Downloads"></a></li>
 </ul>
 </div>
