@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tseffects-vignette.html">An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/tseffects-vignette.html">An Introduction to tseffects: Dynamic Inferences from Time Series (with Interactions)</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -38,48 +38,80 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
 
       <dl><dt>
 
-          <code><a href="GDTE.calculator.html">GDTE.calculator()</a></code>
+          <code><a href="GDRF.adl.plot.html">GDRF.adl.plot()</a></code>
 
         </dt>
-        <dd>Generate the General Dynamic Treatment Effect (GDTE) for an autoregressive distributed lag (ADL) model, given Pulse Treatment Effects (PTEs)</dd>
-      </dl><dl><dt>
+        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model</dd>
+
+        <dt>
+
+          <code><a href="GDRF.gecm.plot.html">GDRF.gecm.plot()</a></code>
+
+        </dt>
+        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDRF) for a Generalized Error Correction Model (GECM)</dd>
+
+        <dt>
+
+          <code><a href="GDTE.adl.plot.html">GDTE.adl.plot()</a></code>
+
+        </dt>
+        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDTE) for an autoregressive distributed lag (ADL) model</dd>
+
+        <dt>
+
+          <code><a href="GDTE.gecm.plot.html">GDTE.gecm.plot()</a></code>
+
+        </dt>
+        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDTE) for a Generalized Error Correction Model (GECM)</dd>
+
+        <dt>
 
           <code><a href="approval.html">approval</a></code>
 
         </dt>
         <dd>Data on US Presidential Approval</dd>
-      </dl><dl><dt>
 
-          <code><a href="pte.calculator.html">pte.calculator()</a></code>
+        <dt>
+
+          <code><a href="gecm.to.adl.html">gecm.to.adl()</a></code>
 
         </dt>
-        <dd>Generate the Pulse Treatment Effect (PTE) for a given autoregressive distributed lag (ADL) model</dd>
-      </dl><dl><dt>
+        <dd>Translate the coefficients from the General Error Correction Model (GECM) to the autoregressive distributed lag (ADL) model</dd>
+
+        <dt>
+
+          <code><a href="general.calculator.html">general.calculator()</a></code>
+
+        </dt>
+        <dd>Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock/treatment history</dd>
+
+        <dt>
+
+          <code><a href="interact.adl.plot.html">interact.adl.plot()</a></code>
+
+        </dt>
+        <dd>Plot the interaction in a single-equation time series model estimated via <code>lm</code>. It is imperative that you double-check you have referenced all x, y, z, and interaction terms through <code>x.vrbl</code>, <code>y.vrbl</code>, <code>z.vrbl</code>, and <code>x.z.vrbl</code>. You must also have their orders correctly entered. <code>interact.adl.plot</code> has no way of determining, from the variable list, which correspond with which</dd>
+
+        <dt>
+
+          <code><a href="pulse.calculator.html">pulse.calculator()</a></code>
+
+        </dt>
+        <dd>Generate pulse effect formulae for a given autoregressive distributed lag (ADL) model</dd>
+
+        <dt>
 
           <code><a href="toy.ts.interaction.data.html">toy.ts.interaction.data</a></code>
 
         </dt>
         <dd>Simulated interactive time series data</dd>
-      </dl><dl><dt>
-
-          <code><a href="ts.ci.adl.plot.html">ts.ci.adl.plot()</a></code>
-
-        </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDTE) for an autoregressive distributed lag (ADL) model</dd>
-      </dl><dl><dt>
-
-          <code><a href="ts.ci.gecm.plot.html">ts.ci.gecm.plot()</a></code>
-
-        </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDTE) for a Generalized Error Correction Model (GECM)</dd>
       </dl></div>
   </main></div>
 
@@ -89,7 +121,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

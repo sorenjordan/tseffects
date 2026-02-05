@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions) • tseffects</title>
+<title>An Introduction to tseffects: Dynamic Inferences from Time Series (with Interactions) • tseffects</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -15,7 +15,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="An Introduction to tseffects: Dynamic Inferences from Time Series (with Interactions)">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/tseffects-vignette.html">An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)</a></li>
+<li><a class="dropdown-item" href="../articles/tseffects-vignette.html">An Introduction to tseffects: Dynamic Inferences from Time Series (with Interactions)</a></li>
   </ul>
 </li>
       </ul>
@@ -59,11 +59,11 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>An Introduction to tseffects: Robust Dynamic (Causal) Inferences from Single-Equation Time Series Models (with Interactions)</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>An Introduction to tseffects: Dynamic Inferences from Time Series (with Interactions)</h1>
                         <h4 data-toc-skip class="author">Soren Jordan,
 Garrett N. Vande Kamp, and Reshi Rajan</h4>
             
-            <h4 data-toc-skip class="date">2025-07-31</h4>
+            <h4 data-toc-skip class="date">2026-02-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sorenjordan/tseffects/blob/main/vignettes/tseffects-vignette.Rmd" class="external-link"><code>vignettes/tseffects-vignette.Rmd</code></a></small>
       <div class="d-none name"><code>tseffects-vignette.Rmd</code></div>
@@ -76,38 +76,56 @@ reparameterized equivalent, the Generalized Error-Correction Model
 [GECM]) are the workhorse models in uncovering dynamic inferences. Since
 the introduction of the general-to-specific modeling strategy of Hendry
 <span class="citation">(1995)</span>, users have become accustomed to
-specifying a single-equation model with lags of the dependent variable
-included alongside the independent variables (in differences or levels,
-as appropriate) to capture dynamic inferences. Through all of the
-follolwing, we assume users are familiar with such models and their best
-practices, including testing for stationarity on both sides of the
+specifying a single-equation model with (possibly) lags of the dependent
+variable included alongside the independent variables (in differences or
+levels, as appropriate) to capture dynamic inferences. Through all of
+the follolwing, we assume users are familiar with such models and their
+best practices, including testing for stationarity on both sides of the
 equation <span class="citation">(Philips 2022)</span>, equation balance
 <span class="citation">(Pickup and Kellstedt 2023)</span>, the absence
-of serial autocorrelation in the residuals, or the testing for moving
-averages <span class="citation">(Vande Kamp and Jordan 2025)</span>.</p>
-<p>ADL models are simple to estimate; this is what makes them
-attractive. Once these models are estimated, what is less clear is how
-to uncover a rich set of dynamic <em>inferences</em> from these models.
-This complication arises in two key areas. First: despite robust work on
-possible quantities of interest that can be derived from dynamic models
-(see De Boef and Keele <span class="citation">(2008)</span>), the actual
-calculation of these quantities (and corresponding measures of
-uncertainty) remains a considerable difficulty for practitioners.
-Formulae are often complex and model-dependent (i.e. on the underlying
-lag structure of the model). While other, simulation-based methods exist
-to interpret A[R]DL models (as in Jordan and Philips <span class="citation">Jordan and Philips (2018a)</span>), these methods are
+of serial autocorrelation in the residuals, or testing for moving
+averages <span class="citation">(Vande Kamp and Jordan 2025)</span>. ADL
+models are simple to estimate; this is what makes them attractive. Once
+these models are estimated, what is less clear is how to uncover a rich
+set of dynamic <em>inferences</em> from these models. This complication
+arises in three key areas.</p>
+<p>First: despite robust work on possible quantities of interest that
+can be derived from dynamic models (see De Boef and Keele <span class="citation">(2008)</span>), the actual calculation of these
+quantities (and corresponding measures of uncertainty) remains a
+considerable difficulty for practitioners. Formulae are often complex
+and model-dependent (i.e. on the underlying lag structure of the model),
+especially when considering periods other than an instantaneous effect
+or a long-run multiplier. While other, simulation-based methods exist to
+interpret A[R]DL models (as in Jordan and Philips <span class="citation">Jordan and Philips (2018a)</span>), these methods are
 not well equipped to test hypotheses of interest.</p>
-<p>Second: these inferences are rarely causal. While some have developed
-frameworks for causal inference using alternative dynamic models <span class="citation">(Blackwell 2013)</span>, little work recognizes the
-potential of the A[R]DL model itself to provide causal inferences. Vande
-Kamp, Jordan, and Rajan <span class="citation">(2025)</span> begin to
-fill this gap by specifying the conditions under which the ADL model
-provides causal inferences, but these inferences too are difficult to
-calculate.</p>
-<p><code>tseffects</code> solves both problems. To show how, we first
-re-introduce the ADL and GECM models and define typical effects
-calcualted from these models. We then apply those effects to each of the
-unique problems outlined above.</p>
+<p>Second: methodological approaches to unbalanced equations or
+integrated series routinely involve differencing one or both sides of
+the ADL model to ensure stationarity. Yet researchers might wish to
+uncover inferences about their variables in levels, even if they are
+modeled in differences. Some work approaches this by generalizing shock
+histories to allow for inferences in levels or differences (Vande Kamp,
+Jordan, and Rajan <span class="citation">(2025)</span>), no
+implementation of this approach exists in software.</p>
+<p>Third: the problem grows much more complicated when considering
+conditional dynamic relationships. Though recent work advances a unified
+modeling strategy through a general framework, including cross-lags (see
+Warner, Vande Kamp, and Jordan <span class="citation">(2026)</span>), no
+similar general approach exists to visualize interactive effects. This
+problem is complicated by the observation that, in any dynamic
+interactive model, time itself is a moderator that must be accounted for
+(Vande Kamp, Jordan, and Rajan <span class="citation">(2022)</span>) in
+addition to the values of both variables in the interaction (well
+established since Brambor, Clark, and Golder <span class="citation">(<strong>BramborClarkGolder2006?</strong>)</span>).</p>
+<p><code>tseffects</code> solves these problems. Our point of departure
+is leveraging Box, Jenkins, and Reinsel <span class="citation">(1994)</span>. Rather than deriving period-specific and
+cumulative effects for every combination of independent variables, lags,
+and lags of the dependent variable (as in Wilkins <span class="citation">(2018)</span>, for instance), or simulating the
+unfolding effects over time (as in Jordan and Philips <span class="citation">(2018b)</span>), Box, Jenkins, and Reinsel provide
+simple formulae that focus on the unique period-specific contribution of
+a change in an independent variable. To show how, we first re-introduce
+the ADL and GECM models and define typical effects calculated from these
+models. We then apply those effects to each of the unique problems
+outlined above.</p>
 <div class="section level2">
 <h2 id="the-adlgecm-model">The ADL/GECM model<a class="anchor" aria-label="anchor" href="#the-adlgecm-model"></a>
 </h2>
@@ -123,133 +141,171 @@ model as follows</p>
 </annotation></semantics></math></p>
 <p>Notice in particular the form of the GECM with a single first lag of
 both the dependent and independent variable in levels. (The GECM
-calculations provided by <code>ts.ci.gecm.plot</code> assume this
+calculations provided by <code>GDRF.gecm.plot</code> assume this
 correctly specified GECM and use the variable translations between the
-GECM and ADL to define the coefficient in ADL terms.) We will use these
-models to define and recover both causal effects and traditional
-time-series effects from the underlying model.</p>
+GECM and ADL to define the coefficient in ADL terms. These translations
+are done by <code>gecm.to.adl</code>.) The model might contain other
+regressors, but, for unconditional dynamic models, these regressors are
+unimportant for understanding the dynamic effects of variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
+We will use these models to define and recover time-series quantities of
+interest from the underlying model.</p>
 </div>
 <div class="section level2">
-<h2 id="causal-inferences-with-ts-effects">Causal inferences with <code>ts.effects</code><a class="anchor" aria-label="anchor" href="#causal-inferences-with-ts-effects"></a>
+<h2 id="a-unified-approach-to-inferences-the-generalized-dynamic-response-function">A unified approach to inferences: the Generalized Dynamic Response
+Function<a class="anchor" aria-label="anchor" href="#a-unified-approach-to-inferences-the-generalized-dynamic-response-function"></a>
 </h2>
-<p>We define the causal estimand of the Pulse Treatment Effect (PTE),
-commonly referred to as an impulse response function (or perhaps a
-short-run effect) in the time series literature.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>T</mi><msub><mi>E</mi><mi>h</mi></msub><mo>=</mo><msub><mi>β</mi><mi>h</mi></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>h</mi></munderover><msub><mi>α</mi><mi>i</mi></msub><mi>P</mi><mi>T</mi><msub><mi>E</mi><mrow><mi>h</mi><mo>−</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">PTE_{h} = \beta_{h} + \sum_{i=1}^{h}\alpha_{i}PTE_{h-i}</annotation></semantics></math></p>
-<p>We additionally define the causal estimand of the Step Treatment
-Effect (STE), commonly referred to as a cumulative impulse response
-function in the time series literature.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>T</mi><msub><mi>E</mi><mi>h</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mi>h</mi></munderover><mi>P</mi><mi>T</mi><msub><mi>E</mi><mi>k</mi></msub><mo>=</mo><mi>P</mi><mi>T</mi><msub><mi>E</mi><mi>h</mi></msub><mo>+</mo><mi>S</mi><mi>T</mi><msub><mi>E</mi><mrow><mi>h</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">STE_{h} = \sum_{k=0}^{h}PTE_{k} = PTE_{h} + STE_{h-1}</annotation></semantics></math></p>
+<p>The ADL model is well established, and traditoinal quantities of
+interest are well known. Box, Jenkins, and Reinsel <span class="citation">(1994)</span> define quantities of interest that result
+from various shock histories applied to an independent variable. The
+first is the impulse response function (IRF) (or perhaps a short-run
+effect).</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mi>R</mi><msub><mi>F</mi><mi>s</mi></msub><mo>=</mo><msub><mi>β</mi><mi>s</mi></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></munderover><msub><mi>α</mi><mi>i</mi></msub><mi>I</mi><mi>R</mi><msub><mi>F</mi><mrow><mi>s</mi><mo>−</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">IRF_{s} = \beta_{s} + \sum_{i=1}^{s}\alpha_{i}IRF_{s-i}</annotation></semantics></math></p>
+<p>We additionally define the step response function (SRF), also
+referred to as a cumulative impulse response function in the time series
+literature.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>R</mi><msub><mi>F</mi><mi>s</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mi>s</mi></munderover><mi>I</mi><mi>R</mi><msub><mi>F</mi><mi>k</mi></msub><mo>=</mo><mi>I</mi><mi>R</mi><msub><mi>F</mi><mi>s</mi></msub><mo>+</mo><mi>S</mi><mi>R</mi><msub><mi>F</mi><mrow><mi>s</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">SRF_{s} = \sum_{k=0}^{s}IRF_{k} = IRF_{s} + SRF_{s-1}</annotation></semantics></math></p>
 <p>These quantities are often estimated from an ADL including a
 dependent variable in levels or differences, an independent variable in
 levels or differences, or a mix of both. Yet scholars might want to make
-causal inferences regarding the dependent variable in levels
+inferences regarding the dependent variable in levels
 <em>regardless</em> of its order of differencing in the ADL model. Or,
-scholars might want to uncover the effects of a treatment applied to an
-independent variable in levels, even if that independent variable is
+scholars might want to uncover the effects of a shock history applied to
+an independent variable in levels, even if that independent variable is
 entered into the ADL in differences. Regular ADL formulae cannot deliver
 on this expectation. To resolve this deficiency, Vande Kamp, Jordan, and
 Rajan <span class="citation">(2025)</span> introduce the General Dynamic
-Treatment Effect</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mi>D</mi><mi>T</mi><msub><mi>E</mi><mrow><mi>h</mi><mo>,</mo><mi>n</mi><mo>,</mo><mi>d</mi><mi>.</mi><mi>y</mi><mo>,</mo><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msub><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>y</mi></mrow></msup><msub><mi>Y</mi><mrow><mi>t</mi><mo>+</mo><mi>h</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>X</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>=</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>x</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>+</mo><msub><mi>c</mi><mrow><mn>0</mn><mo>:</mo><mi>h</mi><mo>,</mo><mi>n</mi></mrow></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>y</mi></mrow></msup><msub><mi>Y</mi><mrow><mi>t</mi><mo>+</mo><mi>h</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>X</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>h</mi></mrow></msub><mo>=</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>x</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>h</mi></mrow></msub><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">GDTE_{h,n,d.y,d.x} = E[\Delta^{d.y}Y_{t+h}|\Delta^{d.x}X_{t:t+h} = \Delta^{d.x}x_{t:t+h} + c_{0:h,n}] - E[\Delta^{d.y}Y_{t+h}|\Delta^{d.x}X_{t:t+h}= \Delta^{d.x}x_{t:t+h}]</annotation></semantics></math>
+Response Function (GDRF)</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">GDRF</mtext><mrow><mi>s</mi><mo>,</mo><mi>h</mi><mo>,</mo><mi>d</mi><mi>.</mi><mi>y</mi><mo>,</mo><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msub><mo>≡</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>y</mi></mrow></msup><msub><mi>Y</mi><mrow><mi>t</mi><mo>+</mo><mi>s</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>X</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>s</mi></mrow></msub><mo>=</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>x</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>s</mi></mrow></msub><mo>+</mo><msub><mi>c</mi><mrow><mn>0</mn><mo>:</mo><mi>s</mi><mo>,</mo><mi>h</mi></mrow></msub><mo>,</mo><mi>𝐙</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>y</mi></mrow></msup><msub><mi>Y</mi><mrow><mi>t</mi><mo>+</mo><mi>s</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>X</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>s</mi></mrow></msub><mo>=</mo><msup><mi>Δ</mi><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow></msup><msub><mi>x</mi><mrow><mi>t</mi><mo>:</mo><mi>t</mi><mo>+</mo><mi>s</mi></mrow></msub><mo>,</mo><mi>𝐙</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\text{GDRF}_{s,h,d.y,d.x} \equiv E[\Delta^{d.y}Y_{t+s}|\Delta^{d.x}X_{t:t+s}=\Delta^{d.x}x_{t:t+s}+c_{0:s,h},\bm{Z}] -E[\Delta^{d.y}Y_{t+s}|\Delta^{d.x}X_{t:t+s}=\Delta^{d.x}x_{t:t+s}, \bm{Z}]</annotation></semantics></math>
 with the following elements:</p>
 <ul>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>.</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">d.y</annotation></semantics></math>:
 the number of times the independent variable is differenced
-<em>before</em> determining the effect of the treatment on the dependent
+<em>before</em> determining the effect of the shock on the dependent
 variable</li>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>.</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">d.x</annotation></semantics></math>:
 the number of times the independent variable is differenced
-<em>before</em> a treatment is applied to it</li>
+<em>before</em> a shock is applied to it</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>:
-the number of time periods since a treatment was applied</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>:
+the number of time periods since a shock was applied</li>
 </ul>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>
 deserves special explanation. <span class="citation">(Vande Kamp,
 Jordan, and Rajan 2025)</span> demonstrate how the binomial function can
-be used to represent traditional and beyond-traditional treatment
-histories typically examined in time series</p>
+be used to represent traditional and beyond-traditional shock histories
+typically examined in time series</p>
 <ul>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n = 1</annotation></semantics></math>:
-Treatment sequence
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h = 1</annotation></semantics></math>:
+Shock sequence
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mi>…</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(1,2,3,4,\dots)</annotation></semantics></math>;
 Linear Trend Coefficient of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
 </li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">n = 0</annotation></semantics></math>:
-Treatment sequence
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h = 0</annotation></semantics></math>:
+Shock sequence
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(1,1,1,1,\dots)</annotation></semantics></math>;
 Permanent One-Unit Increase (Step)</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n = -1</annotation></semantics></math>:
-Treatment sequence
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h = -1</annotation></semantics></math>:
+Shock sequence
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(1,0,0,0,\dots)</annotation></semantics></math>
 One-Time, One-Unit Increase (Pulse)</li>
 </ul>
-<p>The leverage of the GDTE is that it “translates” these popular
-treatment histories to recover inferences in the desired form of the
-independent and dependent variables, regardless of their level of
-differencing, given the specified treatment history. All scholars need
-to do is estimate the ADL model and choose a treatment.</p>
-<div class="section level3">
-<h3 id="two-subfunctions-pte-calculator-and-gdte-calculator">Two subfunctions: <code>pte.calculator</code> and
-<code>GDTE.calculator</code><a class="anchor" aria-label="anchor" href="#two-subfunctions-pte-calculator-and-gdte-calculator"></a>
-</h3>
-<p>While its unlikely that users will want to interact with these “under
-the hood” functions, they might be useful either for teaching or for
-developing a better understanding of the GDTE. Despite their names,
-neither function actually does any “calculation”; rather, they return an
+<p>The second virtue of the binomial coefficient is that it translates
+between variables in levels and in differences. <span class="citation">(Vande Kamp, Jordan, and Rajan 2025)</span> prove that
+an arbitrary shock history for a variable in levels is equivalent to
+another counterfactual shock history to that same variable after
+differencing, simply adjusting the parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>:</p>
+<p>$$<em>{s,h, d.y, 0} &amp; E[<sup>{d.y}Y_{t+s}(</sup>{d.x}(x_{1:t-1}),
+^{d.x}(x_{t:T} + c_{0:T-t, h})) -
+<sup>{d.y}Y_{t+s}(</sup>{d.x}(x_{1:T}))] = </em>{s,h-d.x, d.y, d.x}\</p>
+<p>So the GDRF “translates” these popular shock histories to recover
+inferences in the desired form of the independent and dependent
+variables, regardless of their modeled level of differencing, given the
+specified shock history. All scholars need to do is estimate the ADL
+model and choose a shock. The virtue of <code>tseffects</code> is that
+it automatically does this translation for you.</p>
+<p>Computationally, the benefit of <code>tseffects</code> is that it
+applies these formulae symbolically. Rather than performing many
+recursive calculations as effects extend into future time periods, a
+symbolic representation of those formulae are built (using
+<code>mpoly</code>: <span class="citation">(Kahle 2013)</span>) that
+only need to be evaluated once. We can also peek “under the hood” at
+these formulae, perhaps as a teaching aid, to observe the GDRF in
+different periods, based on the model specified.</p>
+</div>
+<div class="section level2">
+<h2 id="two-subfunctions-pulse-calculator-and-general-calculator">Two subfunctions: <code>pulse.calculator</code> and
+<code>general.calculator</code><a class="anchor" aria-label="anchor" href="#two-subfunctions-pulse-calculator-and-general-calculator"></a>
+</h2>
+<p>While its unlikely that users will want to interact with these
+functions, they might be useful either for teaching or for developing a
+better understanding of the GDRF. Despite their names, neither function
+actually does any “calculation”; rather, they return an
 <code>mpoly</code> class of the formula that would be evaluated.</p>
-<p>The first is <code>pte.calculator</code>. Like its name implies, this
-calculates the traditional PTE for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h = 0</annotation></semantics></math>
-up to $h = $ some <code>limit</code>. It returns a list of formulae,
-each one the PTE for the relevant period. (Time series scholars might
-refer to these as the period-specific effects.) It constructs these
-formulae given a named vector of the relevant
+<p>The first is <code>pulse.calculator</code>. Like its name implies,
+this calculates the traditional pulse effect for time period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s = 0</annotation></semantics></math>
+up to $s = $ some <code>limit</code>. It returns a list of formulae,
+each one the pulse effect for the relevant period. (Time series scholars
+might refer to these as the period-specific effects.) It constructs
+these formulae given a named vector of the relevant
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 variables (passed to <code>x.vrbl</code>) and their corresponding lag
 orders, as well as the same for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
-(passed to <code>y.vrbl</code>). For instance, if you estimate an
-ADL(1,2), where the
+(passed to <code>y.vrbl</code>), if given. Though most ADLs include a
+lagged dependent variable to allow for flexible dynamics, it is entirely
+possibly that a finite dynamic model is more appropriate: in this case,
+<code>y.vrbl</code> would be <code>NULL</code>.</p>
+<p>Imagine a simple finite dynamic model, where the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 variables are <code>mood</code>, <code>l1.mood</code>, and
 <code>l2.mood</code> (lags need not be consecutive, though in a
-well-specified ADL they likely are) and the dependent variable is
-<code>policy</code> (with its first lag <code>l1.policy</code>),
-<code>pte.calculator</code> would look like</p>
+well-specified ADL they likely are). <code>pulse.calculator</code> would
+look like</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sorenjordan.github.io/tseffects/">tseffects</a></span><span class="op">)</span></span>
-<span><span class="va">ADL1.2.ptes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pte.calculator.html">pte.calculator</a></span><span class="op">(</span>x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mood"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l1_mood"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"l2_mood"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
+<span><span class="va">ADL.finite</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pulse.calculator.html">pulse.calculator</a></span><span class="op">(</span>x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mood"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l1_mood"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"l2_mood"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
+<span>               y.vrbl <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>               limit <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<p>This list is six elements long: including the pulses for each period
+from 0 to 5. These will naturally be more complex if there are more
+sophisticated dynamics through a lagged dependent variable. For
+instance, if you estimate an ADL(1,2), where the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+variables are <code>mood</code>, <code>l1.mood</code>, and
+<code>l2.mood</code> and the dependent variable is <code>policy</code>
+(with its first lag <code>l1.policy</code>).</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ADL1.2.pulses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pulse.calculator.html">pulse.calculator</a></span><span class="op">(</span>x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mood"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l1_mood"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"l2_mood"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
 <span>               y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l1_policy"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>               limit <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p>This list is six elements long: including the PTE for each period
-from 0 to 5. These PTEs form the basis of the GDTE, given the order of
+<p>These pulses form the basis of the GDRF, given the order of
 differencing of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
-and the specified treatment history
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
-To create the formulae for the GDTE, <code>GDTE.calculator</code>
+and the specified shock history
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>.
+To create the formulae for the GDRF, <code>general.calculator</code>
 requires five arguments, most of which are defined above:
 <code>d.x</code> and <code>d.y</code> (defined with respect to the
-GDTE), <code>n</code> (the treatment history applied),
-<code>limit</code>, and <code>pte</code>. The novel argument,
-<code>pte</code>, is the list of PTEs for each period in which a GDTE is
-desired.</p>
+GDRF), <code>h</code> (the shock history applied), <code>limit</code>,
+and <code>pulses</code>. The novel argument, <code>pulses</code>, is the
+list of pulses for each period in which a GDRF is desired.</p>
 <p>Assume the same ADL(1,2) from above. To recover the formulae for a
-GDTE of a pulse treatment, assuming that both <code>mood</code> and
+GDRF of a pulse shock, assuming that both <code>mood</code> and
 <code>policy</code> are in levels (such that both <code>d.x</code> and
 <code>d.y</code> are 0), we would run</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/GDTE.calculator.html">GDTE.calculator</a></span><span class="op">(</span>d.x <span class="op">=</span> <span class="fl">0</span>, d.y <span class="op">=</span> <span class="fl">0</span>, n <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">5</span>, pte <span class="op">=</span> <span class="va">ADL1.2.ptes</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/general.calculator.html">general.calculator</a></span><span class="op">(</span>d.x <span class="op">=</span> <span class="fl">0</span>, d.y <span class="op">=</span> <span class="fl">0</span>, h <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">5</span>, pulses <span class="op">=</span> <span class="va">ADL1.2.pulses</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $formulae</span></span>
 <span><span class="co">#&gt; $formulae[[1]]</span></span>
 <span><span class="co">#&gt; [1] "mood "</span></span>
@@ -288,28 +344,30 @@ GDTE of a pulse treatment, assuming that both <code>mood</code> and
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $binomials[[6]]</span></span>
 <span><span class="co">#&gt; [1] 1 0 0 0 0 0</span></span></code></pre></div>
-<p>(Since <code>GDTE.calculator</code> is “under the hood,”
-<code>n</code> can only be specified as an integer. Later, in a more
-user-friendly function, we will see that treatment histories can also be
+<p>(Since <code>general.calculator</code> is “under the hood,”
+<code>h</code> can only be specified as an integer. Later, in a more
+user-friendly function, we will see that shock histories can also be
 specified using characters.)</p>
 <p>Recall that we might want to generalize our inferences beyond simple
 ADLs with both variables in levels. For exposition, assume that
 <code>mood</code> was integrated, so, to balance the ADL, it needed to
 be entered in differences. The user does this and enters
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
-variables as <code>d.mood</code>, <code>l1.d.mood</code>, and
-<code>l2.d.mood</code>. <code>pte.calculator</code> would look like</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ADL1.2.d.ptes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pte.calculator.html">pte.calculator</a></span><span class="op">(</span>x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d_mood"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l1_d_mood"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"l2_d_mood"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
+variables as <code>d_mood</code>, <code>l1_d_mood</code>, and
+<code>l2_d_mood</code>. <code>pulse.calculator</code> would look
+like</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ADL1.2.d.pulses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pulse.calculator.html">pulse.calculator</a></span><span class="op">(</span>x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d_mood"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l1_d_mood"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"l2_d_mood"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
 <span>               y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l1_policy"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>               limit <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p><code>tseffects</code> allows the user to recover inferences of a
-treatment history applied to
+<p>These pulses look identical to the ones from
+<code>ADL1.2.pulses</code>. But <code>tseffects</code> allows the user
+to recover inferences of a shock history applied to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 in levels, rather than its observed form of differences. All we need to
 do is specify the <code>d.x</code> order.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/GDTE.calculator.html">GDTE.calculator</a></span><span class="op">(</span>d.x <span class="op">=</span> <span class="fl">1</span>, d.y <span class="op">=</span> <span class="fl">0</span>, n <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">5</span>, pte <span class="op">=</span> <span class="va">ADL1.2.d.ptes</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/general.calculator.html">general.calculator</a></span><span class="op">(</span>d.x <span class="op">=</span> <span class="fl">1</span>, d.y <span class="op">=</span> <span class="fl">0</span>, h <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">5</span>, pulses <span class="op">=</span> <span class="va">ADL1.2.d.pulses</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $formulae</span></span>
 <span><span class="co">#&gt; $formulae[[1]]</span></span>
 <span><span class="co">#&gt; [1] "d_mood "</span></span>
@@ -349,15 +407,15 @@ do is specify the <code>d.x</code> order.</p>
 <span><span class="co">#&gt; $binomials[[6]]</span></span>
 <span><span class="co">#&gt; [1]  1 -1  0  0  0  0</span></span></code></pre></div>
 <p>As <span class="citation">(Vande Kamp, Jordan, and Rajan 2025)</span>
-suggest, scholars should be very thoughtful about the treatment history
-applied. These treatments are applied to the underlying independent
-variable <em>in levels</em>. Since
+suggest, scholars should be very thoughtful about the shock history
+applied. These shocks are applied to the underlying independent variable
+<em>in levels</em>. Since
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 is integrated in this example, it might be more reasonable to imagine
 that the underlying levels variable is actually trending. To revise this
-expectation and apply a new treatment history, we would run</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/GDTE.calculator.html">GDTE.calculator</a></span><span class="op">(</span>d.x <span class="op">=</span> <span class="fl">1</span>, d.y <span class="op">=</span> <span class="fl">0</span>, n <span class="op">=</span> <span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">5</span>, pte <span class="op">=</span> <span class="va">ADL1.2.d.ptes</span><span class="op">)</span></span>
+expectation and apply a new shock history, we would run</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/general.calculator.html">general.calculator</a></span><span class="op">(</span>d.x <span class="op">=</span> <span class="fl">1</span>, d.y <span class="op">=</span> <span class="fl">0</span>, h <span class="op">=</span> <span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">5</span>, pulses <span class="op">=</span> <span class="va">ADL1.2.d.pulses</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $formulae</span></span>
 <span><span class="co">#&gt; $formulae[[1]]</span></span>
 <span><span class="co">#&gt; [1] "d_mood "</span></span>
@@ -396,20 +454,20 @@ expectation and apply a new treatment history, we would run</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $binomials[[6]]</span></span>
 <span><span class="co">#&gt; [1] 1 1 1 1 1 1</span></span></code></pre></div>
-<p>(Notice that the PTEs do not change.) Recall that these are “under
+<p>(Notice that the pulses do not change.) Recall that these are “under
 the hood”: we expect instead that most users will interact with the full
 calculation and plotting functions, discussed below.</p>
 </div>
-<div class="section level3">
-<h3 id="user-friendly-causal-effects-ts-ci-adl-plot-and-ts-ci-gecm-plot">User-friendly causal effects: <code>ts.ci.adl.plot</code> and
-<code>ts.ci.gecm.plot</code><a class="anchor" aria-label="anchor" href="#user-friendly-causal-effects-ts-ci-adl-plot-and-ts-ci-gecm-plot"></a>
-</h3>
-<p>Again, we don’t expect most users will not interact with these
-calculators. Instead, they will estimate an ADL model via
-<code>lm</code> and expect causal effects. To achieve this directly, we
-introduce <code>ts.ci.adl.plot</code>. We gloss over arguments that
-we’ve already seen in <code>pte.calculator</code> and
-<code>GDTE.calculator</code>:</p>
+<div class="section level2">
+<h2 id="user-friendly-effects-gdrf-adl-plot-and-gdrf-gecm-plot">User-friendly effects: <code>GDRF.adl.plot</code> and
+<code>GDRF.gecm.plot</code><a class="anchor" aria-label="anchor" href="#user-friendly-effects-gdrf-adl-plot-and-gdrf-gecm-plot"></a>
+</h2>
+<p>Again, we expect most users will not interact with these calculators.
+Instead, they will estimate an ADL model via <code>lm</code> and expect
+easy-to-use effects. To achieve this directly, we introduce
+<code>GDRF.adl.plot</code>. We gloss over arguments that we’ve already
+seen in <code>pulse.calculator</code> and
+<code>general.calculator</code>:</p>
 <ul>
 <li>
 <code>x.vrbl</code>: a named vector of the
@@ -418,29 +476,38 @@ variable and its lag orders</li>
 <li>
 <code>y.vrbl</code>: a named vector of the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
-variable and its lag orders</li>
+variable and its lag orders (if a lagged dependent variable is in the
+model)</li>
 <li>
 <code>d.x</code>: the order of differencing of the independent
-variable before a treatment is applied</li>
+variable before a shock is applied</li>
 <li>
 <code>d.y</code>: the order of differencing of the dependent
-variable before causal effects are recovered</li>
+variable before effects are recovered</li>
 <li>
-<code>h.limit</code>: the number of periods for which to calculate
-the treatment effects (the default is 20)</li>
+<code>s.limit</code>: the number of periods for which to calculate
+the effects of the shock (the default is 20)</li>
 </ul>
-<p>Now, since effects will be calcualted, users must also provide a
+<p>Now, since effects will be calculated, users must also provide a
 <code>model</code>: the <code>lm</code> object containing the
-(well-specified, etc. ADL model) that has the estimates. Users must also
-specify a treatment history through <code>te.type</code>. Users can
-continue to specify an integer that represents <code>n</code> or can use
-the phrases <code>pte</code> or <code>pulse</code> (for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n = -1</annotation></semantics></math>)
-and <code>ste</code> or <code>step</code> (for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">n = 0</annotation></semantics></math>).
-To generalize the challenge of variables entered in differences, users
-can specify <code>inferences.y</code> and <code>inferences.x</code>. If
-both
+(well-specified, balanced, free of serial autocorrelation, etc. ADL
+model) that has the estimates. Users must also specify a shock history
+through <code>shock.history</code>. Users can continue to specify an
+integer that represents <code>n</code> (from above) or can use the
+phrases <code>pulse</code> (for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h = -1</annotation></semantics></math>)
+and <code>step</code> (for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h = 0</annotation></semantics></math>).</p>
+<p>Users have already indicated the order of differencing of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+(through <code>d.x</code> and <code>d.y</code>): now
+<code>general.calculator</code> can leverage this information and the
+supplied <code>shock.history</code> to deliver inferences about
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+in either levels or differences through <code>inferences.y</code> and
+<code>inferences.x</code>. If both
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
@@ -452,17 +519,17 @@ either
 or
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 (or both) are entered in differences, users can recover causal effects
-from a treatment history applied to
+from a shock history applied to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 in levels, or to a dependent variable realized in levels. However,
-<em>they don’t have to</em>. The treatment can still be applied to
+<em>they don’t have to</em>. The shock can still be applied to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
-in differences, or the causal effects can be realized on
+in differences, or the effects can be realized on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 in differences: just change <code>inferences.x</code> to
 <code>differences</code> (for the former) or <code>inferences.y</code>
 to <code>differences</code> (for the latter).</p>
-<p>A few options allows users to tailor levels and types of uncertainty
+<p>A few options allow users to tailor levels and types of uncertainty
 desired. The first is the type of standard errors calculated from the
 model: users can specify any type of standard error accepted by
 <code>vcovHC</code> in the <code>sandwich</code> package: this is done
@@ -485,101 +552,106 @@ perhaps users want to see the particular formula for the effect in some
 particular period
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>.
 If <code>return.formulae = TRUE</code>, these are returned as a list,
-along with the binomial series that represents the treatment history
+along with the binomial series that represents the shock history
 (default is <code>FALSE</code>)</li>
 </ul>
 <p>We’ll use the toy time series data included with the package to
 illustrate the function. These data are purely expository, as is the
 model. We do not advocate for this model.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fit an ADL(1, 1)</span></span>
 <span><span class="va">model.adl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">l_1_x</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">test.pulse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ts.ci.adl.plot.html">ts.ci.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl</span>,</span>
+<span><span class="va">test.pulse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GDRF.adl.plot.html">GDRF.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl</span>,</span>
 <span>                                   x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                                   y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                                   d.x <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>                                   d.y <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                                   te.type <span class="op">=</span> <span class="st">"pulse"</span>, </span>
+<span>                                   shock.history <span class="op">=</span> <span class="st">"pulse"</span>, </span>
 <span>                                   inferences.y <span class="op">=</span> <span class="st">"levels"</span>, </span>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
-<span>                                   h.limit <span class="op">=</span> <span class="fl">20</span>, </span>
+<span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                   return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  </span></code></pre></div>
-<p>This recovers the pulse treatment effect. We can also observe the
-formulae and associated binomials in <code>test.pulse$formulae</code>
-and <code>test.pulse$binomials</code>. <code>test.pulse$plot</code>
-contains the plot: the effect of applying a pulse treatment to
+<p>This recovers the pulse effect. We can also observe the formulae and
+associated binomials in <code>test.pulse$formulae</code> and
+<code>test.pulse$binomials</code>. <code>test.pulse$plot</code> contains
+the plot: the effect of applying a pulse shock to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
-If we wanted the STE, we would change <code>te.type</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test.pulse2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ts.ci.adl.plot.html">ts.ci.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl</span>,</span>
+If we wanted the step effect, we would change
+<code>shock.history</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">test.pulse2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GDRF.adl.plot.html">GDRF.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl</span>,</span>
 <span>                                   x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                                   y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                                   d.x <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>                                   d.y <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                                   te.type <span class="op">=</span> <span class="st">"ste"</span>, </span>
+<span>                                   shock.history <span class="op">=</span> <span class="st">"step"</span>, </span>
 <span>                                   inferences.y <span class="op">=</span> <span class="st">"levels"</span>, </span>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
-<span>                                   h.limit <span class="op">=</span> <span class="fl">20</span>, </span>
+<span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                   return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  </span></code></pre></div>
-<p>Equivalently, we could specify <code>te.type</code> =
-<code>step</code> or <code>0</code> (since this is the value of
+<p>Equivalently, we could specify <code>shock.history</code> =
+<code>0</code> (since this is the value of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
-that represents a step treatment history).</p>
+that represents a step shock history).</p>
 <p>Imagine that the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 variable was actually integrated, so, for balance, it was entered into
 the model in differences.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fit an ADL(1, 1)</span></span>
 <span><span class="va">model.adl.diffs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">d_x</span> <span class="op">+</span> <span class="va">l_1_d_x</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span></code></pre></div>
-<p>To observe the causal effects of a pulse treatment history applied to
+<p>To observe the causal effects of a pulse shock history applied to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math><em>in levels</em>, we would run</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ts.ci.adl.plot.html">ts.ci.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl.diffs</span>,</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/GDRF.adl.plot.html">GDRF.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl.diffs</span>,</span>
 <span>                                   x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d_x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_d_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                                   y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                                   d.x <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>                                   d.y <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                                   te.type <span class="op">=</span> <span class="st">"pte"</span>, </span>
+<span>                                   shock.history <span class="op">=</span> <span class="st">"pulse"</span>, </span>
 <span>                                   inferences.y <span class="op">=</span> <span class="st">"levels"</span>, </span>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
-<span>                                   h.limit <span class="op">=</span> <span class="fl">20</span>, </span>
+<span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="700"></p>
 <p>(Notice the change in <code>d.x</code> and the <code>x.vrbl</code>).
-Suppose, though, that we wanted to apply this pulse treatment to
+Suppose, though, that we wanted to apply this pulse to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math><em>in differences</em>. We just change the form of
 <code>inferences.x</code>, leaving all other arguments the same.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ts.ci.adl.plot.html">ts.ci.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl.diffs</span>,</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/GDRF.adl.plot.html">GDRF.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.adl.diffs</span>,</span>
 <span>                                   x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d_x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_d_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                                   y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                                   d.x <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>                                   d.y <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                                   te.type <span class="op">=</span> <span class="st">"pte"</span>, </span>
+<span>                                   shock.history <span class="op">=</span> <span class="st">"pulse"</span>, </span>
 <span>                                   inferences.y <span class="op">=</span> <span class="st">"levels"</span>, </span>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"differences"</span>,</span>
-<span>                                   h.limit <span class="op">=</span> <span class="fl">20</span>, </span>
+<span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p>The same changes could be made to <code>inferences.y</code> (if it
-were modeled in differences). Generally speaking: <code>d.x</code>
-should be entered as the form of the independent variable, even if the
-user desires treatment effects recovered in the differenced form (this
-should be handled by <code>inferences.x</code>). The same is true of
-<code>d.y</code>.</p>
-<p><code>ts.ci.gecm.plot</code> is extremely similar. Imagine the
-following specified GECM model</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="700"></p>
+<p>The same changes could be made to <code>inferences.y</code> (if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+were modeled in differences). <code>d.x</code> should be entered as the
+form of the independent variable, even if the user desires the effects
+of a shock recovered in the differenced form (this should be handled by
+<code>inferences.x</code>). The same is true of <code>d.y</code>.</p>
+<p><code>GDRF.gecm.plot</code> is extremely similar. Imagine the
+following specified GECM model (with a first lag only of each
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+in levels)</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fit a GECM(1, 1)</span></span>
 <span><span class="va">model.gecm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">d_y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">l_1_d_y</span> <span class="op">+</span> <span class="va">l_1_x</span> <span class="op">+</span> <span class="va">d_x</span> <span class="op">+</span> <span class="va">l_1_d_x</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span></code></pre></div>
 <p>Since both the
@@ -587,7 +659,7 @@ following specified GECM model</p>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 variables appear in levels and differences, we need to differentiate
-them. <code>ts.ci.gecm.plot</code> does this by separating them into two
+them. <code>GDRF.gecm.plot</code> does this by separating them into two
 forms</p>
 <ul>
 <li>
@@ -627,12 +699,12 @@ d = 1) in the GECM model</li>
 <code>y.d.vrbl</code> (as well as <code>x.vrbl</code> and
 <code>x.d.vrbl</code>) must be separated by only one order. From here,
 all of the other arguments are the same. (Unlike in
-<code>ts.ci.gecm.plot</code>, <code>inferences.x</code> and
+<code>GDRF.gecm.plot</code>, <code>inferences.x</code> and
 <code>inferences.y</code> must be in levels, given the dual nature of
 the variables in the model.) For <code>model.gecm</code>, the syntax
 would be</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gecm.pulse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ts.ci.gecm.plot.html">ts.ci.gecm.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.gecm</span>,</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gecm.pulse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GDRF.gecm.plot.html">GDRF.gecm.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.gecm</span>,</span>
 <span>                                   x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                                   y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                                   x.vrbl.d.x <span class="op">=</span> <span class="fl">0</span>, </span>
@@ -641,19 +713,221 @@ would be</p>
 <span>                                   y.d.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_d_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                                   x.d.vrbl.d.x <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                                   y.d.vrbl.d.y <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                                   te.type <span class="op">=</span> <span class="st">"pulse"</span>, </span>
+<span>                                   shock.history <span class="op">=</span> <span class="st">"pulse"</span>, </span>
 <span>                                   inferences.y <span class="op">=</span> <span class="st">"levels"</span>, </span>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
-<span>                                   h.limit <span class="op">=</span> <span class="fl">20</span>, </span>
+<span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                   return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Examining the formulae show that the conversion from GECM
 coefficients to ADL coefficients is automatic. As before, if we wanted a
-different treatment history, we would just adjust <code>te.type</code>
-to apply a different treatment history to
+different shock history, we would just adjust <code>shock.history</code>
+to apply a different shock history to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 in levels.</p>
 </div>
+<div class="section level2">
+<h2 id="user-friendly-conditional-effects-interact-adl-plot">User-friendly conditional effects:
+<code>interact.adl.plot</code><a class="anchor" aria-label="anchor" href="#user-friendly-conditional-effects-interact-adl-plot"></a>
+</h2>
+<p><span class="citation">(Warner, Vande Kamp, and Jordan 2026)</span>
+advocate for a general model that allows for conditional dynamic
+relationships to unfold unrestricted over time. They demonstrate the
+superiority of this approach to a restricted model. It requires the
+estimation of a contmeporaneous interaction, cross-period interactions
+(i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">x_{t-1}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>t</mi></msub><annotation encoding="application/x-tex">z_t</annotation></semantics></math>
+and vice versa), and lagged interactions
+(i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">x_{t-1}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">z_{t-1}</annotation></semantics></math>).</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>t</mi></msub><mo>=</mo><msub><mi>α</mi><mn>0</mn></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>f</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></munderover><msub><mi>α</mi><mi>f</mi></msub><msub><mi>y</mi><mrow><mi>t</mi><mo>−</mo><mi>f</mi></mrow></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>g</mi><mo>=</mo><mn>0</mn></mrow><mi>q</mi></munderover><msub><mi>β</mi><mi>g</mi></msub><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>g</mi></mrow></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow><mi>q</mi></munderover><msub><mi>θ</mi><mi>h</mi></msub><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mi>h</mi></mrow></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>g</mi><mo>=</mo><mn>0</mn></mrow><mi>q</mi></munderover><munderover><mo>∑</mo><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow><mi>q</mi></munderover><msub><mi>ζ</mi><mrow><mi>g</mi><mo>,</mo><mi>h</mi></mrow></msub><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>g</mi></mrow></msub><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mi>h</mi></mrow></msub><mo>+</mo><msub><mi>ϵ</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">y_t = \alpha_0 + \sum_{f=1}^p\alpha_{f}y_{t-f} + \sum_{g=0}^q \beta_{g}x_{t-g} + \sum_{h=0}^q \theta_{h}z_{t-h} +  \sum_{g=0}^q\sum_{h=0}^q \zeta_{g, h}x_{t-g}z_{t-h}  + \epsilon_t </annotation></semantics></math></p>
+<p>They provide formulae for calculating effects, but no implementation
+of these formulae in software. Moreover, they do not explicitly
+recognize the conditional role of time itself
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>,
+in our parlance) in moderating calculated interactive effects (see
+Jordan, Vande Kamp, and Rajan <span class="citation">(2022)</span> and
+Brambor, Clark, and Golder <span class="citation">(<strong>BramborClarkGolder2006?</strong>)</span>).</p>
+<p>We resolve these deficiencies through <code>interact.adl.plot</code>.
+Many of the arguments are familiar</p>
+<ul>
+<li>
+<code>model</code>: a (well specified, etc.) ADL model, likely
+following the general recommendation of <span class="citation">(Warner,
+Vande Kamp, and Jordan 2026)</span>
+</li>
+<li>
+<code>x.vrbl</code>: a named vector of the “main”
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+variables and corresponding lag orders in the ADL model</li>
+<li>
+<code>z.vrbl</code>: a named vector of the “moderating”
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+variables and corresponding lag orders in the ADL model</li>
+<li>
+<code>y.vrbl</code>: a named vector of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+variable and its lag orders (if a lagged dependent variable is in the
+model)</li>
+<li>
+<code>x.z.vrbl</code>: a named vector with the interaction variables
+and corresponding lag orders in the ADL model</li>
+</ul>
+<p>We pause to note something extremely important: <code>x.z.vrbl</code>
+should be constructed such that the lag orders reflect the lag order
+that pertains to the “main”
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+variable. For instance, <code>x_l_1_z</code> (contemporaneous
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+times lagged
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>)
+would be 0 and <code>z_l_1_x</code> (lagged
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+times contemporaneous
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>)
+would be 1.</p>
+<p>Four arguments pertain to how the interactive effect should be
+visualized (following Jordan, Vande Kamp, and Rajan <span class="citation">(2022)</span>)</p>
+<ul>
+<li>
+<code>effect.type</code>: whether impulse or cumulative effects
+should be calculated. <code>impulse</code> generates impulse effects, or
+short-run/instantaneous effects specific to each period.
+<code>cumulative</code> generates the accumulated, or
+long-run/cumulative effects up to each period (including the long-run
+multiplier)</li>
+<li>
+<code>plot.type</code>: whether to feature marginal effects at
+discrete values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+as lines, or across a range of values through a heatmap</li>
+<li>
+<code>line.options</code>: if drawing lines, whether the moderator
+should be values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+</li>
+<li>
+<code>heatmap.options</code>: if drawing a heatmap, whether all
+marginal effects should be shown or just statistically significant
+ones</li>
+</ul>
+<p>Users are encourgaed to experiment with many types of visualization:
+they all simply illustrate the underlying conditionality in the model.
+Aesthetics are generally presented with nice defaults, but options
+include</p>
+<ul>
+<li>
+<code>line.colors</code>: defaults to colorsafe Okabe-Ito colors,
+but any vector of colors (matching the number of lines) can be used
+(including a black and white graphic with <code>bw</code>)</li>
+<li>
+<code>heatmap.colors</code>: defaults to Blue-Red, but any
+<code>hcl.pal</code> is possible. We also create one for black and white
+graphics with <code>Grays</code>
+</li>
+<li>
+<code>z.label.rounding</code>: the number of digits to round
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+to in a legend, if values are not discrete</li>
+<li>
+<code>z.vrbl.label</code>: the label to use for the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+variable in plots</li>
+</ul>
+<p>A final set of controls involves the values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+to calculate and plot across</p>
+<ul>
+<li>
+<code>z.vals</code>: if <code>plot.type = lines</code>, these are
+treated as discrete levels of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>.
+If <code>plot.type = heatmap</code>, these are treated as a lower and
+upper level of a range of values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+</li>
+<li>
+<code>s.vals</code>: of <code>line.options = s.lines</code>, the
+values for the time since the shock. The default is 0 (short-run) and
+the <code>LRM</code>
+</li>
+</ul>
+<p>All of these arguments have reasonable defaults. The arguments
+<code>dM.level</code>, <code>s.limit</code>, <code>se.type</code>,
+<code>return.data</code>, <code>return.plot</code>, and
+<code>return.formulae</code> are also available.</p>
+<p>For a final time, let’s estimate a general model (just assuming it is
+well behaved)</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fit an ADL(1, 1)</span></span>
+<span><span class="va">interact.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">l_1_x</span> <span class="op">+</span> <span class="va">z</span> <span class="op">+</span> <span class="va">l_1_z</span> <span class="op">+</span></span>
+<span>        <span class="va">x_z</span> <span class="op">+</span> <span class="va">z_l_1_x</span> <span class="op">+</span></span>
+<span>        <span class="va">x_l_1_z</span> <span class="op">+</span> <span class="va">l_1_x_l_1_z</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span></code></pre></div>
+<p>Let’s first illustrate a line type, where the moderation is shown a
+different values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+over time. The shock history is a simple
+<code>effect.type = "impulse"</code></p>
+<pre><code><span><span class="fu"><a href="../reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    z.vals <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>,</span>
+<span>                    effect.type <span class="op">=</span> <span class="st">"impulse"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"z.lines"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
+<p>If we wanted to moderate by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+instead</p>
+<pre><code><span><span class="fu"><a href="../reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    z.vals <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>,</span>
+<span>                    s.vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>                    effect.type <span class="op">=</span> <span class="st">"impulse"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"s.lines"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
+<p>We observe two lines: the instantaneous effect at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s = 0</annotation></semantics></math>
+and the period-specific effect at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">s = 5</annotation></semantics></math>.
+If we wanted to see these as a step (cumulative), rather than a pulse,
+we would just change the <code>effect.type</code>.</p>
+<pre><code><span><span class="fu"><a href="../reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    z.vals <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>,</span>
+<span>                    s.vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>                    effect.type <span class="op">=</span> <span class="st">"step"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"s.lines"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
+<p>If we wanted to see the period-specific effects of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+across the full range of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>,
+since it is continuous, the heatmap makes the most sense. Notice we omit
+<code>z.vals</code> this time to show that the function establishes
+reasonable defaults.</p>
+<pre><code><span><span class="fu"><a href="../reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    effect.type <span class="op">=</span> <span class="st">"pulse"</span>, plot.type <span class="op">=</span> <span class="st">"heatmap"</span>, heatmap.options <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
+<p>If we want to ignore statistically insignificant effects, we can
+change the <code>heatmap.options</code> to be
+<code>significant</code></p>
+<pre><code><span><span class="fu"><a href="../reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                    effect.type <span class="op">=</span> <span class="st">"pulse"</span>, plot.type <span class="op">=</span> <span class="st">"heatmap"</span>, heatmap.options <span class="op">=</span> <span class="st">"significant"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="concluding-thoughts">Concluding thoughts<a class="anchor" aria-label="anchor" href="#concluding-thoughts"></a>
@@ -663,27 +937,29 @@ model. This is true in three ways. First, it relies on the user to
 specify the lag structure correctly in both the underlying
 <code>lm</code> model as well as the corresponding plot you are
 producing. Including a term in the model, but not passing it to the
-plotting function (i.e. to <code>ts.ci.adl.plot</code> through
+plotting function (i.e. to <code>GDRF.adl.plot</code> through
 <code>x.vrbl</code>) will cause the calculation of the effects to be
-inaccurate. So, be sure to always include all forms of both
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
-constructing effects estimates.</p>
+inaccurate. <code>interact.adl.plot</code> is completely uninformed
+about the underlying model: if there are interactive terms included in
+the model but not included in <code>interact.adl.plot</code>, the effect
+estimates will be incorrect. If a lagged variable is ommitted, the
+effect estimates will be incorrect. It is incumbent on the user to
+ensure that the model is well specified and that the specification is
+fully reflected in the interpretation function used.</p>
 <p>Second, and to reiterate, it makes no check that your model is well
 specified. The best starting place for a calculation of effects is
 always a well-specified model; users should complete this before
 obtaining inferences. See the citations at the beginning of the vignette
 for places to start.</p>
-<p>Third, if using the causal inference functions, it does not pass
-judgement on the treatment history you are applying. Stationary
-(<code>d.x = 0</code>) variables cannot trend by definition, but
-specifying <code>te.type = 1</code> in the function would apply a linear
-trend treatment history anyway. This is not a good idea and is
-inconsistent with the underlying independent variable. However,
-treatments are counterfactuals, and we are loathe to limit the ability
-of a user to specify a counterfactual, consistent or not. We leave it in
-the user’s hands to determine if their treatment is sensible or not.</p>
+<p>Third, it does not pass judgement on the shock history you are
+applying. Stationary (<code>d.x = 0</code>) variables cannot trend by
+definition, but specifying <code>shock.history = 1</code> in the
+function would apply a linear trend shock history anyway. This is not a
+good idea and is inconsistent with the underlying independent variable.
+However, shock histories are hypothetical, and we are loathe to limit
+the ability of a user to specify a counterfactual, consistent or not. We
+leave it in the user’s hands to determine if their shock is sensible or
+not.</p>
 <p>Despite these words of caution, <code>tseffects</code> hopefully
 simplifies the job of the time series analyst in obtaining a variety of
 effects.</p>
@@ -692,10 +968,10 @@ effects.</p>
 <h2 class="unnumbered" id="bibliography">Bibliography<a class="anchor" aria-label="anchor" href="#bibliography"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div id="ref-Blackwell2013" class="csl-entry">
-Blackwell, Matthew. 2013. <span>“A Framework for Dynamic Causal
-Inference in Political Science.”</span> <em>American Journal of
-Political Science</em> 57 (2): 504–20.
+<div id="ref-BJR" class="csl-entry">
+Box, George E. P., Gwilym M. Jenkins, and Gregory C. Reinsel. 1994.
+<em>Time Seires Analysis: Forecasting and Control</em>. John Wiley;
+Sons.
 </div>
 <div id="ref-de2008taking" class="csl-entry">
 De Boef, Suzanna, and Luke Keele. 2008. <span>“Taking Time
@@ -717,6 +993,16 @@ and Testing for Single-Equation Cointegrating and Stationary
 Autoregressive Distributed Lag Models.”</span> <em>The R Journal</em> 10
 (42): 469–88.
 </div>
+<div id="ref-jgvkviz" class="csl-entry">
+Jordan, Soren, and Garrett N. Vande Kamp. 2022. <span>“Modeling Dynamic
+Conditional Relationships Using Multiplicative Interactions in Dynamic
+Regression Model.”</span> In <em>Midwest Political Science Association
+Meeting</em>. Chicago, IL.
+</div>
+<div id="ref-mpolypaper" class="csl-entry">
+Kahle, David. 2013. <span>“Mpoly: Multivariate Polynomials in
+<span>R</span>.”</span> <em>The R Journal</em> 5 (1): 162–70. <a href="https://doi.org/10.32614/RJ-2013-015" class="external-link">https://doi.org/10.32614/RJ-2013-015</a>.
+</div>
 <div id="ref-philipsavoid" class="csl-entry">
 Philips, Andrew Q. 2022. <span>“How to Avoid Incorrect Inferences (While
 Gaining Correct Ones) in Dynamic Models.”</span> <em>Political Science
@@ -732,11 +1018,21 @@ Vande Kamp, Garrett N., and Soren Jordan. 2025. <span>“<span class="nocase">Th
 Regression Models</span>.”</span> <em>American Journal of Political
 Science</em> 1 (69): 176–93.
 </div>
-<div id="ref-gvkjr" class="csl-entry">
+<div id="ref-gvkjrsolving" class="csl-entry">
 Vande Kamp, Garrett N., Soren Jordan, and Reshi Rajan. 2025.
 <span>“Causal Inference for Integrated Data Using Differenced
 Variables.”</span> In <em>Annual Meeting of the Society for Political
 Methodology</em>. Atlanta, GA.
+</div>
+<div id="ref-warnergvkj" class="csl-entry">
+Warner, Zach, Garrett N. Vande Kamp, and Soren Jordan. 2026.
+<span>“Conditional Relationships in Dynamic Models.”</span>
+<em>Political Science Research and Methods</em>, 1–20. <a href="https://doi.org/10.1017/psrm.2026.10087" class="external-link">https://doi.org/10.1017/psrm.2026.10087</a>.
+</div>
+<div id="ref-Wilkins2018" class="csl-entry">
+Wilkins, Arjun S. 2018. <span>“To Lag or Not to Lag?: Re-Evaluating the
+Use of Lagged Dependent Variables in Regression Analysis.”</span>
+<em>Political Science Research and Methods</em> 6 (2): 393–411.
 </div>
 </div>
 </div>
@@ -751,7 +1047,7 @@ Methodology</em>. Atlanta, GA.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
