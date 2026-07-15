@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,25 +55,25 @@
           <code><a href="GDRF.gecm.plot.html">GDRF.gecm.plot()</a></code>
 
         </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDRF) for a Generalized Error Correction Model (GECM)</dd>
+        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a Generalized Error Correction Model (GECM)</dd>
       </dl><dl><dt>
 
-          <code><a href="GDTE.adl.plot.html">GDTE.adl.plot()</a></code>
+          <code><a href="adl.plot.html">adl.plot()</a></code>
 
         </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDTE) for an autoregressive distributed lag (ADL) model</dd>
-      </dl><dl><dt>
-
-          <code><a href="GDTE.gecm.plot.html">GDTE.gecm.plot()</a></code>
-
-        </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Treatment Effect (GDTE) for a Generalized Error Correction Model (GECM)</dd>
+        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, assuming the underlying model is in levels (<code>d.x</code> = <code>d.y</code> = 0) and the user wants a marginal effect (the untransformed GDRF). (This is just a wrapper for <code>GDRF.adl.plot</code> with simplifying assumptions)</dd>
       </dl><dl><dt>
 
           <code><a href="approval.html">approval</a></code>
 
         </dt>
         <dd>Data on US Presidential Approval</dd>
+      </dl><dl><dt>
+
+          <code><a href="gecm.plot.html">gecm.plot()</a></code>
+
+        </dt>
+        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1) model, assuming the underlying model is in first differences (<code>x.vrbl.d.x</code> = <code>y.vrbl.d.y</code> = 0 and <code>x.d.vrbl.d.x</code> = <code>y.d.vrbl.d.y</code> = 1) and the user wants a marginal effect (the untransformed GDRF) and inferences about y in levels to a treatment applied to x in levels. (This is just a wrapper for <code>GDRF.gecm.plot</code> with simplifying assumptions)</dd>
       </dl><dl><dt>
 
           <code><a href="gecm.to.adl.html">gecm.to.adl()</a></code>
@@ -85,13 +85,13 @@
           <code><a href="general.calculator.html">general.calculator()</a></code>
 
         </dt>
-        <dd>Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock/treatment history</dd>
+        <dd>Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history</dd>
       </dl><dl><dt>
 
           <code><a href="interact.adl.plot.html">interact.adl.plot()</a></code>
 
         </dt>
-        <dd>Plot the interaction in a single-equation time series model estimated via <code>lm</code>. It is imperative that you double-check you have referenced all x, y, z, and interaction terms through <code>x.vrbl</code>, <code>y.vrbl</code>, <code>z.vrbl</code>, and <code>x.z.vrbl</code>. You must also have their orders correctly entered. <code>interact.adl.plot</code> has no way of determining, from the variable list, which correspond with which</dd>
+        <dd>Plot the interaction in a single-equation time series model estimated via <code>lm</code>.</dd>
       </dl><dl><dt>
 
           <code><a href="pulse.calculator.html">pulse.calculator()</a></code>
@@ -104,6 +104,12 @@
 
         </dt>
         <dd>Simulated interactive time series data</dd>
+      </dl><dl><dt>
+
+          <code><a href="yhat.calculator.html">yhat.calculator()</a></code>
+
+        </dt>
+        <dd>Transform the GDRF formulae to fitted value formulae</dd>
       </dl></div>
   </main></div>
 
