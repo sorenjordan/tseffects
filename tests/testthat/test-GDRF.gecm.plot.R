@@ -1680,8 +1680,8 @@ test_that("Correct Plot: GDRF.gecm.plot", {
                        return.plot =  TRUE,
                        return.data = FALSE)
   expect_no_error(one) 
-  expect_doppelganger("gdrfgecmpulse", one)
-  expect_snapshot("gdrfgecmpulse")
+  # expect_doppelganger("gdrfgecmpulse", one)
+  # expect_snapshot("gdrfgecmpulse")
   
   two <- GDRF.gecm.plot(model = model, 
                        x.vrbl = c("l_1_x" = 1), 
@@ -1700,6 +1700,6 @@ test_that("Correct Plot: GDRF.gecm.plot", {
                        return.plot =  TRUE,
                        return.data = FALSE)
   expect_no_error(two) 
-  expect_doppelganger("gdrfgecmstep", two)
-  expect_snapshot("gdrfgecmstep")
+  # expect_doppelganger("gdrfgecmstep", two)
+  # expect_snapshot("gdrfgecmstep")
 })

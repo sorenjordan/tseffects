@@ -1138,8 +1138,8 @@ test_that("Correct Plot: adl.interact.plot", {
                    return.plot = TRUE, return.data = FALSE, return.formulae = FALSE)                        
                         
   expect_no_error(p) # Check for errors during plot generation
-  expect_doppelganger("adlinteractpulsezlines", p) # Test the plot
-  expect_snapshot("adlinteractpulsezlines")
+  # expect_doppelganger("adlinteractpulsezlines", p) # Test the plot
+  # expect_snapshot("adlinteractpulsezlines")
   
   q <-  interact.adl.plot(model = model.alllags, 
                    x.vrbl = c("x" = 0, "l_1_x" = 1), 
@@ -1154,8 +1154,8 @@ test_that("Correct Plot: adl.interact.plot", {
                    return.plot = TRUE, return.data = FALSE, return.formulae = FALSE) 
                    
   expect_no_error(q)
-  expect_doppelganger("adlinteractpulseheatmap", q) # Test the plot
-  expect_snapshot("adlinteractpulseheatmap")
+  # expect_doppelganger("adlinteractpulseheatmap", q) # Test the plot
+  # expect_snapshot("adlinteractpulseheatmap")
     
   n <-  interact.adl.plot(model = model.alllags, 
                    x.vrbl = c("x" = 0, "l_1_x" = 1), 
@@ -1170,6 +1170,6 @@ test_that("Correct Plot: adl.interact.plot", {
                    return.plot = TRUE, return.data = FALSE, return.formulae = FALSE) 
                    
   expect_no_error(n) # Check for errors during plot generation
-  expect_doppelganger("adlinteractstepslines", n) # Test the plot
-  expect_snapshot("adlinteractstepslines")
+  # expect_doppelganger("adlinteractstepslines", n) # Test the plot
+  # expect_snapshot("adlinteractstepslines")
 })

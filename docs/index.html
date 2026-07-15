@@ -57,8 +57,76 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences. These tools apply to traditional time-series quantities of interest and are built from the Impulse Response Function and Step Response Function (sometimes described as a pulse effect or a cumulative effect). They also allow for a variety of shock histories to be applied to the independent variable (beyond just a one-time, one-unit increase) as well as the recovery of inferences in levels for shocks applied to (in)dependent variables in differences (what we call the Generalized Dynamic Response Function). These effects are also available for the general conditional dynamic model advocated by Warner, Vande Kamp, and Jordan (2026 &lt;<a href="https://doi.org/10.1017/psrm.2026.10087" class="external-link">doi:10.1017/psrm.2026.10087</a>&gt;). We also provide the formulae for these effects.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="tseffects-dynamic-inferences-from-time-series-with-interactions">tseffects: Dynamic Inferences from Time Series (with Interactions)<a class="anchor" aria-label="anchor" href="#tseffects-dynamic-inferences-from-time-series-with-interactions"></a>
+</h1>
+</div>
+<!-- badges: start -->
+
+<p>Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences. These tools apply to traditional time-series quantities of interest and are built from the Impulse Response Function and Step Response Function (sometimes described as a pulse effect or a cumulative effect). They also allow for a variety of shock histories to be applied to the independent variable (beyond just a one-time, one-unit increase) as well as the recovery of inferences in levels for shocks applied to (in)dependent variables in differences (what we call the Generalized Dynamic Response Function). These effects are also available for the general conditional dynamic model advocated by Warner, Vande Kamp, and Jordan (2026 <a href="doi:10.1017/psrm.2026.10087" class="uri">doi:10.1017/psrm.2026.10087</a>). We also provide the formulae for these effects.</p>
+<p>Two ultra-simple examples are shown below: see the vignette and manual for many, many more!</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p><code>tseffects</code> is available on CRAN. To install the stable version released to CRAN, install as normal:</p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tseffects"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sorenjordan.github.io/tseffects/">tseffects</a></span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="usage-effects-in-levels">Usage: effects in levels<a class="anchor" aria-label="anchor" href="#usage-effects-in-levels"></a>
+</h2>
+<p>Drawing inferences from ADL and GECM models is easy. From an ADL(1,1), just specify the independent and dependent variables, as well as the treatment history desired.</p>
+<pre><code><span><span class="co"># ADL(1,1)</span></span>
+<span><span class="co"># Use the toy data to run an ADL. No argument is made this is well specified; it is just expository</span></span>
+<span><span class="va">model.toydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">l_1_x</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/GDRF.adl.plot.html">GDRF.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>,</span>
+<span>x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>d.x <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>d.y <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>shock.history <span class="op">=</span> <span class="st">"pulse"</span>,</span>
+<span>inferences.y <span class="op">=</span> <span class="st">"levels"</span>,</span>
+<span>inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
+<span>s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="usage-conditional-relationships">Usage: conditional relationships<a class="anchor" aria-label="anchor" href="#usage-conditional-relationships"></a>
+</h2>
+<p>If we want to interpret the same style of effects from an interactive model, we just specify the interaction and its terms.</p>
+<pre><code><span><span class="co"># ADL(1,1)</span></span>
+<span><span class="co"># Use the toy data to run an ADL. No argument is made this is well specified; it is just expository</span></span>
+<span><span class="va">model.toydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">l_1_y</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">l_1_x</span> <span class="op">+</span> <span class="va">z</span> <span class="op">+</span> <span class="va">l_1_z</span> <span class="op">+</span></span>
+<span><span class="va">x_z</span> <span class="op">+</span> <span class="va">l_1_x_z</span> <span class="op">+</span></span>
+<span><span class="va">x_l_1_z</span> <span class="op">+</span> <span class="va">l_1_x_l_1_z</span>, data <span class="op">=</span> <span class="va">toy.ts.interaction.data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model.toydata</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_z"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>z.vals <span class="op">=</span> <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span>,</span>
+<span>effect.type <span class="op">=</span> <span class="st">"impulse"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"z.lines"</span>,</span>
+<span>s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre>
+<!-- ## Citation
+
+To cite ```tseffects``` in publications and working papers, please use:
+
+Mehlhaff, Isaac D. *Mass Polarization across Time and Space*. New York: Cambridge University Press (2025).
+
+For BibTeX users:
+
+```
+@book{Mehlhaffbook,
+  title = {Mass {{Polarization}} across {{Time}} and {{Space}}},
+  author = {Mehlhaff, Isaac D.},
+  year = {2025},
+  publisher = {{Cambridge University Press}},
+  location = {{New York}},
+  doi = {https://doi.org/10.1017/9781009350662}
+}
+```
+-->
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -93,7 +161,15 @@ Autoregressive distributed lag (A[R]DL) models (and their reparameterized equiva
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=tseffects" class="external-link"><img src="https://www.r-pkg.org/badges/version/tseffects?color=black" alt="Version"></a></li>
+<li><a href="https://cran.r-project.org/web/checks/check_results_tseffects.html" class="external-link"><img src="https://badges.cranchecks.info/summary/tseffects.svg" alt="CRAN checks"></a></li>
+<li><a href="https://app.codecov.io/github/sorenjordan/tseffects" class="external-link"><img src="https://codecov.io/github/sorenjordan/tseffects/graph/badge.svg?token=SD7T7UUCCP" alt="codecov"></a></li>
+<li><a href="https://cran.r-project.org/package=tseffects" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/tseffects" alt="Downloads"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
