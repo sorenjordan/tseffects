@@ -420,8 +420,8 @@ interact.model <- lm(y ~ l_1_y + x + l_1_x + z + l_1_z +
 
 Let's first illustrate a line type, where the moderation is shown a different values of $z$ over time. The shock history is a simple `effect.type = "impulse"`
 
-```
-interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1), 
+```{r}
+interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1), 
 					y.vrbl = c("l_1_y" = 1), 
 					z.vrbl = c("z" = 0, "l_1_z" = 1),
 					x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
@@ -432,12 +432,12 @@ interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1),
 
 If we wanted to moderate by $s$ instead
 
-```
-interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1), 
+```{r}
+interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1), 
 					y.vrbl = c("l_1_y" = 1), 
 					z.vrbl = c("z" = 0, "l_1_z" = 1),
 					x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
-					z.vals = -1:1,
+					z.vals = c(-1, 1),
 					s.vals = c(0, 5),
 					effect.type = "impulse", plot.type = "lines", line.options = "s.lines",
 					s.limit = 20)
@@ -445,12 +445,12 @@ interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1),
 
 We observe two lines: the instantaneous effect at $s = 0$ and the period-specific effect at $s = 5$. If we wanted to see these as a step (cumulative), rather than a pulse, we would just change the `effect.type`.
 
-```
-interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1), 
+```{r}
+interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1), 
 					y.vrbl = c("l_1_y" = 1), 
 					z.vrbl = c("z" = 0, "l_1_z" = 1),
 					x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
-					z.vals = -1:1,
+					z.vals = c(-1, 1),
 					s.vals = c(0, 5),
 					effect.type = "step", plot.type = "lines", line.options = "s.lines",
 					s.limit = 20)
@@ -458,8 +458,8 @@ interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1),
 
 If we wanted to see the period-specific effects of $x$ across the full range of $z$, since it is continuous, the heatmap makes the most sense. Notice we omit `z.vals` this time to show that the function establishes reasonable defaults.
 
-```
-interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1), 
+```{r}
+interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1), 
 					y.vrbl = c("l_1_y" = 1), 
 					z.vrbl = c("z" = 0, "l_1_z" = 1),
 					x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
@@ -470,8 +470,8 @@ interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1),
 If we want to ignore statistically insignificant effects, we can change the `heatmap.options` to be `significant`
 
 
-```
-interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1), 
+```{r}
+interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1), 
 					y.vrbl = c("l_1_y" = 1), 
 					z.vrbl = c("z" = 0, "l_1_z" = 1),
 					x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
@@ -556,9 +556,9 @@ mult_inter12_IBO2 <- GDRF.gecm.plot(model = uecm_3132_replication,
                       x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
                       s.limit = 12, return.data = TRUE, return.plot = FALSE)
 
-all.equal(mult_inter12_IBO2$GDRF[1:13], mult_inter12$IBO$Interim)
 all.equal(mult_inter12_IBO2$GDRF[14], mult_uecm$Estimate[3])
 all.equal(mult_inter12_IBO2$SE[14], mult_uecm$'Std. Error'[3])
+all.equal(mult_inter12_IBO2$GDRF[1:13], mult_inter12$IBO$Interim)
 ```
 
 The point estimates from `tseffects` and `ARDL` match exactly for both the step response function and the long-run multiplier. The standard errors for the long-run multiplier also match exactly. Because `ARDL` does not produce standard errors for the step response function, they cannot be compared to those produced by `tseffects`. Overall, good news for both packages.
@@ -575,7 +575,7 @@ mult_inter12_IBO <- GDRF.gecm.plot(model = uecm_3132_replication,
                s.limit = 12, return.data = TRUE, return.plot = FALSE)
 
 all.equal(mult_inter12_IBO$GDRF, mult_inter12$IBO$Delay) 
-all.equal(mult_inter12_IBO$SE, mult_inter12$IBO$`Std. Error Delay`)
+all.equal(mult_inter12_IBO$SE, mult_inter12$IBO$'Std. Error Delay')
 ```
 
 Here we see a partial replication. The point estimates from `tseffects` and `ARDL` match exactly. The standard error estimates, however, do not. Again, that both packages claim to use the delta method to calculate standard errors. To investigate this discrepancy, we examine estimates for the short-run effect. The short-run effect is the value of the impulse response function when $s=0$. In a dynamic linear model, the formula for the short-run effect is simply the coefficient for the contemporaneous value of the independent variable, $\beta_{0}$. We can compare, then, the standard errors of the impulse response function to the dynamic regression model itself; they should match identically. 
@@ -610,7 +610,7 @@ We can walk away from this replication with a few observations. First, the point
 
 The annotated replication of the `ARDL` package ends here. Below, we provide code that replicates the two other variables in the model included in the `ARDL` documentation. The results are largely the same as the above replication.
 
-```{r}
+```{r, eval = FALSE}
 ### Replication - LRY
 
 mult_inter12_LRY2 <- GDRF.gecm.plot(model = uecm_3132_replication, x.vrbl = c("LRY_l1" = 1), 
@@ -638,7 +638,7 @@ mult_inter12_LRY <- GDRF.gecm.plot(model = uecm_3132_replication, x.vrbl = c("LR
                                     s.limit = 12, return.data = TRUE, return.plot = FALSE)
 
 all.equal(mult_inter12_LRY$GDRF, mult_inter12$LRY$Delay) # Estimates are Identical
-all.equal(mult_inter12_LRY$SE, mult_inter12$LRY$`Std. Error Delay`) # Standard errors are not
+all.equal(mult_inter12_LRY$SE, mult_inter12$LRY$'Std. Error Delay') # Standard errors are not
 
 all.equal(mult_inter12_LRY$SE[1], sqrt(vcov(uecm_3132_replication)[6,6])) # IRF(0) SE match Coef SE for tseffects
 
@@ -674,7 +674,7 @@ mult_inter12_IDE <- GDRF.gecm.plot(model = uecm_3132_replication,
                                     s.limit = 12, return.data = TRUE, return.plot = FALSE)
 
 all.equal(mult_inter12_IDE$GDRF, mult_inter12$IDE$Delay) # Estimates are Identical
-all.equal(mult_inter12_IDE$SE, mult_inter12$IDE$`Std. Error Delay`) # Standard Errors are not
+all.equal(mult_inter12_IDE$SE, mult_inter12$IDE$'Std. Error Delay') # Standard Errors are not
 
 all.equal(mult_inter12_IDE$SE[1], sqrt(vcov(uecm_3132_replication)[8,8])) # IRF(0) SE match Coef SE
 
@@ -691,11 +691,10 @@ But the package provides multiple functions for calculating the step response fu
 
 Like `ARDL`, these functions require users to estimate their dynamic regression models using the `kardl` package and do not accept base R or other estimation strategies. Standard errors are not available for the estimates of the step response function.
 
-The documentation for `bootstrap` and `kardl_longrun` presents the following code for estimating dynamic quantities of interest from a general error correction model:
+The documentation for `bootstrap` and `kardl_longrun` presents the following code for estimating dynamic quantities of interest from a general error correction model. We can replicate this set of analysis using `tseffects`. Again, since `tseffects` is built around the underlying regression results, we show how to estimate the same model using `lm`. We can replicate the results for each variable using the `GDRF.gecm.plot` function. We focus on the variable `PPI` for exposition (notice adding a trend or other bespoke features is trivial):
 
-```{r}
+```{r, eval = FALSE}
 library(kardl)
-library(tidyverse)
 
 kardl_model <- kardl(imf_example_data,
                      CPI ~ ER + PPI + asy(ER) +
@@ -708,11 +707,7 @@ long <- kardl_longrun(kardl_model)
 long_summary <- summary(long)
 
 boot <- bootstrap(kardl_model, replications=5, seed = 123L)
-```
 
-We can replicate this set of analysis using `tseffects`. Again, since `tseffects` is built around the underlying regression results, we show how to estimate the same model using `lm`. Notice adding a trend or other bespoke features is trivial.
-
-```{r}
 data <- imf_example_data
 data$trend <- 1:nrow(data)
 
@@ -748,11 +743,7 @@ model <- lm(L0.d.CPI ~ L1.CPI + L1.ER_POS + L1.ER_NEG + L1.PPI +
               covid + trend, data = data[6:470,])
 
 summary(model)
-```
 
-We can replicate the results for each variable using the `GDRF.gecm.plot` function. We focus on the variable `PPI` for exposition:
-
-```{r}
 boot_ppi <- GDRF.gecm.plot(model = model,
                            x.vrbl = c("L1.PPI" = 1), y.vrbl = c("L1.CPI" = 1), 
                            x.d.vrbl = c("L0.d.PPI" = 0),
@@ -769,7 +760,7 @@ all.equal(boot_ppi$SE[22], long_summary$coefficients[3,2]) # Standard Errors are
 
 The point estimates from `tseffects` and `kardl` match exactly for both the step response function and the long-run multiplier. The standard errors for the long-run multiplier also match exactly. Because `kardl` does not produce standard errors for the step response function, they cannot be compared to those produced by `tseffects`. Below, we provide code that replicates the other variable in the model, `ER`, which is allowed to have an asymmetric effect. The results are largely the same: the point estimates and standard errors match.
 
-```{r}
+```{r, eval = FALSE}
 ### Replication - ER_POS
 boot_pos <- GDRF.gecm.plot(model = model,
                            x.vrbl = c("L1.ER_POS" = 1), y.vrbl = c("L1.CPI" = 1), 
@@ -807,7 +798,7 @@ all.equal(boot_neg$SE[22], long_summary$coefficients[2,2]) # Standard Errors are
 
 Still, we can observe whether the packages are broadly equivalent. We estimate a GECM described in `dynamac`, noting again that we create the individual variables for standalone estimation by `lm`
 
-```{r}
+```{r, eval = FALSE}
 library(dynamac)
 
 ### From helpfile of dynardl.simulation.plot()
@@ -851,7 +842,7 @@ ardl.model.replication.plot <- GDRF.gecm.plot(model = ardl.model.replication,
 
 We note that, since `dynamac` traces the response path of predicted values, if we wanted to see the change in those values (the changing differences that is predicted by the GDRF), we would just difference them.
 
-```{r}
+```{r, eval = FALSE}
 # dynamac is fitted values; dshift (difference) is akin to marginal effect (change in fitted)
 all.equal(ardl.model.replication.plot$GDRF[1:21],
           dshift(ardl.model$simulation$central)[10:30])
@@ -861,7 +852,7 @@ These estimates are not identical but are very close, likely due to simulation-b
 
 We can also use this as a chance to better see the `effect.type = "fitted"` plots, since this is what `dynamac` creates natively. This is easiest if we switch back to the toy data for one last model:
 
-```{r}
+```{r, eval = FALSE}
 dynamac.fitted <- dynardl(y ~ x, 
                       lags = list("y" = 1, "x" = 1),
                       levels = c("x"), 
