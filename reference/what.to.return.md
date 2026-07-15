@@ -1,7 +1,6 @@
-# Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM model
+# Consistently return the correct objects after a GDRF ADL/GECM
 
-Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM
-model
+Consistently return the correct objects after a GDRF ADL/GECM
 
 ## Usage
 
@@ -26,6 +25,18 @@ what.to.return(
 
   a TRUE/FALSE on whether the data from the effect should be returned
   from the function
+
+- plot.out:
+
+  the created plot from the GDRF ADL/GECM
+
+- dat.out:
+
+  the created data from the GDRF ADL/GECM
+
+- the.final.formulae:
+
+  the created formulae from the GDRF ADL/GECM
 
 ## Author
 

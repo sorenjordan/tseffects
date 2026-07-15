@@ -1,7 +1,6 @@
-# Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM model
+# Do consistent dummy checks for functions that use a GECM model
 
-Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM
-model
+Do consistent dummy checks for functions that use a GECM model
 
 ## Usage
 
@@ -86,7 +85,7 @@ gecm.dummy.checks(
 
 - type:
 
-  whether the effects are estimated in the context of a GDTE/GDRF
+  whether the effects are estimated in the context of a GDRF
 
 ## Author
 

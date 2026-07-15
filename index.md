@@ -7,16 +7,16 @@ models are simple to estimate; this is what makes them attractive. Once
 these models are estimated, what is less clear is how to uncover a rich
 set of dynamic inferences from these models. We provide tools for
 recovering those inferences. These tools apply to traditional
-time-series quantities of interest: especially instantaneous effects for
-any period and cumulative effects for any period (including the long-run
-effect). They also allow for a variety of shock histories to be applied
-to the independent variable (beyond just a one-time, one-unit increase)
-as well as the recovery of inferences in levels for shocks applies to
-(in)dependent variables in differences (what we call the Generalized
-Dynamic Response Function). These effects are also available for the
-general conditional dynamic model advocated by Warner, Vande Kamp, and
-Jordan (2026 <doi:https://doi.org/10.1017/psrm.2026.10087>). We also
-provide the actual formulae for these effects.
+time-series quantities of interest and are built from the Impulse
+Response Function and Step Response Function (sometimes described as a
+pulse effect or a cumulative effect). They also allow for a variety of
+shock histories to be applied to the independent variable (beyond just a
+one-time, one-unit increase) as well as the recovery of inferences in
+levels for shocks applied to (in)dependent variables in differences
+(what we call the Generalized Dynamic Response Function). These effects
+are also available for the general conditional dynamic model advocated
+by Warner, Vande Kamp, and Jordan (2026 <doi:10.1017/psrm.2026.10087>).
+We also provide the formulae for these effects.
 
 Two ultra-simple examples are shown below: see the vignette and manual
 for many, many more!

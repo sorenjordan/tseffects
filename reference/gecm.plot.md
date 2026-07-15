@@ -1,29 +1,23 @@
-# Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a Generalized Error Correction Model (GECM)
+# Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1) model, assuming the underlying model is in first differences (`x.vrbl.d.x` = `y.vrbl.d.y` = 0 and `x.d.vrbl.d.x` = `y.d.vrbl.d.y` = 1) and the user wants a marginal effect (the untransformed GDRF) and inferences about y in levels to a treatment applied to x in levels. (This is just a wrapper for `GDRF.gecm.plot` with simplifying assumptions)
 
 Evaluate (and possibly plot) the General Dynamic Response Function
-(GDRF) for a Generalized Error Correction Model (GECM)
+(GDRF) for a GECM(1,1) model, assuming the underlying model is in first
+differences (`x.vrbl.d.x` = `y.vrbl.d.y` = 0 and `x.d.vrbl.d.x` =
+`y.d.vrbl.d.y` = 1) and the user wants a marginal effect (the
+untransformed GDRF) and inferences about y in levels to a treatment
+applied to x in levels. (This is just a wrapper for `GDRF.gecm.plot`
+with simplifying assumptions)
 
 ## Usage
 
 ``` r
-GDRF.gecm.plot(
+gecm.plot(
   model = NULL,
   x.vrbl = NULL,
   y.vrbl = NULL,
-  x.vrbl.d.x = NULL,
-  y.vrbl.d.y = NULL,
   x.d.vrbl = NULL,
   y.d.vrbl = NULL,
-  x.d.vrbl.d.x = NULL,
-  y.d.vrbl.d.y = NULL,
   shock.history = "pulse",
-  inferences.y = "levels",
-  inferences.x = "levels",
-  effect.type = "marginal",
-  prediction.values = NULL,
-  baseline.y = NULL,
-  baseline.y.se = 0,
-  shock.size = 1,
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
@@ -52,16 +46,6 @@ GDRF.gecm.plot(
   of differencing, usually in levels d = 0) and corresponding lag orders
   in the GECM model
 
-- x.vrbl.d.x:
-
-  the order of differencing of the x variable (of the lower level of
-  differencing, usually in levels d = 0) in the GECM model
-
-- y.vrbl.d.y:
-
-  the order of differencing of the y variable (of the lower level of
-  differencing, usually in levels d = 0) in the GECM model
-
 - x.d.vrbl:
 
   a named numeric vector of the x variables (of the higher level of
@@ -75,16 +59,6 @@ GDRF.gecm.plot(
   orders in the GECM model. Can be `NULL` if the model has no lags of
   the differenced dependent variables
 
-- x.d.vrbl.d.x:
-
-  the order of differencing of the x variable (of the higher level of
-  differencing, usually first differences d = 1) in the GECM model
-
-- y.d.vrbl.d.y:
-
-  the order of differencing of the y variable (of the higher level of
-  differencing, usually first differences d = 1) in the GECM model
-
 - shock.history:
 
   the desired shock history. `shock.history` determines the shock
@@ -92,56 +66,6 @@ GDRF.gecm.plot(
   represents a pulse. 0 represents a step. These can also be specified
   via `pulse` and `step`. For others, see Vande Kamp, Jordan, and Rajan.
   The default is `pulse`
-
-- inferences.y:
-
-  does the user want resulting inferences about the dependent variable
-  in `levels` or in `differences`? The default is `levels`
-
-- inferences.x:
-
-  does the user want to apply the shock history to the independent
-  variable in `levels` or in `differences`? The default is `levels`
-
-- effect.type:
-
-  whether to return marginal effects or fitted values. `marginal`
-  returns the GDRF as a marginal effect. `fitted` returns the GDRF as a
-  fitted value, relative to a baseline value of y. The default is
-  `marginal`
-
-- prediction.values:
-
-  a named list of values for non-y variables in the model, used to
-  calculate a steady-state baseline when `effect.type = "fitted"` and
-  `d.y = 0` and `baseline.y` is not supplied. This allows for the
-  calculation of model-based uncertainty. If any differenced variables
-  are included in the model, they should be set to 0. Ignored when
-  `d.y > 0`
-
-- baseline.y:
-
-  a user-supplied baseline value of y in levels. For `d.y = 0`, this
-  overrides the steady-state calculation from `prediction.values` if
-  provided. For `d.y > 0` with `inferences.y = "levels"`, this is
-  required (otherwise it is just marginal effects). Only used when
-  `effect.type = "fitted"`
-
-- baseline.y.se:
-
-  a user-supplied standard error for the baseline value of y (to suggest
-  uncertainty around predictions). If supplied, this is added in
-  quadrature to the standard errors of the GDRF estimates. Only used
-  when `effect.type = "fitted"` and `inferences.y = "levels"`. The
-  default is 0: in recognition that this is user-constructed
-  uncertainty. Possible values would be the square root of the standard
-  deviation of y (in levels)
-
-- shock.size:
-
-  the size of the shock to x in the units of x. Only used when
-  `effect.type = "fitted"`; marginal effects are not scaled. Defaults to
-  1 (a marginal effect)
 
 - dM.level:
 
@@ -200,22 +124,16 @@ Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 ## Examples
 
 ``` r
-# GECM(1,1)
+# GECM(1,1). So we can use gecm.plot to quickly check dynamics
 # Use the toy data to run a GECM. No argument is made this 
 #  is well specified or even sensible; it is just expository
 model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
-test.pulse <- GDRF.gecm.plot(model = model,
+test.pulse <- gecm.plot(model = model,
                                   x.vrbl = c("l_1_x" = 1), 
                                   y.vrbl = c("l_1_y" = 1),
-                                  x.vrbl.d.x = 0, 
-                                  y.vrbl.d.y = 0,
                                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
                                   y.d.vrbl = c("l_1_d_y" = 1),
-                                  x.d.vrbl.d.x = 1,
-                                  y.d.vrbl.d.y = 1,
                                   shock.history = "pulse", 
-                                  inferences.y = "levels", 
-                                  inferences.x = "levels",
                                   s.limit = 10, 
                                   return.plot = TRUE, 
                                   return.formulae = TRUE)

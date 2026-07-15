@@ -1,7 +1,6 @@
-# Do consistent dummy checks for functions (GDTE/GDRF) that use an ADL model
+# Do consistent dummy checks for functions that use an ADL model
 
-Do consistent dummy checks for functions (GDTE/GDRF) that use an ADL
-model
+Do consistent dummy checks for functions that use an ADL model
 
 ## Usage
 
@@ -58,7 +57,7 @@ adl.dummy.checks(
 
 - type:
 
-  whether the effects are estimated in the context of a GDTE/GDRF
+  whether the effects are estimated in the context of a GDRF
 
 ## Author
 

@@ -1,8 +1,7 @@
-# Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock/treatment history
+# Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history
 
 Generate the generalized effect formulae for an autoregressive
-distributed lag (ADL) model, given pulse effects and shock/treatment
-history
+distributed lag (ADL) model, given pulse effects and shock history
 
 ## Usage
 
@@ -14,20 +13,22 @@ general.calculator(d.x, d.y, h, limit, pulses)
 
 - d.x:
 
-  the order of differencing of the x variable in the ADL model.
+  an integer determining the order of differencing of the x variable
+  before a shock is applied when parametrized as an ADL model.
   (Generally, this is the same x variable used in `pulse.calculator`)
 
 - d.y:
 
-  the order of differencing of the y variable in the ADL model.
-  (Generally, this is the same y variable used in `pulse.calculator`)
+  an integer determining the order of differencing of the y variable
+  when parametrized as an ADL model. (Generally, this is the same y
+  variable used in `pulse.calculator`)
 
 - h:
 
-  an integer for the shock/treatment history. `h` determines the
-  counterfactual series that will be applied to the independent
-  variable. -1 represents a pulse. 0 represents a step. For others, see
-  Vande Kamp, Jordan, and Rajan
+  an integer determining the shock history applied to the independent
+  variable in levels. -1 represents the Impulse Response Function. 0
+  represents a Step Response Function. For others, see Vande Kamp,
+  Jordan, and Rajan
 
 - limit:
 
@@ -36,8 +37,8 @@ general.calculator(d.x, d.y, h, limit, pulses)
 
 - pulses:
 
-  a list of pulse effect formulae used to construct the generalized
-  effect formulae. We expect this will be provided by `pulse.calculator`
+  a list comprising the formulae for Impulse Response Functions,
+  typically generated using `pulse.calculator`
 
 ## Value
 
@@ -66,7 +67,7 @@ x.lags <- c("x" = 0, "l_1_x" = 1) # lags of x
 y.lags <- c("l_1_y" = 1)
 s <- 5
 pulse.effects <- pulse.calculator(x.vrbl = x.lags, y.vrbl = y.lags, limit = s)
-# Assume that both x and y are in levels and we want a pulse treatment
+# Assume that both x and y are in levels and we want a pulse shock history
 general.pulse.effects <- general.calculator(d.x = 0, d.y = 0, 
               h = -1, limit = s, pulses = pulse.effects)
 general.pulse.effects
@@ -110,7 +111,7 @@ general.pulse.effects
 #> [1] 1 0 0 0 0 0
 #> 
 #> 
-# Apply a step treatment
+# Apply a step shock response function
 general.step.effects <- general.calculator(d.x = 0, d.y = 0, 
               h = 0, limit = s, pulses = pulse.effects)
 general.step.effects

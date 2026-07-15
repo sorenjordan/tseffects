@@ -1,11 +1,7 @@
-# Plot the interaction in a single-equation time series model estimated via `lm`. It is imperative that you double-check you have referenced all x, y, z, and interaction terms through `x.vrbl`, `y.vrbl`, `z.vrbl`, and `x.z.vrbl`. You must also have their orders correctly entered. `interact.adl.plot` has no way of determining, from the variable list, which correspond with which
+# Plot the interaction in a single-equation time series model estimated via `lm`.
 
 Plot the interaction in a single-equation time series model estimated
-via `lm`. It is imperative that you double-check you have referenced all
-x, y, z, and interaction terms through `x.vrbl`, `y.vrbl`, `z.vrbl`, and
-`x.z.vrbl`. You must also have their orders correctly entered.
-`interact.adl.plot` has no way of determining, from the variable list,
-which correspond with which
+via `lm`.
 
 ## Usage
 
@@ -16,7 +12,7 @@ interact.adl.plot(
   z.vrbl = NULL,
   x.z.vrbl = NULL,
   y.vrbl = NULL,
-  effect.type = "impulse",
+  shock.history = "impulse",
   plot.type = "lines",
   line.options = "z.lines",
   heatmap.options = "significant",
@@ -44,80 +40,82 @@ interact.adl.plot(
 
 - x.vrbl:
 
-  named vector of the “main” x variables and corresponding lag orders in
-  the ADL model
+  named numeric vector of the “main” x variables and corresponding lag
+  orders in the ADL model
 
 - z.vrbl:
 
-  named vector of the “moderating” z variables and corresponding lag
-  orders in the ADL model
+  named numeric vector of the “moderating” z variables and corresponding
+  lag orders in the ADL model
 
 - x.z.vrbl:
 
-  named vector with the interaction variables and corresponding lag
-  orders in the ADL model. IMPORTANT: enter the lag order that pertains
-  to the “main” x variable. For instance, x_l_1_z (contemporaneous x
-  times lagged z) would be 0 and l_1_x_z (lagged x times
-  contemporaneous z) would be 1
+  named numeric vector with the interaction variables and corresponding
+  lag orders in the ADL model. IMPORTANT: enter the lag order that
+  pertains to the “main” x variable. For instance, x_l_1_z
+  (contemporaneous x times lagged z) would be 0 and l_1_x_z (lagged x
+  times contemporaneous z) would be 1
 
 - y.vrbl:
 
-  named vector of the (lagged) y variables and corresponding lag orders
-  in the ADL model
+  named numeric vector of the (lagged) y variables and corresponding lag
+  orders in the ADL model. Can be `NULL` if the model has no lagged
+  dependent variables
 
-- effect.type:
+- shock.history:
 
-  whether impulse or cumulative effects should be calculated. `impulse`
-  generates impulse effects, or short-run/instantaneous effects specific
-  to each period. `cumulative` generates the accumulated, or
-  long-run/cumulative effects up to each period (including the long-run
-  multiplier). The default is `impulse`
+  whether impulse/pulse or cumulative/step effects should be calculated.
+  `impulse` (or `pulse`) generates impulse effects (the Impulse Response
+  Function), or short-run/instantaneous effects specific to each period.
+  `cumulative` (or `step`: the Step Response Function) generates the
+  accumulated, or long-run/cumulative effects up to each period
+  (including the long-run multiplier). The default is `impulse`
 
 - plot.type:
 
-  whether to feature marginal effects at discrete values of s/z as
-  lines, or across a range of values through a heatmap. The default is
-  `lines`
+  a string for whether to feature marginal effects at discrete values of
+  s/z as `lines`, or across a range of values through a `heatmap`. The
+  default is `lines`
 
 - line.options:
 
-  if drawing lines, whether the moderator should be values of z
-  (`z.lines`) or values of s (`s.lines`). The default is `z.lines`
+  if drawing lines, a string for whether the moderator should be values
+  of z (`z.lines`) or values of s (`s.lines`). The default is `z.lines`
 
 - heatmap.options:
 
-  if drawing a heatmap, whether all marginal effects should be shown or
-  just statistically significant ones. (Note: this just sets the
-  insignificant effects to the numeric value of 0. If the middle value
-  of your scale gradient is white, these will effectively “disappear.”
-  If another gradient is used, they will take on the color assigned to 0
-  values.) The default is `significant`
+  if drawing a heatmap, a string for whether `all` marginal effects
+  should be shown or just statistically significant ones. (Note: this
+  just sets the insignificant effects to the numeric value of 0. If the
+  middle value of your scale gradient is white, these will effectively
+  “disappear.” If another gradient is used, they will take on the color
+  assigned to 0 values.) The default is `significant`
 
 - line.colors:
 
-  what color lines would you like for line plots? This defaults to the
-  color-safe Okabe-Ito (`okabe-ito`) colors. There is also a grayscale
-  option through `bw`. Users can also include whatever colors they like.
-  The number of colors must match the number of lines drawn. This is
-  passed to `scale_color_discrete`
+  a string for what color lines would you like for line plots? This
+  defaults to the color-safe Okabe-Ito (`okabe-ito`) colors. There is
+  also a grayscale option through `bw`. Users can also include whatever
+  colors they like. The number of colors must match the number of lines
+  drawn. This is passed to `scale_color_discrete`
 
 - heatmap.colors:
 
-  what color scale would you like for the heatmap? The default is
-  `Blue-Red`. Alternate colors must be one of
+  a string for what color scale would you like for the heatmap? The
+  default is `Blue-Red`. Alternate colors must be one of
   [`hcl.pals()`](https://rdrr.io/r/grDevices/palettes.html). For
   grayscale plots, use `Grays`. This is passed to `scale_fill_gradientn`
 
 - z.vals:
 
-  values for the moderating variable. If `plot.type = lines`, these are
-  treated as discrete levels of z. If `plot.type = heatmap`, these are
-  treated as a lower and upper level of a range of values of z. If none
-  are provided, `interact.adl.plot` will pick
+  numeric values for the moderating variable. If `plot.type = lines`,
+  these are treated as discrete levels of z. If `plot.type = heatmap`,
+  these are treated as a lower and upper level of a range of values
+  of z. If none are provided, `interact.adl.plot` will pick
 
 - s.vals:
 
-  values for the time since the shock. This is only used if
+  numeric values for the time since the shock. This is only used if
   `line.options = s.lines`, meaning s is treated as the moderator. The
   default is 0 (short-run) and the `LRM`
 
@@ -148,27 +146,43 @@ interact.adl.plot(
 
 - return.data:
 
-  return the raw calculated (cumulative) marginal effects as a list
-  element under `estimates`. The default is `FALSE`
+  logical to return the raw calculated (cumulative) marginal effects as
+  a list element under `estimates`. The default is `FALSE`
 
 - return.plot:
 
-  return the visualized (cumulative) marginal effects as a list element
-  under `plot`. The default is `TRUE`
+  logical to return the visualized (cumulative) marginal effects as a
+  list element under `plot`. The default is `TRUE`
 
 - return.formulae:
 
-  return the formulae for the (cumulative) marginal effects as a list
-  element under `formulae` (for the (cumulative) marginal effects) and
-  `binomials` (for the shock history). The default is `FALSE`
+  logical to return the formulae for the (cumulative) marginal effects
+  as a list element under `formulae` (for the (cumulative) marginal
+  effects) and `binomials` (for the shock history). The default is
+  `FALSE`
 
 - ...:
 
   other arguments to be passed to the call to plot
 
+## Value
+
+depending on `return.data`, `return.plot`, and `return.formulae`, a list
+of elements relating to the interaction
+
+## Details
+
+We assume that the ADL model estimated is well specified, free of
+residual autocorrelation, balanced, and meets other standard time-series
+qualities. It is imperative that you double-check you have referenced
+all x, y, z, and interaction terms through `x.vrbl`, `y.vrbl`, `z.vrbl`,
+and `x.z.vrbl`. You must also have their orders correctly entered.
+`interact.adl.plot` has no way of determining, from the variable list,
+which correspond with which
+
 ## Author
 
-Soren Jordan, Garrett N. Vande Kamp, and Reshikesav Rajan
+Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 
 ## Examples
 
@@ -191,8 +205,10 @@ cavari.model <- lm(APPROVE ~ APPROVE_ECONOMY + APPROVE_FOREIGN + MIP_MACROECONOM
 interact.adl.plot(model = cavari.model, 
   x.vrbl = c("APPROVE_ECONOMY" = 0), y.vrbl = c("APPROVE_L1" = 1),
     z.vrbl = c("MIP_MACROECONOMICS" = 0), x.z.vrbl = c("ECONAPP_ECONMIP" = 0),
-  effect.type = "impulse", plot.type = "lines", line.options = "z.lines")
+  shock.history = "impulse", plot.type = "lines", line.options = "z.lines")
 #> Warning: Variable names containing . replaced with _
+#> Warning: Variable names containing ( replaced with _
+#> Warning: Variable names containing ) replaced with _
 
 
 # Use well-behaved simulated data (included) for even more examples, 
@@ -208,7 +224,7 @@ if (FALSE) interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" 
         x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, 
           "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
         z.vals = -2:2,
-        effect.type = "impulse", 
+        shock.history = "impulse", 
         plot.type = "lines", 
         line.options = "z.lines",
         s.limit = 20)
@@ -221,7 +237,7 @@ if (FALSE) interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" 
         x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, 
           "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
         z.vals = c(-2,2),
-        effect.type = "impulse", 
+        shock.history = "impulse", 
         plot.type = "heatmap", 
         heatmap.options = "all",
         s.limit = 20)

@@ -13,18 +13,21 @@ pulse.calculator(x.vrbl, y.vrbl = NULL, limit)
 
 - x.vrbl:
 
-  a named vector of the x variables and corresponding lag orders in an
-  ADL model
+  a named numeric vector in which the names correspond to an independent
+  variable and its lags and the numbers correspond to the specific lag
+  order of each variable
 
 - y.vrbl:
 
-  a named vector of the (lagged) y variables and corresponding lag
-  orders in an ADL model
+  a named numeric vector in which the names correspond to lags of the
+  dependent variable and the numbers correspond to the specific lag
+  order of each variable. Can be `NULL` if the model has no lagged
+  dependent variables
 
 - limit:
 
-  an integer for the number of periods (s) to determine the pulse effect
-  (beginning at 0)
+  an integer representing the number of periods after the initial
+  shock (s) to calculate the Impulse Response Function
 
 ## Value
 
