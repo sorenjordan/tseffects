@@ -33,7 +33,7 @@ test_that("adl.dummy.checks produces the correct warnings (GDTE type)", {
     "Order of differencing of variables in treatment effect terms must be specified through d.x and d.y"
   ) 
 
-  expect_error( # d.y missing
+  expect_error( # d.y missing (y.vrbl)
     # Function output
     adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = NULL,
     				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
@@ -43,6 +43,16 @@ test_that("adl.dummy.checks produces the correct warnings (GDTE type)", {
     "Order of differencing of variables in treatment effect terms must be specified through d.x and d.y"
   ) 
 
+  expect_error( # d.y missing (no y.vrbl)
+    # Function output
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, d.x = 0, d.y = NULL,
+    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
+    				se.type = "const", type = "GDTE"),
+
+    # Expected output
+    "Even if there is no y.vrbl in"
+  ) 
+  
   expect_error( # d.x not integer
     # Function output
     adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 1.5, d.y = 0,
@@ -210,7 +220,7 @@ test_that("adl.dummy.checks produces the correct warnings (GDRF type)", {
     "Order of differencing of variables in shock history terms must be specified through d.x and d.y"
   ) 
 
-  expect_error( # d.y missing
+  expect_error( # d.y missing (y.vrbl)
     # Function output
     adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = NULL,
     				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),

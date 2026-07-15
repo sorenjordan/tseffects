@@ -2,26 +2,26 @@
 % Please edit documentation in R/tseffects.R
 \name{general.calculator}
 \alias{general.calculator}
-\title{Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock/treatment history}
+\title{Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history}
 \usage{
 general.calculator(d.x, d.y, h, limit, pulses)
 }
 \arguments{
-\item{d.x}{the order of differencing of the x variable in the ADL model. (Generally, this is the same x variable used in \code{pulse.calculator})}
+\item{d.x}{an integer determining the order of differencing of the x variable before a shock is applied when parametrized as an ADL model. (Generally, this is the same x variable used in \code{pulse.calculator})}
 
-\item{d.y}{the order of differencing of the y variable in the ADL model. (Generally, this is the same y variable used in \code{pulse.calculator})}
+\item{d.y}{an integer determining the order of differencing of the y variable when parametrized as an ADL model. (Generally, this is the same y variable used in \code{pulse.calculator})}
 
-\item{h}{an integer for the shock/treatment history. \code{h} determines the counterfactual series that will be applied to the independent variable. -1 represents a pulse. 0 represents a step. For others, see Vande Kamp, Jordan, and Rajan}
+\item{h}{an integer determining the shock history applied to the independent variable in levels. -1 represents the Impulse Response Function. 0 represents a Step Response Function. For others, see Vande Kamp, Jordan, and Rajan}
 
 \item{limit}{an integer for the number of periods (s) to determine the generalized effect (beginning at 0)}
 
-\item{pulses}{a list of pulse effect formulae used to construct the generalized effect formulae. We expect this will be provided by \code{pulse.calculator}}
+\item{pulses}{a list comprising the formulae for Impulse Response Functions, typically generated using \code{pulse.calculator}}
 }
 \value{
 a list of \code{limit} + 1 \code{mpoly} formulae containing the generalized effect formula in each period
 }
 \description{
-Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock/treatment history
+Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history
 }
 \details{
 \code{general.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the generalized effect in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. Note: \code{mpoly} does not allow variable names with a .; variables passed to \code{general.calculator} should not include this character
@@ -32,11 +32,11 @@ x.lags <- c("x" = 0, "l_1_x" = 1) # lags of x
 y.lags <- c("l_1_y" = 1)
 s <- 5
 pulse.effects <- pulse.calculator(x.vrbl = x.lags, y.vrbl = y.lags, limit = s)
-# Assume that both x and y are in levels and we want a pulse treatment
+# Assume that both x and y are in levels and we want a pulse shock history
 general.pulse.effects <- general.calculator(d.x = 0, d.y = 0, 
 							h = -1, limit = s, pulses = pulse.effects)
 general.pulse.effects
-# Apply a step treatment
+# Apply a step shock response function
 general.step.effects <- general.calculator(d.x = 0, d.y = 0, 
 							h = 0, limit = s, pulses = pulse.effects)
 general.step.effects

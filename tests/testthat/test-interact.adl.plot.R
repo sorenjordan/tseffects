@@ -212,30 +212,30 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
     "x.z.vrbl not present in"
   )
 
-  expect_error( # no effect.type
+  expect_error( # no shock.history
     # Function
     interact.adl.plot(model = model.alllags, 
                    x.vrbl = c("x" = 0, "l_1_x" = 1), 
                    y.vrbl = c("l_1_y" = 1), 
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
-                   effect.type = NULL),
+                   shock.history = NULL),
                    
     # Expected error
-    "effect.type must be specified"
+    "shock.history must be specified"
   )
 
-  expect_error( # no effect.type
+  expect_error( # no shock.history
     # Function
     interact.adl.plot(model = model.alllags, 
                    x.vrbl = c("x" = 0, "l_1_x" = 1), 
                    y.vrbl = c("l_1_y" = 1), 
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
-                   effect.type = "no"),
+                   shock.history = "no"),
                    
     # Expected error
-    "effect.type must be one of impulse or cumulative"
+    "shock.history must be one of impulse or cumulative"
   )
 
   expect_error( # plot.type missing
@@ -646,7 +646,7 @@ test_that("interactive formulae finite dynamics", { # test an early period s = 0
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 0`}),
 
@@ -662,7 +662,7 @@ test_that("interactive formulae finite dynamics", { # test an early period s = 0
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 1`}),
 
@@ -678,7 +678,7 @@ test_that("interactive formulae finite dynamics", { # test an early period s = 0
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 0`}),
 
@@ -694,7 +694,7 @@ test_that("interactive formulae finite dynamics", { # test an early period s = 0
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 1`}),
 
@@ -710,7 +710,7 @@ test_that("interactive formulae finite dynamics", { # test an early period s = 0
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$LRM}),
 
@@ -738,7 +738,7 @@ test_that("interactive formulae lagged y", { # test an early period s = 0; s = 1
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 0`,
 
@@ -754,7 +754,7 @@ test_that("interactive formulae lagged y", { # test an early period s = 0; s = 1
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 1`,
 
@@ -770,7 +770,7 @@ test_that("interactive formulae lagged y", { # test an early period s = 0; s = 1
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 0`,
 
@@ -786,7 +786,7 @@ test_that("interactive formulae lagged y", { # test an early period s = 0; s = 1
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$`s = 1`,
 
@@ -802,7 +802,7 @@ test_that("interactive formulae lagged y", { # test an early period s = 0; s = 1
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    s.limit = 1,
                    return.plot = FALSE, return.data = FALSE, return.formulae = TRUE)$formulae$LRM,
 
@@ -826,7 +826,7 @@ test_that("Correct dimensions of interaction output - impulse and lines", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = FALSE, return.data = TRUE, return.formulae = FALSE)
@@ -838,7 +838,7 @@ test_that("Correct dimensions of interaction output - impulse and lines", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = FALSE, return.data = TRUE, return.formulae = FALSE)
@@ -881,7 +881,7 @@ test_that("Correct dimensions of interaction output - impulse and lines", {
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "heatmap",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    heatmap.options = "all",                  
                    z.vals = c(0, 1),
                    s.limit = 10,
@@ -893,7 +893,7 @@ test_that("Correct dimensions of interaction output - impulse and lines", {
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "heatmap",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    heatmap.options = "all",
                    z.vals = c(0, 1),
                    s.limit = 10,
@@ -905,7 +905,7 @@ test_that("Correct dimensions of interaction output - impulse and lines", {
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "heatmap",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    heatmap.options = "significant",                  
                    z.vals = c(0, 1),
                    s.limit = 10,
@@ -917,7 +917,7 @@ test_that("Correct dimensions of interaction output - impulse and lines", {
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "heatmap",
-                   effect.type = "cumulative",
+                   shock.history = "cumulative",
                    heatmap.options = "significant",
                    z.vals = c(0, 1),
                    s.limit = 10,
@@ -1007,7 +1007,7 @@ test_that("Function returns objects correctly (including errors)", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = FALSE, return.data = FALSE, return.formulae = FALSE),
@@ -1023,7 +1023,7 @@ test_that("Function returns objects correctly (including errors)", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = TRUE, return.data = TRUE, return.formulae = TRUE)
@@ -1040,7 +1040,7 @@ test_that("Function returns objects correctly (including errors)", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = TRUE, return.data = FALSE, return.formulae = FALSE)
@@ -1057,7 +1057,7 @@ test_that("Function returns objects correctly (including errors)", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = FALSE, return.data = TRUE, return.formulae = TRUE)
@@ -1074,7 +1074,7 @@ test_that("Function returns objects correctly (including errors)", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = TRUE, return.data = TRUE, return.formulae = FALSE)
@@ -1090,7 +1090,7 @@ test_that("Function returns objects correctly (including errors)", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = TRUE, return.data = FALSE, return.formulae = TRUE)
@@ -1106,7 +1106,7 @@ test_that("Function returns objects correctly (including errors)", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = FALSE, return.data = TRUE, return.formulae = FALSE)
@@ -1132,7 +1132,7 @@ test_that("Correct Plot: adl.interact.plot", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "z.lines",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = TRUE, return.data = FALSE, return.formulae = FALSE)                        
@@ -1148,7 +1148,7 @@ test_that("Correct Plot: adl.interact.plot", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "heatmap",
                    heatmap.options = "all",
-                   effect.type = "impulse",
+                   shock.history = "impulse",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = TRUE, return.data = FALSE, return.formulae = FALSE) 
@@ -1164,7 +1164,7 @@ test_that("Correct Plot: adl.interact.plot", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                    plot.type = "lines",
                    line.options = "s.lines",
-                   effect.type = "step",
+                   shock.history = "step",
                    z.vals = c(0, 1),
                    s.limit = 10,
                    return.plot = TRUE, return.data = FALSE, return.formulae = FALSE) 

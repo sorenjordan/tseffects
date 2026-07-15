@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{what.to.return}
 \alias{what.to.return}
-\title{Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM model}
+\title{Consistently return the correct objects after a GDRF ADL/GECM}
 \usage{
 what.to.return(
   return.plot,
@@ -17,9 +17,15 @@ what.to.return(
 \item{return.plot}{a TRUE/FALSE on whether the plot should be returned from the function}
 
 \item{return.formulae}{a TRUE/FALSE on whether the data from the effect should be returned from the function}
+
+\item{plot.out}{the created plot from the GDRF ADL/GECM}
+
+\item{dat.out}{the created data from the GDRF ADL/GECM}
+
+\item{the.final.formulae}{the created formulae from the GDRF ADL/GECM}
 }
 \description{
-Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM model
+Consistently return the correct objects after a GDRF ADL/GECM
 }
 \author{
 Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan

@@ -1,9 +1,9 @@
 Package: tseffects
 Title: Dynamic Inferences from Time Series (with Interactions)
-Version: 0.2.1
+Version: 0.3.1
 Authors@R: c(person("Soren", "Jordan", comment = c(ORCID = "0000-0003-4201-1085"), email = "sorenjordanpols@gmail.com", role = c("aut", "cre", "cph")), person("Garrett N. Vande Kamp", email = "garrettvandekamp@uga.edu", role = c("aut")), person("Reshi Rajan", email = "rrajan@tamu.edu", role = c("aut")))
 Maintainer: Soren Jordan <sorenjordanpols@gmail.com>
-Description: Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences. These tools apply to traditional time-series quantities of interest: especially instantaneous effects for any period and cumulative effects for any period (including the long-run effect). They also allow for a variety of shock histories to be applied to the independent variable (beyond just a one-time, one-unit increase) as well as the recovery of inferences in levels for shocks applies to (in)dependent variables in differences (what we call the Generalized Dynamic Response Function). These effects are also available for the general conditional dynamic model advocated by Warner, Vande Kamp, and Jordan (2026 <doi:10.1017/psrm.2026.10087>). We also provide the actual formulae for these effects.
+Description: Autoregressive distributed lag (A[R]DL) models (and their reparameterized equivalent, the Generalized Error-Correction Model [GECM]) are the workhorse models in uncovering dynamic inferences. ADL models are simple to estimate; this is what makes them attractive. Once these models are estimated, what is less clear is how to uncover a rich set of dynamic inferences from these models. We provide tools for recovering those inferences. These tools apply to traditional time-series quantities of interest and are built from the Impulse Response Function and Step Response Function (sometimes described as a pulse effect or a cumulative effect). They also allow for a variety of shock histories to be applied to the independent variable (beyond just a one-time, one-unit increase) as well as the recovery of inferences in levels for shocks applied to (in)dependent variables in differences (what we call the Generalized Dynamic Response Function). These effects are also available for the general conditional dynamic model advocated by Warner, Vande Kamp, and Jordan (2026 <doi:10.1017/psrm.2026.10087>). We also provide the formulae for these effects.
 URL: https://sorenjordan.github.io/tseffects/, https://github.com/sorenjordan/tseffects
 BugReports: https://github.com/sorenjordan/tseffects/issues
 Imports: mpoly, car, ggplot2, sandwich, stats, utils
@@ -11,6 +11,13 @@ Suggests:
     knitr,
     rmarkdown,
     vdiffr,
+	ARDL,
+	dynamac,
+	kardl,
+	tidyverse,
+	zoo,
+	ggplotify,
+	patchwork,
     testthat (>= 3.0.0)
 Depends: R (>= 3.5.0)
 License: GPL (>=2)

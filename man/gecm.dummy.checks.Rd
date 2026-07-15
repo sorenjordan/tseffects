@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{gecm.dummy.checks}
 \alias{gecm.dummy.checks}
-\title{Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM model}
+\title{Do consistent dummy checks for functions that use a GECM model}
 \usage{
 gecm.dummy.checks(
   x.vrbl,
@@ -45,10 +45,10 @@ gecm.dummy.checks(
 
 \item{se.type}{the type of standard error calculated}
 
-\item{type}{whether the effects are estimated in the context of a GDTE/GDRF}
+\item{type}{whether the effects are estimated in the context of a GDRF}
 }
 \description{
-Do consistent dummy checks for functions (GDTE/GDRF) that use a GECM model
+Do consistent dummy checks for functions that use a GECM model
 }
 \author{
 Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan

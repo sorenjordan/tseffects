@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan" />
+
+<meta name="date" content="2026-07-15" />
+
+<title>An Introduction to tseffects: Dynamic Inferences from Time Series (with Interactions)</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">An Introduction to tseffects: Dynamic
+Inferences from Time Series (with Interactions)</h1>
+<h4 class="author">Soren Jordan, Garrett N. Vande Kamp, and Reshi
+Rajan</h4>
+<h4 class="date">2026-07-15</h4>
+
+
+
+<p>Autoregressive distributed lag (A[R]DL) models (and their
+reparameterized equivalent, the Generalized Error-Correction Model
+[GECM]) are the workhorse models in uncovering dynamic inferences. Since
+the introduction of the general-to-specific modeling strategy of Hendry
+<span class="citation">(1995)</span>, users have become accustomed to
+specifying a single-equation model with (possibly) lags of the dependent
+variable included alongside the independent variables (in differences or
+levels, as appropriate) to capture dynamic inferences. Through all of
+the following, we assume users are familiar with such models and their
+best practices, including testing for stationarity on both sides of the
+equation <span class="citation">(Philips 2022)</span>, equation balance
+<span class="citation">(Pickup and Kellstedt 2023)</span>, the absence
+of serial autocorrelation in the residuals, or testing for moving
+averages <span class="citation">(Vande Kamp and Jordan 2025)</span>. ADL
+models are simple to estimate; this is what makes them attractive. Once
+these models are estimated, what is less clear is how to uncover a rich
+set of dynamic <em>inferences</em> from these models. This complication
+arises in three key areas.</p>
+<p>First: despite robust work on possible quantities of interest that
+can be derived from dynamic models (see De Boef and Keele <span class="citation">(2008)</span>), the actual calculation of these
+quantities (and corresponding measures of uncertainty) remains a
+considerable difficulty for practitioners. Formulae are often complex
+and model-dependent (i.e. on the underlying lag structure of the model),
+especially when considering periods other than an instantaneous effect
+or a long-run multiplier. While other, simulation-based methods exist to
+interpret A[R]DL models (as in Jordan and Philips <span class="citation">(2018a)</span>), these methods are not well equipped to
+test hypotheses of interest.</p>
+<p>Second: methodological approaches to unbalanced equations or
+integrated series routinely involve differencing one or both sides of
+the ADL model to ensure stationarity. Yet researchers might wish to
+uncover inferences about their variables in levels, even if they are
+modeled in differences. Some work approaches this by generalizing shock
+histories to allow for inferences in levels or differences (Vande Kamp,
+Jordan, and Rajan <span class="citation">(2025)</span>), no
+implementation of this approach exists in software.</p>
+<p>Third: the problem grows much more complicated when considering
+conditional dynamic relationships. Though recent work advances a unified
+modeling strategy through a general framework, including cross-lags (see
+Warner, Vande Kamp, and Jordan <span class="citation">(2026)</span>), no
+similar general approach exists to visualize interactive effects. This
+problem is complicated by the observation that, in any dynamic
+interactive model, time itself is a moderator that must be accounted for
+(Vande Kamp, Jordan, and Rajan <span class="citation">(2022)</span>) in
+addition to the values of both variables in the interaction (well
+established since Brambor, Clark, and Golder <span class="citation">(<strong>BramborClarkGolder2006?</strong>)</span>).</p>
+<p><code>tseffects</code> solves these problems. Our point of departure
+is leveraging Box, Jenkins, and Reinsel <span class="citation">(1994)</span>. Rather than deriving period-specific and
+cumulative effects for every combination of independent variables, lags,
+and lags of the dependent variable (as in Wilkins <span class="citation">(2018)</span>, for instance), or simulating the
+unfolding effects over time (as in Jordan and Philips <span class="citation">(2018b)</span>), Box, Jenkins, and Reinsel provide
+simple formulae that focus on the unique period-specific contribution of
+a change in an independent variable. To show how, we first re-introduce
+the ADL and GECM models and define typical effects calculated from these
+models. We then apply those effects to each of the unique problems
+outlined above.</p>
+<div id="the-adlgecm-model" class="section level1">
+<h1>The ADL/GECM model</h1>
+<p>To help ensure consistency in notation, we define the ADL(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>)
+model as follows</p>
+<p><span class="math display">\[
+    Y_{t} = \alpha_{0} + \sum_{i = 1}^{p}\alpha_{i}Y_{t-i} + \sum_{j =
+0}^{q}\beta_{j}X_{t-j} + \sum_{j = 0}^{q}\gamma_{j}Z_{t-j} + \sum_{k =
+0}^{r}\theta_{k}\varepsilon_{t-k}
+\]</span></p>
+<p>Similarly, we define its GECM equivalent as</p>
+<p><span class="math display">\[
+    \Delta Y_{t} = \alpha_{0} + \sum_{i = 1}^{p-1}\alpha_{i}\Delta
+Y_{t-i} + \theta_{0}Y_{t-1} + \sum_{j = 0}^{q-1}\beta_{j}\Delta X_{t-j}
++ \theta_{1}X_{t-1} + \sum_{j = 0}^{q}\gamma_{j}Z_{t-j} + \sum_{k =
+0}^{r}\theta_{k}\varepsilon_{t-k}
+\]</span></p>
+<p>Notice in particular the form of the GECM with a single first lag of
+both the dependent and independent variable in levels. (The GECM
+calculations provided by <code>GDRF.gecm.plot</code> assume this
+correctly specified GECM and use the variable translations between the
+GECM and ADL to define the coefficient in ADL terms. These translations
+are done by <code>gecm.to.adl</code>.) The model might contain other
+regressors, but, for unconditional dynamic models, these regressors are
+unimportant for understanding the dynamic effects of variable <span class="math inline">\(x\)</span>. We will use these models to define and
+recover time-series quantities of interest from the underlying
+model.</p>
+</div>
+<div id="a-unified-approach-to-inferences-the-generalized-dynamic-response-function" class="section level1">
+<h1>A unified approach to inferences: the Generalized Dynamic Response
+Function</h1>
+<p>The ADL model is well established, and traditional quantities of
+interest are well known. Box, Jenkins, and Reinsel <span class="citation">(1994)</span> define quantities of interest that result
+from various shock histories applied to an independent variable. The
+first is the impulse response function (IRF) (or perhaps a short-run
+effect).</p>
+<p><span class="math display">\[IRF_{s} = \beta_{s} +
+\sum_{i=1}^{s}\alpha_{i}IRF_{s-i}\]</span></p>
+<p>We additionally define the step response function (SRF), also
+referred to as a cumulative impulse response function in the time series
+literature.</p>
+<p><span class="math display">\[SRF_{s} = \sum_{k=0}^{s}IRF_{k} =
+IRF_{s} + SRF_{s-1}\]</span></p>
+<p>These quantities are often estimated from an ADL including a
+dependent variable in levels or differences, an independent variable in
+levels or differences, or a mix of both. Yet scholars might want to make
+inferences regarding the dependent variable in levels
+<em>regardless</em> of its order of differencing in the ADL model. Or,
+scholars might want to uncover the effects of a shock history applied to
+an independent variable in levels, even if that independent variable is
+entered into the ADL in differences. Regular ADL formulae cannot deliver
+on this expectation. To resolve this deficiency, Vande Kamp, Jordan, and
+Rajan <span class="citation">(2025)</span> introduce the General Dynamic
+Response Function (GDRF)</p>
+<p><span class="math display">\[\text{GDRF}_{s,h,d.y,d.x} \equiv
+E[\Delta^{d.y}Y_{t+s}|\Delta^{d.x}X_{t:t+s}=\Delta^{d.x}x_{t:t+s}+c_{0:s,h},\textbf{Z}]
+-E[\Delta^{d.y}Y_{t+s}|\Delta^{d.x}X_{t:t+s}=\Delta^{d.x}x_{t:t+s},
+\textbf{Z}]\]</span> with the following elements:</p>
+<ul>
+<li><span class="math inline">\(d.y\)</span>: the number of times the
+dependent variable is differenced <em>before</em> determining the effect
+of the shock on the dependent variable. In other words, in the
+underlying model time series model, was the dependent variable
+first-differenced prior to estimation? If so, <span class="math inline">\(d.y = 1\)</span>. If it is in levels, <span class="math inline">\(d.y = 0\)</span></li>
+<li><span class="math inline">\(d.x\)</span>: the number of times the
+independent variable is differenced <em>before</em> a shock is applied
+to it</li>
+<li><span class="math inline">\(s\)</span>: the number of time periods
+since a shock was applied</li>
+</ul>
+<p><span class="math inline">\(h\)</span> deserves special explanation.
+<span class="citation">(Vande Kamp et al. 2025)</span> demonstrate how
+the binomial function can be used to represent traditional and
+beyond-traditional shock histories typically examined in time series</p>
+<ul>
+<li><span class="math inline">\(h = 1\)</span>: Shock sequence <span class="math inline">\((1,2,3,4,\dots)\)</span>; Linear Trend Coefficient
+of <span class="math inline">\(X\)</span></li>
+<li><span class="math inline">\(h = 0\)</span>: Shock sequence <span class="math inline">\((1,1,1,1,\dots)\)</span>; Permanent One-Unit
+Increase (Step)</li>
+<li><span class="math inline">\(h = -1\)</span>: Shock sequence <span class="math inline">\((1,0,0,0,\dots)\)</span> One-Time, One-Unit
+Increase (Pulse)</li>
+</ul>
+<p>The second virtue of the binomial coefficient is that it translates
+between variables in levels and in differences. <span class="citation">(Vande Kamp et al. 2025)</span> demonstrate that an
+arbitrary shock history for a variable in levels is equivalent to
+another counterfactual shock history to that same variable after
+differencing, simply adjusting the parameter <span class="math inline">\(h\)</span>:</p>
+<p><span class="math display">\[\text{GDRF}_{s,h, d.y, 0} &amp; \equiv
+E[\Delta^{d.y}Y_{t+s}(\Delta^{d.x}(x_{1:t-1}), \Delta^{d.x}(x_{t:T} +
+c_{0:T-t, h})) - \Delta^{d.y}Y_{t+s}(\Delta^{d.x}(x_{1:T}))] =
+\text{GDRF}_{s,h-d.x, d.y, d.x}\]</span></p>
+<p>So the GDRF “translates” these popular shock histories to recover
+inferences in the desired form of the independent and dependent
+variables, regardless of their modeled level of differencing, given the
+specified shock history. All scholars need to do is estimate the ADL
+model and choose a shock. The virtue of <code>tseffects</code> is that
+it automatically does this translation for you.</p>
+<p>Computationally, the benefit of <code>tseffects</code> is that it
+applies these formulae symbolically. Rather than performing many
+recursive calculations as effects extend into future time periods, a
+symbolic representation of those formulae are built (using
+<code>mpoly</code>: <span class="citation">(Kahle 2013)</span>) that
+only need to be evaluated once. We can also peek “under the hood” at
+these formulae, perhaps as a teaching aid, to observe the GDRF in
+different periods, based on the model specified.</p>
+</div>
+<div id="two-subfunctions-pulse.calculator-and-general.calculator" class="section level1">
+<h1>Two subfunctions: <code>pulse.calculator</code> and
+<code>general.calculator</code></h1>
+<p>While its unlikely that users will want to interact with these
+functions, they might be useful either for teaching or for developing a
+better understanding of the GDRF. Despite their names, neither function
+actually does any “calculation”; rather, they return an
+<code>mpoly</code> class of the formula that would be evaluated.</p>
+<p>The first is <code>pulse.calculator</code>. Like its name implies,
+this calculates the traditional pulse effect for time period <span class="math inline">\(s = 0\)</span> up to $s = $ some
+<code>limit</code>. It returns a list of formulae, each one the pulse
+effect for the relevant period. (Time series scholars might refer to
+these as the period-specific effects.) It constructs these formulae
+given a named vector of the relevant <span class="math inline">\(x\)</span> variables (passed to
+<code>x.vrbl</code>) and their corresponding lag orders, as well as the
+same for <span class="math inline">\(y\)</span> (passed to
+<code>y.vrbl</code>), if given. Though most ADLs include a lagged
+dependent variable to allow for flexible dynamics, it is entirely
+possibly that a finite dynamic model is more appropriate: in this case,
+<code>y.vrbl</code> would be <code>NULL</code>.</p>
+<p>Imagine a simple finite dynamic model, where the <span class="math inline">\(x\)</span> variables are <code>mood</code>,
+<code>l1.mood</code>, and <code>l2.mood</code> (lags need not be
+consecutive, though in a well-specified ADL they likely are).
+<code>pulse.calculator</code> would look like</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tseffects)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; Warning: package &#39;tseffects&#39; was built under R version 4.5.2</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>ADL.finite <span class="ot">&lt;-</span> <span class="fu">pulse.calculator</span>(<span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;mood&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l1_mood&quot;</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">&quot;l2_mood&quot;</span> <span class="ot">=</span> <span class="dv">2</span>), </span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>               <span class="at">y.vrbl =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>               <span class="at">limit =</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>This list is six elements long: including the pulses for each period
+from 0 to 5. These will naturally be more complex if there are more
+sophisticated dynamics through a lagged dependent variable. For
+instance, if you estimate an ADL(1,2), where the <span class="math inline">\(x\)</span> variables are <code>mood</code>,
+<code>l1.mood</code>, and <code>l2.mood</code> and the dependent
+variable is <code>policy</code> (with its first lag
+<code>l1.policy</code>).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>ADL1.<span class="fl">2.</span>pulses <span class="ot">&lt;-</span> <span class="fu">pulse.calculator</span>(<span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;mood&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l1_mood&quot;</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">&quot;l2_mood&quot;</span> <span class="ot">=</span> <span class="dv">2</span>), </span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>               <span class="at">y.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l1_policy&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>               <span class="at">limit =</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>These pulses form the basis of the GDRF, given the order of
+differencing of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> and the specified shock history <span class="math inline">\(h\)</span>. To create the formulae for the GDRF,
+<code>general.calculator</code> requires five arguments, most of which
+are defined above: <code>d.x</code> and <code>d.y</code> (defined with
+respect to the GDRF), <code>h</code> (the shock history applied),
+<code>limit</code>, and <code>pulses</code>. The novel argument,
+<code>pulses</code>, is the list of pulses for each period in which a
+GDRF is desired.</p>
+<p>Assume the same ADL(1,2) from above. To recover the formulae for a
+GDRF of a pulse shock, assuming that both <code>mood</code> and
+<code>policy</code> are in levels (such that both <code>d.x</code> and
+<code>d.y</code> are 0), we would run</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">general.calculator</span>(<span class="at">d.x =</span> <span class="dv">0</span>, <span class="at">d.y =</span> <span class="dv">0</span>, <span class="at">h =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">limit =</span> <span class="dv">5</span>, <span class="at">pulses =</span> ADL1.<span class="fl">2.</span>pulses)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; $formulae</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; $formulae[[1]]</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;mood &quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; $formulae[[2]]</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_mood  +  l1_policy * mood &quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; $formulae[[3]]</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l2_mood  +  l1_policy * l1_mood  +  l1_policy**2 * mood &quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; $formulae[[4]]</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy * l2_mood  +  l1_policy**2 * l1_mood  +  l1_policy**3 * mood &quot;</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; $formulae[[5]]</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy**2 * l2_mood  +  l1_policy**3 * l1_mood  +  l1_policy**4 * mood &quot;</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; $formulae[[6]]</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy**3 * l2_mood  +  l1_policy**4 * l1_mood  +  l1_policy**5 * mood &quot;</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; $binomials</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; $binomials[[1]]</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; $binomials[[2]]</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; [1] 1 0</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; $binomials[[3]]</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; [1] 1 0 0</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; $binomials[[4]]</span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; [1] 1 0 0 0</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co">#&gt; $binomials[[5]]</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co">#&gt; [1] 1 0 0 0 0</span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt; $binomials[[6]]</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt; [1] 1 0 0 0 0 0</span></span></code></pre></div>
+<p>(Since <code>general.calculator</code> is “under the hood,”
+<code>h</code> can only be specified as an integer. Later, in a more
+user-friendly function, we will see that shock histories can also be
+specified using characters.)</p>
+<p>Recall that we might want to generalize our inferences beyond simple
+ADLs with both variables in levels. For exposition, assume that
+<code>mood</code> was integrated, so, to balance the ADL, it needed to
+be entered in differences. The user does this and enters <span class="math inline">\(x\)</span> variables as <code>d_mood</code>,
+<code>l1_d_mood</code>, and <code>l2_d_mood</code>.
+<code>pulse.calculator</code> would look like</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>ADL1.<span class="fl">2.</span>d.pulses <span class="ot">&lt;-</span> <span class="fu">pulse.calculator</span>(<span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;d_mood&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l1_d_mood&quot;</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">&quot;l2_d_mood&quot;</span> <span class="ot">=</span> <span class="dv">2</span>), </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>               <span class="at">y.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l1_policy&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>               <span class="at">limit =</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>These pulses look identical to the ones from
+<code>ADL1.2.pulses</code>. But <code>tseffects</code> allows the user
+to recover inferences of a shock history applied to <span class="math inline">\(x\)</span> in levels, rather than its observed
+form of differences. All we need to do is specify the <code>d.x</code>
+order.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">general.calculator</span>(<span class="at">d.x =</span> <span class="dv">1</span>, <span class="at">d.y =</span> <span class="dv">0</span>, <span class="at">h =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">limit =</span> <span class="dv">5</span>, <span class="at">pulses =</span> ADL1.<span class="fl">2.</span>d.pulses)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; $formulae</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; $formulae[[1]]</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;d_mood &quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; $formulae[[2]]</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_d_mood  +  l1_policy * d_mood  -  d_mood &quot;</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; $formulae[[3]]</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l2_d_mood  +  l1_policy * l1_d_mood  +  l1_policy**2 * d_mood  -  l1_d_mood  -  l1_policy * d_mood &quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; $formulae[[4]]</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy * l2_d_mood  +  l1_policy**2 * l1_d_mood  +  l1_policy**3 * d_mood  -  l2_d_mood  -  l1_policy * l1_d_mood  -  l1_policy**2 * d_mood &quot;</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; $formulae[[5]]</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy**2 * l2_d_mood  +  l1_policy**3 * l1_d_mood  +  l1_policy**4 * d_mood  -  l1_policy * l2_d_mood  -  l1_policy**2 * l1_d_mood  -  l1_policy**3 * d_mood &quot;</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; $formulae[[6]]</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy**3 * l2_d_mood  +  l1_policy**4 * l1_d_mood  +  l1_policy**5 * d_mood  -  l1_policy**2 * l2_d_mood  -  l1_policy**3 * l1_d_mood  -  l1_policy**4 * d_mood &quot;</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; $binomials</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; $binomials[[1]]</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; $binomials[[2]]</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; [1]  1 -1</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; $binomials[[3]]</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; [1]  1 -1  0</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; $binomials[[4]]</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; [1]  1 -1  0  0</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt; $binomials[[5]]</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt; [1]  1 -1  0  0  0</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt; $binomials[[6]]</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt; [1]  1 -1  0  0  0  0</span></span></code></pre></div>
+<p>As <span class="citation">(Vande Kamp et al. 2025)</span> suggest,
+scholars should be very thoughtful about the shock history applied.
+These shocks are applied to the underlying independent variable <em>in
+levels</em>. Since <span class="math inline">\(x\)</span> is integrated
+in this example, it might be more reasonable to imagine that the
+underlying levels variable is actually trending. To revise this
+expectation and apply a new shock history, we would run</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">general.calculator</span>(<span class="at">d.x =</span> <span class="dv">1</span>, <span class="at">d.y =</span> <span class="dv">0</span>, <span class="at">h =</span> <span class="dv">1</span>, <span class="at">limit =</span> <span class="dv">5</span>, <span class="at">pulses =</span> ADL1.<span class="fl">2.</span>d.pulses)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; $formulae</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; $formulae[[1]]</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;d_mood &quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; $formulae[[2]]</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_d_mood  +  l1_policy * d_mood  +  d_mood &quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; $formulae[[3]]</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l2_d_mood  +  l1_policy * l1_d_mood  +  l1_policy**2 * d_mood  +  l1_d_mood  +  l1_policy * d_mood  +  d_mood &quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; $formulae[[4]]</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy * l2_d_mood  +  l1_policy**2 * l1_d_mood  +  l1_policy**3 * d_mood  +  l2_d_mood  +  l1_policy * l1_d_mood  +  l1_policy**2 * d_mood  +  l1_d_mood  +  l1_policy * d_mood  +  d_mood &quot;</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; $formulae[[5]]</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy**2 * l2_d_mood  +  l1_policy**3 * l1_d_mood  +  l1_policy**4 * d_mood  +  l1_policy * l2_d_mood  +  l1_policy**2 * l1_d_mood  +  l1_policy**3 * d_mood  +  l2_d_mood  +  l1_policy * l1_d_mood  +  l1_policy**2 * d_mood  +  l1_d_mood  +  l1_policy * d_mood  +  d_mood &quot;</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; $formulae[[6]]</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; [1] &quot;l1_policy**3 * l2_d_mood  +  l1_policy**4 * l1_d_mood  +  l1_policy**5 * d_mood  +  l1_policy**2 * l2_d_mood  +  l1_policy**3 * l1_d_mood  +  l1_policy**4 * d_mood  +  l1_policy * l2_d_mood  +  l1_policy**2 * l1_d_mood  +  l1_policy**3 * d_mood  +  l2_d_mood  +  l1_policy * l1_d_mood  +  l1_policy**2 * d_mood  +  l1_d_mood  +  l1_policy * d_mood  +  d_mood &quot;</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; $binomials</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; $binomials[[1]]</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; $binomials[[2]]</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; [1] 1 1</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt; $binomials[[3]]</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt; [1] 1 1 1</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt; $binomials[[4]]</span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt; [1] 1 1 1 1</span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt; $binomials[[5]]</span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; [1] 1 1 1 1 1</span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt; $binomials[[6]]</span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt; [1] 1 1 1 1 1 1</span></span></code></pre></div>
+<p>(Notice that the pulses do not change.) Recall that these are “under
+the hood”: we expect instead that most users will interact with the full
+calculation and plotting functions, discussed below.</p>
+</div>
+<div id="user-friendly-effects-gdrf.adl.plot-and-gdrf.gecm.plot" class="section level1">
+<h1>User-friendly effects: <code>GDRF.adl.plot</code> and
+<code>GDRF.gecm.plot</code></h1>
+<p>Again, we expect most users will not interact with these calculators.
+Instead, they will estimate an ADL model via <code>lm</code> and expect
+easy-to-use effects. To achieve this directly, we introduce
+<code>GDRF.adl.plot</code>. We gloss over arguments that we’ve already
+seen in <code>pulse.calculator</code> and
+<code>general.calculator</code>:</p>
+<ul>
+<li><code>x.vrbl</code>: a named vector of the <span class="math inline">\(x\)</span> variable and its lag orders</li>
+<li><code>y.vrbl</code>: a named vector of the <span class="math inline">\(y\)</span> variable and its lag orders (if a
+lagged dependent variable is in the model)</li>
+<li><code>d.x</code>: the order of differencing of the independent
+variable before a shock is applied</li>
+<li><code>d.y</code>: the order of differencing of the dependent
+variable before effects are recovered</li>
+<li><code>s.limit</code>: the number of periods for which to calculate
+the effects of the shock (the default is 20)</li>
+</ul>
+<p>Now, since effects will be calculated, users must also provide a
+<code>model</code>: the <code>lm</code> object containing the
+(well-specified, balanced, free of serial autocorrelation, etc. ADL
+model) that has the estimates. Users must also specify a shock history
+through <code>shock.history</code>. Users can continue to specify an
+integer that represents <code>n</code> (from above) or can use the
+phrases <code>pulse</code> (for <span class="math inline">\(h =
+-1\)</span>) and <code>step</code> (for <span class="math inline">\(h =
+0\)</span>).</p>
+<p>Users have already indicated the order of differencing of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> (through <code>d.x</code> and
+<code>d.y</code>): now <code>general.calculator</code> can leverage this
+information and the supplied <code>shock.history</code> to deliver
+inferences about <span class="math inline">\(x\)</span> in either levels
+or differences through <code>inferences.y</code> and
+<code>inferences.x</code>. If both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are entered into the ADL in levels (so
+that <code>d.x</code> and <code>d.y</code> are 0),
+<code>inferences.y</code> and <code>inferences.x</code> default to
+<code>levels</code>. If, however, either <span class="math inline">\(x\)</span> or <span class="math inline">\(y\)</span> (or both) are entered in differences,
+users can recover causal effects from a shock history applied to <span class="math inline">\(x\)</span> in levels, or to a dependent variable
+realized in levels. However, <em>they don’t have to</em>. The shock can
+still be applied to <span class="math inline">\(x\)</span> in
+differences, or the effects can be realized on <span class="math inline">\(y\)</span> in differences: just change
+<code>inferences.x</code> to <code>differences</code> (for the former)
+or <code>inferences.y</code> to <code>differences</code> (for the
+latter).</p>
+<p>A few options allow users to tailor levels and types of uncertainty
+desired. The first is the type of standard errors calculated from the
+model: users can specify any type of standard error accepted by
+<code>vcovHC</code> in the <code>sandwich</code> package: this is done
+by <code>se.type =</code> (where <code>const</code> is the default).
+Users can also specify a level of uncertainty to the delta method other
+than 0.95; this is done through <code>dM.level</code>.</p>
+<p>Three final arguments control the output returned to the user.</p>
+<ul>
+<li><code>return.plot</code>: we assume most users would like a
+visualization of these results and nothing else (default is
+<code>TRUE</code>)</li>
+<li><code>return.data</code>: if the user wants the raw data (to design
+their own <code>ggplot</code>, for instance), this argument should be
+<code>TRUE</code> (default is <code>FALSE</code>)</li>
+<li><code>return.formulae</code>: the formulae can be very complex, but
+perhaps users want to see the particular formula for the effect in some
+particular period <span class="math inline">\(h\)</span>. If
+<code>return.formulae = TRUE</code>, these are returned as a list, along
+with the binomial series that represents the shock history (default is
+<code>FALSE</code>)</li>
+</ul>
+<p>We’ll use the toy time series data included with the package to
+illustrate the function. These data are purely expository, as is the
+model. We do not advocate for this model.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">data</span>(toy.ts.interaction.data)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co"># Fit an ADL(1, 1)</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>model.adl <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> l_1_y <span class="sc">+</span> x <span class="sc">+</span> l_1_x, <span class="at">data =</span> toy.ts.interaction.data)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>test.pulse <span class="ot">&lt;-</span> <span class="fu">GDRF.adl.plot</span>(<span class="at">model =</span> model.adl,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>                                   <span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l_1_x&quot;</span> <span class="ot">=</span> <span class="dv">1</span>), </span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>                                   <span class="at">y.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l_1_y&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>                                   <span class="at">d.x =</span> <span class="dv">0</span>, </span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>                                   <span class="at">d.y =</span> <span class="dv">0</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>                                   <span class="at">shock.history =</span> <span class="st">&quot;pulse&quot;</span>, </span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>                                   <span class="at">inferences.y =</span> <span class="st">&quot;levels&quot;</span>, </span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>                                   <span class="at">inferences.x =</span> <span class="st">&quot;levels&quot;</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>                                   <span class="at">s.limit =</span> <span class="dv">20</span>, </span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>                                   <span class="at">return.plot =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>                                   <span class="at">return.formulae =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  </span></code></pre></div>
+<p>This recovers the pulse effect. We can also observe the formulae and
+associated binomials in <code>test.pulse$formulae</code> and
+<code>test.pulse$binomials</code>. <code>test.pulse$plot</code> contains
+the plot: the effect of applying a pulse shock to <span class="math inline">\(x\)</span>. If we wanted the step effect, we would
+change <code>shock.history</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>test.pulse2 <span class="ot">&lt;-</span> <span class="fu">GDRF.adl.plot</span>(<span class="at">model =</span> model.adl,</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>                                   <span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l_1_x&quot;</span> <span class="ot">=</span> <span class="dv">1</span>), </span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>                                   <span class="at">y.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l_1_y&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>                                   <span class="at">d.x =</span> <span class="dv">0</span>, </span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                                   <span class="at">d.y =</span> <span class="dv">0</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>                                   <span class="at">shock.history =</span> <span class="st">&quot;step&quot;</span>, </span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>                                   <span class="at">inferences.y =</span> <span class="st">&quot;levels&quot;</span>, </span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>                                   <span class="at">inferences.x =</span> <span class="st">&quot;levels&quot;</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>                                   <span class="at">s.limit =</span> <span class="dv">20</span>, </span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>                                   <span class="at">return.plot =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>                                   <span class="at">return.formulae =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  </span></code></pre></div>
+<p>Equivalently, we could specify <code>shock.history</code> =
+<code>0</code> (since this is the value of <span class="math inline">\(n\)</span> that represents a step shock
+history).</p>
+<p>Imagine that the <span class="math inline">\(x\)</span> variable was
+actually integrated, so, for balance, it was entered into the model in
+differences.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">data</span>(toy.ts.interaction.data)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co"># Fit an ADL(1, 1)</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>model.adl.diffs <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> l_1_y <span class="sc">+</span> d_x <span class="sc">+</span> l_1_d_x, <span class="at">data =</span> toy.ts.interaction.data)</span></code></pre></div>
+<p>To observe the causal effects of a pulse shock history applied to
+<span class="math inline">\(x\)</span> <em>in levels</em>, we would
+run</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">GDRF.adl.plot</span>(<span class="at">model =</span> model.adl.diffs,</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>                                   <span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;d_x&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l_1_d_x&quot;</span> <span class="ot">=</span> <span class="dv">1</span>), </span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>                                   <span class="at">y.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l_1_y&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>                                   <span class="at">d.x =</span> <span class="dv">1</span>, </span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>                                   <span class="at">d.y =</span> <span class="dv">0</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>                                   <span class="at">shock.history =</span> <span class="st">&quot;pulse&quot;</span>, </span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>                                   <span class="at">inferences.y =</span> <span class="st">&quot;levels&quot;</span>, </span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>                                   <span class="at">inferences.x =</span> <span class="st">&quot;levels&quot;</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>                                   <span class="at">s.limit =</span> <span class="dv">20</span>, </span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>                                   <span class="at">return.plot =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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UBYk0YB+//13M3bs2CxXFSQEhEC5EBABZUFSXfFZQFGQEGgBBERAWUBdZJFFXKjGAmUBR0FCoIwIiICygNm2bVsz//zza1Z8FmwUJATKiYAIKAZN9YTFAKNgIVBGBERAMWCKgGKAUbAQKCMCIqAYMCGgTz/91Pz1118xdyhYCAiBUhEQAcUgyFigqVOnms8//zzmDgULASFQKgJlIaBG1BLUFV9q1dLzQiA3AkUTEIP0+vTpY7p06WLQFti22morc9555zl/OrlfXdt30BU/wwwzqCestotJqatzBGYsJv39+vUz3333nenZs6fp37+/mWWWWczff//tbCbPPfec2XHHHc0hhxxiunfvXkz0NfFMmzZtzIILLigCqonSUCIaFYGiCGivvfYySy65ZAYmaAtLLbWU23r37t0Qbk3R6jQpNaOYdSIEyopAUU0wTz4TJkwwb7/9tpu4icHWS6tWrcwyyyzjT+t2LwKq26JTwusEgaI0IGaK77HHHmby5Mlm3nnnNX/++aebuLnxxhubiy++2Mw222x1kv3kZC6++OJm4MCBrjeMJplECAiB8iJQlAZ06KGHGuxAaD9PPvmkGTZsmNOC8CR4++23lzeFVYyNnjB6+BgPJBECQqD8CBRFQGg8q6222nSpWWONNcwPP/wwXXi9Bqgrvl5LTumuFwSKaoIdcMABrodr2223dZM20RI+++wzc//995uRI0fWS95zppNesNatW6snLCdSukEIFIdAUQS0yy67mFVXXdU888wzrrdrxhlndL1iL7zwgplrrrmKS0kNPkW+Fl54YRFQDZaNktQYCBRFQGR96aWXdltjwBCfC/WExWOjK0KgVASKsgGV+tJ6ep6eMI0FqqcSU1rrCQERUI7SQgP68ssvXVd8jlt1WQgIgQIRKLoJlu09p512mhk+fLjZfPPNzTHHHJPtloywiRMnmtdee82gZSy33HIZ1/zJF198kbFO+9xzz13RQY4LLbSQm2bCrHianRIhIATKh0BZCejoo482bPkM2nvjjTfMySef7MjqyiuvNEzf2GGHHabL2fXXX2++/fbbtHF75ZVXrjgBkSjGAomApiseBQiBkhAoiYCYivHNN9+4kc80VQoZAc2I6TPOOMPNpu/Ro4fZb7/9TLdu3cxMM82UkSEcw5977rlutn3GhQqd0BWPaDBihQDXa5oKgaII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ASFQOgIioNIxVAxCQAgUiUBDDkQ88MADDXOzJEJACFQXAeZHshhnnDQUAW2xxRbm8ssvd/54fv/997g8u/CxY8ea2WefvSEchjE/DRewc889t5ljjjkS810PF6dOnWq++uorM9988zXExN5ff/3V+ZRaaKGFnHeFeiiDpDT+/PPP5rvvvjOLLbZYTm+flGWi2MrblLLuuuumLrrooobIuyXblHUdkhowYEBD5OfTTz91+Xn++ecbIj/Dhw93+fnkk08aIj/UM+ob9a5UkQ0okZ51UQgIgZZEoGkJaKONNmqY9dlxA7LllluahRdeuCXrSsXixn5Hfjp27Fixd7bki2gak59GsUsussgiLj/lcD/TChWqJcFX3EJACAiBOASaVgOKA0ThQkAIVA6BhuoFyxc21nx/7bXXzOKLL+5crub7XC3e98svvzgXsWHa1l577fC0bo7ff/99w4KQlIuXei4rVsalqY9rX6Rey4qeLL4XXA3jjK9Vq1a+eMwHH3zgemBZAaaYJnPTaUBvvPGG2WeffcyHH35ojj32WPPAAw+kwazHg1deecWcf/75Lh/kpV7zY3u+zNFHH+28T/pyqOeyYk041of766+/fHZMPZbVuHHjTM+ePc3IkSPN4MGDze677278EJf+/fu7ukc57bvvvm4tvHRm8z0otRut3p7fa6+9Um+++aZLtgU3tc0225SlO7FaOFxzzTWpm2++uVqvL8t7H3zwwdR2222Xsp4nUw8//HA6znosK6stpI4//vjUAQcckFpvvfVSdpXcdH7qsawuvfTS1A033JDOg11uPGWJKMVQiR122CFlCdZdu+uuu1JnnXVW+r58D5pKA/rzzz/dKhaokQgD3WaddVY36C1fwq61+1ixgwGVd955p/uHtQVfa0nMmR5Ue1vJzTLLLJNW7+u1rNB4aAJfccUV0+W7HsuKWQV77rlnOi8//vijYWClHdPkmmO+J4wmGCvGFCpNRUDjx493XaFhG7Zdu3Zm0qRJheJWM/dTqV988UUz88wzm1tvvdU5zq+ZxOWZkM0339yN4uZ2T6D1WlaUAwsZeLtPCEE9lhWLL7A2HvL000+7P/CtttrKfPPNN4Zvx8ucc87pRkf783z3TWWEbt26dUabHJD4p8XwWa9y4403mrnmmsstCdS9e3djmzKuktT7mCCVVW3VSJYbv/32242d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" /><!-- --></p>
+<p>(Notice the change in <code>d.x</code> and the <code>x.vrbl</code>).
+Suppose, though, that we wanted to apply this pulse to <span class="math inline">\(x\)</span> <em>in differences</em>. We just change
+the form of <code>inferences.x</code>, leaving all other arguments the
+same.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">GDRF.adl.plot</span>(<span class="at">model =</span> model.adl.diffs,</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>                                   <span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;d_x&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l_1_d_x&quot;</span> <span class="ot">=</span> <span class="dv">1</span>), </span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>                                   <span class="at">y.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l_1_y&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>                                   <span class="at">d.x =</span> <span class="dv">1</span>, </span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>                                   <span class="at">d.y =</span> <span class="dv">0</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>                                   <span class="at">shock.history =</span> <span class="st">&quot;pulse&quot;</span>, </span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>                                   <span class="at">inferences.y =</span> <span class="st">&quot;levels&quot;</span>, </span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>                                   <span class="at">inferences.x =</span> <span class="st">&quot;differences&quot;</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>                                   <span class="at">s.limit =</span> <span class="dv">20</span>, </span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>                                   <span class="at">return.plot =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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9e2339bYJn8EAUFgaQRSz4DI5fPLL7+oUvQ/Lqz777+/8Yi+66673NWyLAgIAjkQSD0DsgroKCQg8K1Tp47afffdZRiW42GTVYKAFwFhQFoBvdZaaylK7URFDMPef/99k6YjqnPKeQSBakQg9Qxo2rRpkQ2/7APSunVrVb9+fXXLLbfYVTIXBASBHAikngExBItq+GXxJWH9AQccoMaMGaO+//57u1rmgoAg4EGg4gxo8eLFauLEiZ5m1fzLcIaEX1Fblr7++mv15ZdfRs6AaH3Xrl1NhdW77767ZmfknyAgCGQRqCgDIgbrkksuUY8++mi2Qd6FIUOGqEGDBhlfneOPP159/PHH3l1C/7cKaL868GFPXrduXdW2bVsZhoUFUI5LBQIVY0AfffSROuaYY3xzKS9YsEC9+uqr5iU+99xz1WGHHabuvffeyG4MDogrrLCCatiwYWTndE+EMvq9995Tr7/+urtalgUBQeAfBCrGgH799Vd14YUXGqaS727ApLbddluFTgWiAgUvtEs///yzKY9MieTZs2er5ZZbzt3su4wE1KRJk6KO8T2hZ2ObNm0UkpB4RnuAkb+CwD8IBH9bI4Zs6623Nmd86aWX8p75iy++qFGjfY011lCLFi2qsT+xVwzNLJEYLCghAdl2BD2mmP2WXXZZowvCKfG6666r0ZdiziP7CgLVikDFJKAggPICkybDEtUnVl55ZfvXzNHfPP3002bq27evqWxaY4c8f5DAqGoatQXMezmsYei6ohw6eq8h/wWBpCIQawa03nrrKapVWGLZ6zC44oorGh0Oepz1118/cGL4d955x6TNqG0GhD8QFVTFJ8jeRZkLAv+PQCwZEMpnpIbtt9/eJAv75JNPFNLPhAkT1A477PD/rS9hyVrAoooB82sKymgCXqdMmeK3m2wTBFKHQCwZ0EknnWRCGdD59OjRQ51wwgnqyCOPNBaz7t27R3KTYECbbLKJWmWVVSI5n99JdtttNxMjJlKQH0qyLY0I/Euno8jEveN//vmnWrJkiak84ddWdEF77723+uCDD1Tjxo39dlXk7iGL4TXXXOO7X1QbUULff//9xvGxGEV5VNeX8wgCcUQglhKQFyhyLUf90t55553q1FNP9V6q1v4feOCBJu3HfffdV2vXkBMLAklDIBEMqDZApaQyU7lo4403NqV7ZBhWLsTl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" /><!-- --></p>
+<p>The same changes could be made to <code>inferences.y</code> (if <span class="math inline">\(y\)</span> were modeled in differences).
+<code>d.x</code> should be entered as the form of the independent
+variable, even if the user desires the effects of a shock recovered in
+the differenced form (this should be handled by
+<code>inferences.x</code>). The same is true of <code>d.y</code>.</p>
+<p><code>GDRF.gecm.plot</code> is extremely similar. Imagine the
+following specified GECM model (with a first lag only of each <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> in levels)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Fit a GECM(1, 1)</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>model.gecm <span class="ot">&lt;-</span> <span class="fu">lm</span>(d_y <span class="sc">~</span> l_1_y <span class="sc">+</span> l_1_d_y <span class="sc">+</span> l_1_x <span class="sc">+</span> d_x <span class="sc">+</span> l_1_d_x, <span class="at">data =</span> toy.ts.interaction.data)</span></code></pre></div>
+<p>Since both the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> variables appear in levels and
+differences, we need to differentiate them. <code>GDRF.gecm.plot</code>
+does this by separating them into two forms</p>
+<ul>
+<li><code>x.vrbl</code>: a named vector of the x variables (of the lower
+level of differencing, usually in levels d = 0) and corresponding lag
+orders in the GECM model</li>
+<li><code>y.vrbl</code>: a named vector of the (lagged) y variables (of
+the lower level of differencing, usually in levels d = 0) and
+corresponding lag orders in the GECM model</li>
+<li><code>x.vrbl.d.x</code>: the order of differencing of the x variable
+(of the lower level of differencing, usually in levels d = 0) in the
+GECM model</li>
+<li><code>y.vrbl.d.y</code>: the order of differencing of the y variable
+(of the lower level of differencing, usually in levels d = 0) in the
+GECM model</li>
+<li><code>x.d.vrbl</code>: a named vector of the x variables (of the
+higher level of differencing, usually first differences d = 1) and
+corresponding lag orders in the GECM model</li>
+<li><code>y.d.vrbl</code>: a named vector of the y variables (of the
+higher level of differencing, usually first differences d = 1) and
+corresponding lag orders in the GECM model</li>
+<li><code>x.d.vrbl.d.x</code>: the order of differencing of the x
+variable (of the higher level of differencing, usually first differences
+d = 1) in the GECM model</li>
+<li><code>y.d.vrbl.d.y</code>: the order of differencing of the y
+variable (of the higher level of differencing, usually first differences
+d = 1) in the GECM model</li>
+</ul>
+<p>The orders of differencing of <code>y.vrbl</code> and
+<code>y.d.vrbl</code> (as well as <code>x.vrbl</code> and
+<code>x.d.vrbl</code>) must be separated by only one order. From here,
+all of the other arguments are the same. (Unlike in
+<code>GDRF.gecm.plot</code>, <code>inferences.x</code> and
+<code>inferences.y</code> must be in levels, given the dual nature of
+the variables in the model.) For <code>model.gecm</code>, the syntax
+would be</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>gecm.pulse <span class="ot">&lt;-</span> <span class="fu">GDRF.gecm.plot</span>(<span class="at">model =</span> model.gecm,</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>                                   <span class="at">x.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l_1_x&quot;</span> <span class="ot">=</span> <span class="dv">1</span>), </span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>                                   <span class="at">y.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l_1_y&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>                                   <span class="at">x.vrbl.d.x =</span> <span class="dv">0</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>                                   <span class="at">y.vrbl.d.y =</span> <span class="dv">0</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>                                   <span class="at">x.d.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;d_x&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;l_1_d_x&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>                                   <span class="at">y.d.vrbl =</span> <span class="fu">c</span>(<span class="st">&quot;l_1_d_y&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>                                   <span class="at">x.d.vrbl.d.x =</span> <span class="dv">1</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>                                   <span class="at">y.d.vrbl.d.y =</span> <span class="dv">1</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>                                   <span class="at">shock.history =</span> <span class="st">&quot;pulse&quot;</span>, </span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>                                   <span class="at">inferences.y =</span> <span class="st">&quot;levels&quot;</span>, </span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>                                   <span class="at">inferences.x =</span> <span class="st">&quot;levels&quot;</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>                                   <span class="at">s.limit =</span> <span class="dv">20</span>, </span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>                                   <span class="at">return.plot =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>                                   <span class="at">return.formulae =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Examining the formulae show that the conversion from GECM
+coefficients to ADL coefficients is automatic. As before, if we wanted a
+different shock history, we would just adjust <code>shock.history</code>
+to apply a different shock history to <span class="math inline">\(x\)</span> in levels.</p>
+</div>
+<div id="user-friendly-conditional-effects-interact.adl.plot" class="section level1">
+<h1>User-friendly conditional effects:
+<code>interact.adl.plot</code></h1>
+<p><span class="citation">(Warner et al. 2026)</span> advocate for a
+general model that allows for conditional dynamic relationships to
+unfold unrestricted over time. They demonstrate the superiority of this
+approach to a restricted model. It requires the estimation of a
+contmeporaneous interaction, cross-period interactions (i.e. <span class="math inline">\(x_{t-1}\)</span> and <span class="math inline">\(z_t\)</span> and vice versa), and lagged
+interactions (i.e. <span class="math inline">\(x_{t-1}\)</span> and
+<span class="math inline">\(z_{t-1}\)</span>).</p>
+<p><span class="math display">\[y_t = \alpha_0 +
+\sum_{f=1}^p\alpha_{f}y_{t-f} + \sum_{g=0}^q \beta_{g}x_{t-g} +
+\sum_{h=0}^q \theta_{h}z_{t-h} +  \sum_{g=0}^q\sum_{h=0}^q \zeta_{g,
+h}x_{t-g}z_{t-h}  + \epsilon_t \]</span></p>
+<p>They provide formulae for calculating effects, but no implementation
+of these formulae in software. Moreover, they do not explicitly
+recognize the conditional role of time itself (<span class="math inline">\(s\)</span>, in our parlance) in moderating
+calculated interactive effects (see Jordan, Vande Kamp, and Rajan <span class="citation">(2022)</span> and Brambor, Clark, and Golder <span class="citation">(<strong>BramborClarkGolder2006?</strong>)</span>).</p>
+<p>We resolve these deficiencies through <code>interact.adl.plot</code>.
+Many of the arguments are familiar</p>
+<ul>
+<li><code>model</code>: a (well specified, etc.) ADL model, likely
+following the general recommendation of <span class="citation">(Warner
+et al. 2026)</span></li>
+<li><code>x.vrbl</code>: a named vector of the “main” <span class="math inline">\(x\)</span> variables and corresponding lag orders
+in the ADL model</li>
+<li><code>z.vrbl</code>: a named vector of the “moderating” <span class="math inline">\(z\)</span> variables and corresponding lag orders
+in the ADL model</li>
+<li><code>y.vrbl</code>: a named vector of the <span class="math inline">\(y\)</span> variable and its lag orders (if a
+lagged dependent variable is in the model)</li>
+<li><code>x.z.vrbl</code>: a named vector with the interaction variables
+and corresponding lag orders in the ADL model</li>
+</ul>
+<p>We pause to note something extremely important: <code>x.z.vrbl</code>
+should be constructed such that the lag orders reflect the lag order
+that pertains to the “main” <span class="math inline">\(x\)</span>
+variable. For instance, <code>x_l_1_z</code> (contemporaneous <span class="math inline">\(x\)</span> times lagged <span class="math inline">\(z\)</span>) would be 0 and <code>z_l_1_x</code>
+(lagged <span class="math inline">\(x\)</span> times contemporaneous
+<span class="math inline">\(z\)</span>) would be 1.</p>
+<p>Four arguments pertain to how the interactive effect should be
+visualized (following Jordan, Vande Kamp, and Rajan <span class="citation">(2022)</span>)</p>
+<ul>
+<li><code>effect.type</code>: whether impulse or cumulative effects
+should be calculated. <code>impulse</code> generates impulse effects, or
+short-run/instantaneous effects specific to each period.
+<code>cumulative</code> generates the accumulated, or
+long-run/cumulative effects up to each period (including the long-run
+multiplier)</li>
+<li><code>plot.type</code>: whether to feature marginal effects at
+discrete values of <span class="math inline">\(s\)</span>/<span class="math inline">\(z\)</span> as lines, or across a range of values
+through a heatmap</li>
+<li><code>line.options</code>: if drawing lines, whether the moderator
+should be values of <span class="math inline">\(z\)</span> or <span class="math inline">\(s\)</span></li>
+<li><code>heatmap.options</code>: if drawing a heatmap, whether all
+marginal effects should be shown or just statistically significant
+ones</li>
+</ul>
+<p>Users are encourgaed to experiment with many types of visualization:
+they all simply illustrate the underlying conditionality in the model.
+Aesthetics are generally presented with nice defaults, but options
+include</p>
+<ul>
+<li><code>line.colors</code>: defaults to colorsafe Okabe-Ito colors,
+but any vector of colors (matching the number of lines) can be used
+(including a black and white graphic with <code>bw</code>)</li>
+<li><code>heatmap.colors</code>: defaults to Blue-Red, but any
+<code>hcl.pal</code> is possible. We also create one for black and white
+graphics with <code>Grays</code></li>
+<li><code>z.label.rounding</code>: the number of digits to round <span class="math inline">\(z\)</span> to in a legend, if values are not
+discrete</li>
+<li><code>z.vrbl.label</code>: the label to use for the <span class="math inline">\(z\)</span> variable in plots</li>
+</ul>
+<p>A final set of controls involves the values of <span class="math inline">\(z\)</span> to calculate and plot across</p>
+<ul>
+<li><code>z.vals</code>: if <code>plot.type = lines</code>, these are
+treated as discrete levels of <span class="math inline">\(z\)</span>. If
+<code>plot.type = heatmap</code>, these are treated as a lower and upper
+level of a range of values of <span class="math inline">\(z\)</span></li>
+<li><code>s.vals</code>: of <code>line.options = s.lines</code>, the
+values for the time since the shock. The default is 0 (short-run) and
+the <code>LRM</code></li>
+</ul>
+<p>All of these arguments have reasonable defaults. The arguments
+<code>dM.level</code>, <code>s.limit</code>, <code>se.type</code>,
+<code>return.data</code>, <code>return.plot</code>, and
+<code>return.formulae</code> are also available.</p>
+<p>For a final time, let’s estimate a general model (just assuming it is
+well behaved)</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">data</span>(toy.ts.interaction.data)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co"># Fit an ADL(1, 1)</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>interact.model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> l_1_y <span class="sc">+</span> x <span class="sc">+</span> l_1_x <span class="sc">+</span> z <span class="sc">+</span> l_1_z <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>        x_z <span class="sc">+</span> z_l_1_x <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>        x_l_1_z <span class="sc">+</span> l_1_x_l_1_z, <span class="at">data =</span> toy.ts.interaction.data)</span></code></pre></div>
+<p>Let’s first illustrate a line type, where the moderation is shown a
+different values of <span class="math inline">\(z\)</span> over time.
+The shock history is a simple <code>effect.type = &quot;impulse&quot;</code></p>
+<pre><code>interact.adl.plot(model = model.toydata, x.vrbl = c(&quot;x&quot; = 0, &quot;l_1_x&quot; = 1), 
+                    y.vrbl = c(&quot;l_1_y&quot; = 1), 
+                    z.vrbl = c(&quot;z&quot; = 0, &quot;l_1_z&quot; = 1),
+                    x.z.vrbl = c(&quot;x_z&quot; = 0, &quot;z_l_1_x&quot; = 1, &quot;x_l_1_z&quot; = 0, &quot;l_1_x_l_1_z&quot; = 1),
+                    z.vals = -1:1,
+                    effect.type = &quot;impulse&quot;, plot.type = &quot;lines&quot;, line.options = &quot;z.lines&quot;,
+                    s.limit = 20)</code></pre>
+<p>If we wanted to moderate by <span class="math inline">\(s\)</span>
+instead</p>
+<pre><code>interact.adl.plot(model = model.toydata, x.vrbl = c(&quot;x&quot; = 0, &quot;l_1_x&quot; = 1), 
+                    y.vrbl = c(&quot;l_1_y&quot; = 1), 
+                    z.vrbl = c(&quot;z&quot; = 0, &quot;l_1_z&quot; = 1),
+                    x.z.vrbl = c(&quot;x_z&quot; = 0, &quot;z_l_1_x&quot; = 1, &quot;x_l_1_z&quot; = 0, &quot;l_1_x_l_1_z&quot; = 1),
+                    z.vals = -1:1,
+                    s.vals = c(0, 5),
+                    effect.type = &quot;impulse&quot;, plot.type = &quot;lines&quot;, line.options = &quot;s.lines&quot;,
+                    s.limit = 20)</code></pre>
+<p>We observe two lines: the instantaneous effect at <span class="math inline">\(s = 0\)</span> and the period-specific effect at
+<span class="math inline">\(s = 5\)</span>. If we wanted to see these as
+a step (cumulative), rather than a pulse, we would just change the
+<code>effect.type</code>.</p>
+<pre><code>interact.adl.plot(model = model.toydata, x.vrbl = c(&quot;x&quot; = 0, &quot;l_1_x&quot; = 1), 
+                    y.vrbl = c(&quot;l_1_y&quot; = 1), 
+                    z.vrbl = c(&quot;z&quot; = 0, &quot;l_1_z&quot; = 1),
+                    x.z.vrbl = c(&quot;x_z&quot; = 0, &quot;z_l_1_x&quot; = 1, &quot;x_l_1_z&quot; = 0, &quot;l_1_x_l_1_z&quot; = 1),
+                    z.vals = -1:1,
+                    s.vals = c(0, 5),
+                    effect.type = &quot;step&quot;, plot.type = &quot;lines&quot;, line.options = &quot;s.lines&quot;,
+                    s.limit = 20)</code></pre>
+<p>If we wanted to see the period-specific effects of <span class="math inline">\(x\)</span> across the full range of <span class="math inline">\(z\)</span>, since it is continuous, the heatmap
+makes the most sense. Notice we omit <code>z.vals</code> this time to
+show that the function establishes reasonable defaults.</p>
+<pre><code>interact.adl.plot(model = model.toydata, x.vrbl = c(&quot;x&quot; = 0, &quot;l_1_x&quot; = 1), 
+                    y.vrbl = c(&quot;l_1_y&quot; = 1), 
+                    z.vrbl = c(&quot;z&quot; = 0, &quot;l_1_z&quot; = 1),
+                    x.z.vrbl = c(&quot;x_z&quot; = 0, &quot;z_l_1_x&quot; = 1, &quot;x_l_1_z&quot; = 0, &quot;l_1_x_l_1_z&quot; = 1),
+                    effect.type = &quot;pulse&quot;, plot.type = &quot;heatmap&quot;, heatmap.options = &quot;all&quot;,
+                    s.limit = 20)</code></pre>
+<p>If we want to ignore statistically insignificant effects, we can
+change the <code>heatmap.options</code> to be
+<code>significant</code></p>
+<pre><code>interact.adl.plot(model = model.toydata, x.vrbl = c(&quot;x&quot; = 0, &quot;l_1_x&quot; = 1), 
+                    y.vrbl = c(&quot;l_1_y&quot; = 1), 
+                    z.vrbl = c(&quot;z&quot; = 0, &quot;l_1_z&quot; = 1),
+                    x.z.vrbl = c(&quot;x_z&quot; = 0, &quot;z_l_1_x&quot; = 1, &quot;x_l_1_z&quot; = 0, &quot;l_1_x_l_1_z&quot; = 1),
+                    effect.type = &quot;pulse&quot;, plot.type = &quot;heatmap&quot;, heatmap.options = &quot;significant&quot;,
+                    s.limit = 20)</code></pre>
+</div>
+<div id="concluding-thoughts" class="section level1">
+<h1>Concluding thoughts</h1>
+<p>A word of caution: <code>tseffects</code> is very naive to your
+model. This is true in three ways. First, it relies on the user to
+specify the lag structure correctly in both the underlying
+<code>lm</code> model as well as the corresponding plot you are
+producing. Including a term in the model, but not passing it to the
+plotting function (i.e. to <code>GDRF.adl.plot</code> through
+<code>x.vrbl</code>) will cause the calculation of the effects to be
+inaccurate. <code>interact.adl.plot</code> is completely uninformed
+about the underlying model: if there are interactive terms included in
+the model but not included in <code>interact.adl.plot</code>, the effect
+estimates will be incorrect. If a lagged variable is ommitted, the
+effect estimates will be incorrect. It is incumbent on the user to
+ensure that the model is well specified and that the specification is
+fully reflected in the interpretation function used.</p>
+<p>Second, and to reiterate, it makes no check that your model is well
+specified. The best starting place for a calculation of effects is
+always a well-specified model; users should complete this before
+obtaining inferences. See the citations at the beginning of the vignette
+for places to start.</p>
+<p>Third, it does not pass judgement on the shock history you are
+applying. Stationary (<code>d.x = 0</code>) variables cannot trend by
+definition, but specifying <code>shock.history = 1</code> in the
+function would apply a linear trend shock history anyway. This is not a
+good idea and is inconsistent with the underlying independent variable.
+However, shock histories are hypothetical, and we are loathe to limit
+the ability of a user to specify a counterfactual, consistent or not. We
+leave it in the user’s hands to determine if their shock is sensible or
+not.</p>
+<p>Despite these words of caution, <code>tseffects</code> hopefully
+simplifies the job of the time series analyst in obtaining a variety of
+effects.</p>
+</div>
+<div id="bibliography" class="section level1 unnumbered">
+<h1 class="unnumbered">Bibliography</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-BJR" class="csl-entry">
+Box, George E. P., Gwilym M. Jenkins, and Gregory C. Reinsel. 1994.
+<em>Time Seires Analysis: Forecasting and Control</em>. John Wiley;
+Sons.
+</div>
+<div id="ref-de2008taking" class="csl-entry">
+De Boef, Suzanna, and Luke Keele. 2008. <span>“Taking Time
+Seriously.”</span> <em>American Journal of Political Science</em> 52
+(1): 184–200. <a href="https://doi.org/10.1111/j.1540-5907.2007.00307.x">https://doi.org/10.1111/j.1540-5907.2007.00307.x</a>.
+</div>
+<div id="ref-hendry" class="csl-entry">
+Hendry, David E. 1995. <em>Dynamic Econometrics</em>. Oxford: Oxford
+University Press.
+</div>
+<div id="ref-jordan2018cointegration" class="csl-entry">
+Jordan, Soren, and Andrew Q Philips. 2018a. <span>“Cointegration Testing
+and Dynamic Simulations of Autoregressive Distributed Lag
+Models.”</span> <em>The Stata Journal</em> 18 (4): 902–23.
+</div>
+<div id="ref-JordanPhilips2018RJ" class="csl-entry">
+Jordan, Soren, and Andrew Q. Philips. 2018b. <span>“Dynamic Simulation
+and Testing for Single-Equation Cointegrating and Stationary
+Autoregressive Distributed Lag Models.”</span> <em>The R Journal</em> 10
+(42): 469–88.
+</div>
+<div id="ref-jgvkviz" class="csl-entry">
+Jordan, Soren, and Garrett N. Vande Kamp. 2022. <span>“Modeling Dynamic
+Conditional Relationships Using Multiplicative Interactions in Dynamic
+Regression Model.”</span> <em>Midwest Political Science Association
+Meeting</em> (Chicago, IL).
+</div>
+<div id="ref-mpolypaper" class="csl-entry">
+Kahle, David. 2013. <span>“Mpoly: Multivariate Polynomials in
+<span>R</span>.”</span> <em>The R Journal</em> 5 (1): 162–70. <a href="https://doi.org/10.32614/RJ-2013-015">https://doi.org/10.32614/RJ-2013-015</a>.
+</div>
+<div id="ref-philipsavoid" class="csl-entry">
+Philips, Andrew Q. 2022. <span>“How to Avoid Incorrect Inferences (While
+Gaining Correct Ones) in Dynamic Models.”</span> <em>Political Science
+Research and Methods</em>, no. 10: 879–89.
+</div>
+<div id="ref-pickupkellstedt19" class="csl-entry">
+Pickup, Mark, and Paul M. Kellstedt. 2023. <span>“Balance as a
+Pre-Estimation Test for Time Series Analysis.”</span> <em>Political
+Analysis</em> 2 (31): 295–304.
+</div>
+<div id="ref-gvkjordan" class="csl-entry">
+Vande Kamp, Garrett N., and Soren Jordan. 2025. <span>“<span class="nocase">The Necessity of Moving Averages in Dynamic Linear
+Regression Models</span>.”</span> <em>American Journal of Political
+Science</em> 1 (69): 176–93.
+</div>
+<div id="ref-gvkjrsolving" class="csl-entry">
+Vande Kamp, Garrett N., Soren Jordan, and Reshi Rajan. 2025.
+<span>“Causal Inference for Integrated Data Using Differenced
+Variables.”</span> <em>Annual Meeting of the Society for Political
+Methodology</em> (Atlanta, GA).
+</div>
+<div id="ref-warnergvkj" class="csl-entry">
+Warner, Zach, Garrett N. Vande Kamp, and Soren Jordan. 2026.
+<span>“Conditional Relationships in Dynamic Models.”</span>
+<em>Political Science Research and Methods</em>, 1–20. <a href="https://doi.org/10.1017/psrm.2026.10087">https://doi.org/10.1017/psrm.2026.10087</a>.
+</div>
+<div id="ref-Wilkins2018" class="csl-entry">
+Wilkins, Arjun S. 2018. <span>“To Lag or Not to Lag?: Re-Evaluating the
+Use of Lagged Dependent Variables in Regression Analysis.”</span>
+<em>Political Science Research and Methods</em> 6 (2): 393–411.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

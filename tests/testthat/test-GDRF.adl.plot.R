@@ -362,7 +362,559 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
     # Expected output
     "Invalid shock.history. shock.history must be one of pulse or step" 
   )  
+
+  # The below are all new with the fitted option
+  model.fitted <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
+
+  expect_error( # invalid effect.type
+      # Function output	  
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "cough",
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+    # Expected output
+    "Invalid effect.type. effect.type must be one of marginal or fitted"
+  )
+
+  expect_error( # marginal + prediction.values
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "marginal",
+                  prediction.values = list("x" = 1, "l_1_x" = 1),
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Do not supply prediction.values when effect.type = 'marginal'"
+  )
+
+  expect_error( # marginal + baseline.y
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "marginal",
+                  baseline.y = 5,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Do not supply baseline.y when effect.type = 'marginal'"
+  )
+
+  expect_error( # marginal + baseline.y.se
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "marginal",
+                  baseline.y.se = 1,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Do not supply baseline.y.se when effect.type = 'marginal'"
+  )
+
+  expect_error( # marginal + shock.size
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "marginal",
+                  shock.size = 2,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Do not supply shock.size when effect.type = 'marginal'"
+  )
+
+  expect_error( # fitted + prediction.values not a list
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  prediction.values = c("x" = 1, "l_1_x" = 1),
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "If using prediction.values, it must be a list"
+  )
+
+  expect_error( # fitted + baseline.y not numeric
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  baseline.y = "cough",
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "If providing a baseline.y, it must be numeric"
+  )
+
+  expect_error( # fitted + baseline.y length > 1
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  baseline.y = c(1, 2),
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Only provide a single baseline.y value"
+  )
+
+  expect_error( # fitted + baseline.y.se not numeric
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  baseline.y = 2,
+                  baseline.y.se = "cough",
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output                 
+    "If providing a baseline.y.se, it must be numeric"
+  )
+
+  expect_error( # fitted + baseline.y.se length > 1
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  baseline.y = 2,
+                  baseline.y.se = c(1, 2),
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Only provide a single baseline.y.se value"
+  )
+
+  expect_error( # fitted + shock.size not numeric
+      # Function output
+    GDRF.adl.plot(model = model.fitted,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  shock.size = "cough",
+                  baseline.y = 0,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "shock.size must be numeric"
+  )
 })
+
+
+test_that("GDRF.adl.plot effect.type combination warnings are issued correctly", {
+  model <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
+  model.diffs <- lm(d_y ~ l_1_d_y + x + l_1_x, data = toy.ts.interaction.data)
+
+  expect_warning( # fitted + d.y = 0 + both baseline.y and prediction.values
+      # Function output
+    GDRF.adl.plot(model = model,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  prediction.values = list("x" = 0, "l_1_x" = 0),
+                  baseline.y = 5,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Both baseline.y and prediction.values supplied; baseline.y takes precedence and prediction.values will be ignored"
+  )
+
+  expect_warning( # fitted + d.y = 0 + prediction.values only (differenced variable reminder)
+  # Function output
+    GDRF.adl.plot(model = model,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_y" = 1),
+                  d.x = 0,
+                  d.y = 0,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  prediction.values = list("x" = 0, "l_1_x" = 0),
+                  baseline.y = NULL,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "If any differenced variables are included in the model, ensure they are set to 0 in prediction.values"
+  )
+
+  expect_warning( # fitted + d.y = 1 + prediction.values (ignored)
+  # Function output
+    GDRF.adl.plot(model = model.diffs,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_d_y" = 1),
+                  d.x = 0,
+                  d.y = 1,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  prediction.values = list("x" = 0, "l_1_x" = 0),
+                  baseline.y = 5,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "prediction.values is ignored when d.y > 0"
+  )
+
+  expect_warning( # fitted + d.y = 1 + inferences.y = differences + non-zero baseline.y
+      # Function output
+    GDRF.adl.plot(model = model.diffs,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_d_y" = 1),
+                  d.x = 0,
+                  d.y = 1,
+                  shock.history = "pulse",
+                  inferences.y = "differences",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  baseline.y = 5,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "Assuming anything other than baseline.y = 0 when inferences.y = 'differences' suggests the model is unstable"
+  )
+
+  expect_warning( # fitted + d.y = 1 + inferences.y = differences + shock.size = 1 (redundant)
+  # Function output
+    GDRF.adl.plot(model = model.diffs,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_d_y" = 1),
+                  d.x = 0,
+                  d.y = 1,
+                  shock.history = "pulse",
+                  inferences.y = "differences",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  shock.size = 1,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE,
+					baseline.y = 0),
+			      # Expected output
+    "effect.type = 'fitted' with inferences.y = 'differences' and shock.size = 1 is identical to effect.type = 'marginal'"
+  )
+
+  expect_error( # fitted + d.y = 1 + inferences.y = levels + no baseline.y
+      # Function output
+    GDRF.adl.plot(model = model.diffs,
+                  x.vrbl = c("x" = 0, "l_1_x" = 1),
+                  y.vrbl = c("l_1_d_y" = 1),
+                  d.x = 0,
+                  d.y = 1,
+                  shock.history = "pulse",
+                  inferences.y = "levels",
+                  inferences.x = "levels",
+                  effect.type = "fitted",
+                  baseline.y = NULL,
+                  s.limit = 3,
+                  return.plot = TRUE,
+                  return.formulae = TRUE),
+
+			      # Expected output
+    "You must provide either a baseline.y value"
+  )
+})
+
+test_that("GDRF.adl.plot fitted value output is correct (d.y = 0, baseline.y supplied)", {
+  model <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
+
+  result.marginal <- GDRF.adl.plot(model = model,
+                                   x.vrbl = c("x" = 0, "l_1_x" = 1),
+                                   y.vrbl = c("l_1_y" = 1),
+                                   d.x = 0,
+                                   d.y = 0,
+                                   shock.history = "pulse",
+                                   inferences.y = "levels",
+                                   inferences.x = "levels",
+                                   effect.type = "marginal",
+                                   s.limit = 3,
+                                   return.plot = TRUE,
+                                   return.formulae = TRUE,
+                                   return.data = TRUE)
+
+  result.fitted <- GDRF.adl.plot(model = model,
+                                 x.vrbl = c("x" = 0, "l_1_x" = 1),
+                                 y.vrbl = c("l_1_y" = 1),
+                                 d.x = 0,
+                                 d.y = 0,
+                                 shock.history = "pulse",
+                                 inferences.y = "levels",
+                                 inferences.x = "levels",
+                                 effect.type = "fitted",
+                                 baseline.y = 5,
+                                 shock.size = 1,
+                                 s.limit = 3,
+                                 return.plot = TRUE,
+                                 return.formulae = TRUE,
+                                 return.data = TRUE)
+
+  # fitted values should differ from marginal effects
+  expect_false(identical(result.marginal$estimates$GDRF, result.fitted$estimates$GDRF))
+
+  # fitted values should be offset from marginal effects by approximately baseline.y, ignoring the baseline
+  expect_equal(
+    result.fitted$estimates$GDRF[-1] - result.marginal$estimates$GDRF,
+    rep(5, nrow(result.marginal$estimates)),
+    tolerance = 1e-6
+  )
+
+  # SE should be the same for fitted and marginal when baseline.y.se = 0, ignoring the baseline
+  expect_equal(
+    result.fitted$estimates$SE[-1],
+    result.marginal$estimates$SE,
+    tolerance = 1e-6
+  )
+})
+
+test_that("GDRF.adl.plot shock.size scales fitted values correctly", {
+  model <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
+
+  result.size1 <- GDRF.adl.plot(model = model,
+                                x.vrbl = c("x" = 0, "l_1_x" = 1),
+                                y.vrbl = c("l_1_y" = 1),
+                                d.x = 0,
+                                d.y = 0,
+                                shock.history = "pulse",
+                                inferences.y = "levels",
+                                inferences.x = "levels",
+                                effect.type = "fitted",
+                                baseline.y = 0,
+                                shock.size = 1,
+                                s.limit = 3,
+                                return.plot = FALSE,
+                                return.formulae = FALSE,
+                                return.data = TRUE)
+
+  result.size2 <- GDRF.adl.plot(model = model,
+                                x.vrbl = c("x" = 0, "l_1_x" = 1),
+                                y.vrbl = c("l_1_y" = 1),
+                                d.x = 0,
+                                d.y = 0,
+                                shock.history = "pulse",
+                                inferences.y = "levels",
+                                inferences.x = "levels",
+                                effect.type = "fitted",
+                                baseline.y = 0,
+                                shock.size = 2,
+                                s.limit = 3,
+                                return.plot = FALSE,
+                                return.formulae = FALSE,
+                                return.data = TRUE)
+
+  # with baseline.y = 0, shock.size = 2 should double the GDRF relative to shock.size = 1, ignoring the baseline
+  expect_equal(
+    result.size2$GDRF[-1],
+    result.size1$GDRF[-1] * 2,
+    tolerance = 1e-6
+  )
+})
+
+test_that("GDRF.adl.plot baseline.y.se is added in quadrature correctly", {
+  model <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
+
+  result.nose <- GDRF.adl.plot(model = model,
+                               x.vrbl = c("x" = 0, "l_1_x" = 1),
+                               y.vrbl = c("l_1_y" = 1),
+                               d.x = 0,
+                               d.y = 0,
+                               shock.history = "pulse",
+                               inferences.y = "levels",
+                               inferences.x = "levels",
+                               effect.type = "fitted",
+                               baseline.y = 5,
+                               baseline.y.se = 0,
+                               shock.size = 1,
+                               s.limit = 3,
+                               return.plot = FALSE,
+                               return.formulae = FALSE,
+                               return.data = TRUE)
+
+  result.withse <- GDRF.adl.plot(model = model,
+                                 x.vrbl = c("x" = 0, "l_1_x" = 1),
+                                 y.vrbl = c("l_1_y" = 1),
+                                 d.x = 0,
+                                 d.y = 0,
+                                 shock.history = "pulse",
+                                 inferences.y = "levels",
+                                 inferences.x = "levels",
+                                 effect.type = "fitted",
+                                 baseline.y = 5,
+                                 baseline.y.se = 2,
+                                 shock.size = 1,
+                                 s.limit = 3,
+                                 return.plot = FALSE,
+                                 return.formulae = FALSE,
+                                 return.data = TRUE)
+
+  expect_equal( # SE with baseline.y.se should equal sqrt(SE^2 + baseline.y.se^2)
+    # Function output
+    result.withse$SE,
+	
+    # Expected output
+    sqrt(result.nose$SE^2 + 2^2),
+    tolerance = 1e-6
+  )
+
+  expect_false( # CIs should differ when baseline.y.se is added
+    # Function output
+    identical(result.nose$Lower, result.withse$Lower)
+  )
+})
+
+test_that("GDRF.adl.plot LRM is suppressed for effect.type = fitted", {
+  model <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
+
+  result.marginal <- GDRF.adl.plot(model = model,
+                                   x.vrbl = c("x" = 0, "l_1_x" = 1),
+                                   y.vrbl = c("l_1_y" = 1),
+                                   d.x = 0,
+                                   d.y = 0,
+                                   shock.history = "step",
+                                   inferences.y = "levels",
+                                   inferences.x = "levels",
+                                   effect.type = "marginal",
+                                   s.limit = 3,
+                                   return.plot = TRUE,
+                                   return.formulae = TRUE,
+                                   return.data = TRUE)
+
+  result.fitted <- GDRF.adl.plot(model = model,
+                                 x.vrbl = c("x" = 0, "l_1_x" = 1),
+                                 y.vrbl = c("l_1_y" = 1),
+                                 d.x = 0,
+                                 d.y = 0,
+                                 shock.history = "step",
+                                 inferences.y = "levels",
+                                 inferences.x = "levels",
+                                 effect.type = "fitted",
+                                 baseline.y = 5,
+                                 shock.size = 1,
+                                 s.limit = 3,
+                                 return.plot = TRUE,
+                                 return.formulae = TRUE,
+                                 return.data = TRUE)
+
+  expect_true( # marginal effect with step should include LRM
+    # Function output
+    "LRM" %in% names(result.marginal$formulae)
+  )
+
+  expect_false( # fitted value with step should suppress LRM
+    # Function output
+    "LRM" %in% names(result.fitted$formulae)
+  )
+
+  expect_equal( # fitted value output should have s.limit + 1 rows (no LRM row) + 1 baseline
+    # Function output
+    nrow(result.fitted$estimates),
+    # Expected output
+    3 + 1 + 1
+  )
+})
+
 
 test_that("Warning for . issued correctly", {
   

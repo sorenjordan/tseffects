@@ -36,16 +36,17 @@ test_that("gecm.dummy.checks produces the correct warnings (GDTE type)", {
     "Variables in treatment effect terms \\(x and y\\)"
   )
 
-  expect_error( # y.d.vrbl NULL 
-    # Function output
-    gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
-    				x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+  # Do not require a y.d.vrbl since the GECM can be the reparam. ADL(1, 1)
+  # expect_error( # y.d.vrbl NULL 
+    # # Function output
+    # gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
+    				# x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
+    				# inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
+    				# se.type = "const", type = "GDTE"),
 
-    # Expected output
-    "Variables in treatment effect terms \\(x and y\\)"
-  )
+    # # Expected output
+    # "Variables in treatment effect terms \\(x and y\\)"
+  # )
 
   expect_error( # x.vrbl.d.x missing
     # Function output
@@ -80,7 +81,7 @@ test_that("gecm.dummy.checks produces the correct warnings (GDTE type)", {
     "Order of differencing of variables in lagged differences in treatment effect must"
   )
 
-  expect_error( # y.d.vrbl.d.y missing
+  expect_error( # y.d.vrbl.d.y missing (& y.d.vrbl defined)
     # Function output
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
     				x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = NULL,
@@ -89,6 +90,17 @@ test_that("gecm.dummy.checks produces the correct warnings (GDTE type)", {
 
     # Expected output
     "Order of differencing of variables in lagged differences in treatment effect must"
+  )
+
+  expect_error( # y.d.vrbl.d.y missing (& y.d.vrbl not defined)
+    # Function output
+    gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
+    				x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = NULL,
+    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
+    				se.type = "const", type = "GDTE"),
+
+    # Expected output
+    "Even if variables in lagged differences in"
   )
 
   expect_error( # x.vrbl.d.x not integer
@@ -121,7 +133,7 @@ test_that("gecm.dummy.checks produces the correct warnings (GDTE type)", {
     				se.type = "const", type = "GDTE"),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in treatment effect term \\(x.d.vrbl.d.x and y.d.vrbl.d.y\\)"
+    "Order of differencing of variables in lagged differences in treatment effect term \\(x.d.vrbl.d.x"
   )
 
   expect_error( # y.d.vrbl.d.y not integer
@@ -132,7 +144,7 @@ test_that("gecm.dummy.checks produces the correct warnings (GDTE type)", {
     				se.type = "const", type = "GDTE"),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in treatment effect term \\(x.d.vrbl.d.x and y.d.vrbl.d.y\\)"
+    "Order of differencing of variables in lagged differences in treatment effect term \\(y.d.vrbl.d.y"
   )
 
   expect_error( # x.vrbl unnamed
@@ -407,16 +419,17 @@ test_that("gecm.dummy.checks produces the correct warnings (GDRF type)", {
     "Variables in shock history terms \\(x and y\\)"
   )
 
-  expect_error( # y.d.vrbl NULL 
-    # Function output
-    gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
-    				x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+  # Do not require a y.d.vrbl since the GECM can be the reparam. ADL(1, 1)
+  # expect_error( # y.d.vrbl NULL 
+    # # Function output
+    # gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
+    				# x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
+    				# inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
+    				# se.type = "const", type = "GDRF"),
 
-    # Expected output
-    "Variables in shock history terms \\(x and y\\)"
-  )
+    # # Expected output
+    # "Variables in shock history terms \\(x and y\\)"
+  # )
 
   expect_error( # x.vrbl.d.x missing
     # Function output
@@ -451,7 +464,7 @@ test_that("gecm.dummy.checks produces the correct warnings (GDRF type)", {
     "Order of differencing of variables in lagged differences in shock history must"
   )
 
-  expect_error( # y.d.vrbl.d.y missing
+  expect_error( # y.d.vrbl.d.y missing (& y.d.vrbl defined)
     # Function output
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
     				x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = NULL,
@@ -461,6 +474,26 @@ test_that("gecm.dummy.checks produces the correct warnings (GDRF type)", {
     # Expected output
     "Order of differencing of variables in lagged differences in shock history must"
   )
+
+  expect_error( # y.d.vrbl.d.y missing (& y.d.vrbl not defined)
+    # Function output
+    gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
+    				x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = NULL,
+    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
+    				se.type = "const", type = "GDRF"),
+
+    # Expected output
+    "Even if variables in lagged differences in"
+  )
+
+
+
+
+
+
+
+
+
 
   expect_error( # x.vrbl.d.x not integer
     # Function output
@@ -492,7 +525,7 @@ test_that("gecm.dummy.checks produces the correct warnings (GDRF type)", {
     				se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in shock history term \\(x.d.vrbl.d.x and y.d.vrbl.d.y\\)"
+    "Order of differencing of variables in lagged differences in shock history term \\(x.d.vrbl.d.x"
   )
 
   expect_error( # y.d.vrbl.d.y not integer
@@ -503,7 +536,7 @@ test_that("gecm.dummy.checks produces the correct warnings (GDRF type)", {
     				se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in shock history term \\(x.d.vrbl.d.x and y.d.vrbl.d.y\\)"
+    "Order of differencing of variables in lagged differences in shock history term \\(y.d.vrbl.d.y"
   )
 
   expect_error( # x.vrbl unnamed

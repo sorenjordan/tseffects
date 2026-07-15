@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{adl.dummy.checks}
 \alias{adl.dummy.checks}
-\title{Do consistent dummy checks for functions (GDTE/GDRF) that use an ADL model}
+\title{Do consistent dummy checks for functions that use an ADL model}
 \usage{
 adl.dummy.checks(
   x.vrbl,
@@ -33,10 +33,10 @@ adl.dummy.checks(
 
 \item{se.type}{the type of standard error calculated}
 
-\item{type}{whether the effects are estimated in the context of a GDTE/GDRF}
+\item{type}{whether the effects are estimated in the context of a GDRF}
 }
 \description{
-Do consistent dummy checks for functions (GDTE/GDRF) that use an ADL model
+Do consistent dummy checks for functions that use an ADL model
 }
 \author{
 Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan

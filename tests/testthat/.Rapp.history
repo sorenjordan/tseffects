@@ -1,864 +1,3 @@
-model_test_justplot <- ts.interact.plot(model = model.alllags, #
-                   x.vrbl = c("x" = 0, "l_1_x" = 1), #
-                   y.vrbl = c("l_1_y" = 1), #
-                   z.vrbl = c("z" = 0, "l_1_z" = 1),#
-                   x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),#
-                   plot.type = "lines",#
-                   line.options = "z.lines",#
-                   effect.type = "impulse",#
-                   z.vals = c(0, 1),#
-                   s.limit = 10,#
-                   return.plot = TRUE, return.data = FALSE, return.formulae = FALSE)#
-#
-  expect_false( # is formulae or estimates returned?#
-    # Function output#
-    all(c("estimates", "formulae") %in% names(model_test_justplot))#
-  )
-model_test_noplot <- ts.interact.plot(model = model.alllags, #
-                   x.vrbl = c("x" = 0, "l_1_x" = 1), #
-                   y.vrbl = c("l_1_y" = 1), #
-                   z.vrbl = c("z" = 0, "l_1_z" = 1),#
-                   x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),#
-                   plot.type = "lines",#
-                   line.options = "z.lines",#
-                   effect.type = "impulse",#
-                   z.vals = c(0, 1),#
-                   s.limit = 10,#
-                   return.plot = FALSE, return.data = TRUE, return.formulae = TRUE)#
-#
-  expect_false( # is plot returned?#
-    # Function output#
-    all(c("plot") %in% names(model_test_noplot))#
-  )
-model_test_noformulae <- ts.interact.plot(model = model.alllags, #
-                   x.vrbl = c("x" = 0, "l_1_x" = 1), #
-                   y.vrbl = c("l_1_y" = 1), #
-                   z.vrbl = c("z" = 0, "l_1_z" = 1),#
-                   x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),#
-                   plot.type = "lines",#
-                   line.options = "z.lines",#
-                   effect.type = "impulse",#
-                   z.vals = c(0, 1),#
-                   s.limit = 10,#
-                   return.plot = TRUE, return.data = TRUE, return.formulae = FALSE)#
-#
-  expect_false( # is formulae returned?#
-    all(c("formulae") %in% names(model_test_noformulae))#
-  )
-model_test_nodata <- ts.interact.plot(model = model.alllags, #
-                   x.vrbl = c("x" = 0, "l_1_x" = 1), #
-                   y.vrbl = c("l_1_y" = 1), #
-                   z.vrbl = c("z" = 0, "l_1_z" = 1),#
-                   x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),#
-                   plot.type = "lines",#
-                   line.options = "z.lines",#
-                   effect.type = "impulse",#
-                   z.vals = c(0, 1),#
-                   s.limit = 10,#
-                   return.plot = TRUE, return.data = FALSE, return.formulae = TRUE)#
-#
-  expect_false( # is data returned?#
-    all(c("estimates") %in% names(model_test_nodata))#
-  )
-model_test_justdata <- ts.interact.plot(model = model.alllags, #
-                   x.vrbl = c("x" = 0, "l_1_x" = 1), #
-                   y.vrbl = c("l_1_y" = 1), #
-                   z.vrbl = c("z" = 0, "l_1_z" = 1),#
-                   x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),#
-                   plot.type = "lines",#
-                   line.options = "z.lines",#
-                   effect.type = "impulse",#
-                   z.vals = c(0, 1),#
-                   s.limit = 10,#
-                   return.plot = FALSE, return.data = TRUE, return.formulae = FALSE)#
-#
-  expect_false( # is data returned?#
-    all(c("plot", "formulae") %in% names(model_test_justdata))#
-  )
-# required for package#
-library(mpoly)#
-library(car)#
-library(ggplot2)#
-library(see)#
-library(colorspace)#
-library(stats)#
-library(sandwich)#
-library(utils)#
-#
-# required for tester#
-library(testthat)#
-library(vdiffr)#
-#
-# For Soren#
-source("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/tseffects-nextversion-beta.R")#
-load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/approval.rda")#
-load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/toy.ts.interaction.data.rda")
-expect_warning( # no y.vrbl#
-    # Function output#
-    GDRF.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   # y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   shock.history = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "No y.vrbl in shock history terms implies a static or finite model: are you sure you want this?"#
-  )
-model <- lm(d_2_y ~ l_1_d_2_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
-expect_warning( # no y.vrbl#
-    # Function output#
-    GDRF.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   # y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   shock.history = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "No y.vrbl in shock history terms implies a static or finite model: are you sure you want this?"#
-  )
-expect_warning( # no y.vrbl#
-    # Function output#
-    GDRF.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   # y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   shock.history = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "No y.vrbl in shock history terms implies a static or finite dynamics model: are you sure you want this?"#
-  )
-expect_error( # no x.vrbl#
-    # Function output#
-    GDRF.adl.plot(model = model, #
-                   #x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   shock.history = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Variables in shock history terms \\(x and possibly y\\) must be specified through x.vrbl and"#
-  )
-expect_error( # y vrbl not named vector#
-    # Function output#
-    GDRF.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c(1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   shock.history = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "y.vrbl should be a named vector"#
-  )
-model <- lm(d_y ~ x + l_1_d_x, data = toy.ts.interaction.data)#
-#
-  #####################################################################################
-  # ADL(1,1), both inferences in levels, pulse and step#
-  ####################################################################################  #
-  model_test_pulse <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "pulse", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-  model_test_step <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "step", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-#
-  expect_equal( # test whether formula matches for s = 3 (pulse)#
-    # Function output    #
-    model_test_pulse$formulae[['s = 1']],#
-#
-    # Expected output#
-    "l_1_d_x "#
-  )   #
-  expect_equal( # test whether the binomials are as expected for s = 3 (pulse)#
-    # Function output   #
-    # position = 4 because counter starts at s = 0 #
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 0, 0, 0)#
-  )   #
-  expect_equal( # test whether formula matches for s = 3 (step) #
-    # Function output   #
-    model_test_step$formulae[['s = 1']],#
-    # Expected output#
-    "x + l_1_d_x "#
-  )#
-  expect_equal( # test whether the binomials are as expected for s = 3 (step)#
-    # Function output#
-    # position = 4 because counter starts at s = 0 #
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 1, 1, 1)#
-  ) #
-#
-  expect_equal( # test whether formula matches for LRM (step) #
-    # Function output   #
-    model_test_step$formulae[["LRM"]],#
-    # Expected output#
-    "(x+l_1_d_x)/(1)"#
-  )
-# required for package#
-library(mpoly)#
-library(car)#
-library(ggplot2)#
-library(see)#
-library(colorspace)#
-library(stats)#
-library(sandwich)#
-library(utils)#
-#
-# required for tester#
-library(testthat)#
-library(vdiffr)#
-#
-# For Soren#
-source("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/tseffects-nextversion-beta.R")#
-load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/approval.rda")#
-load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/toy.ts.interaction.data.rda")
-test_that("mpoly formulae are correct (x and lag x only)", { #
-  model <- lm(d_y ~ x + l_1_d_x, data = toy.ts.interaction.data)#
-#
-  #####################################################################################
-  # ADL(1,1), both inferences in levels, pulse and step#
-  ####################################################################################  #
-  model_test_pulse <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "pulse", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-  model_test_step <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "step", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-#
-  expect_equal( # test whether formula matches for s = 3 (pulse)#
-    # Function output    #
-    model_test_pulse$formulae[['s = 1']],#
-#
-    # Expected output#
-    "l_1_d_x "#
-  )   #
-  expect_equal( # test whether the binomials are as expected for s = 3 (pulse)#
-    # Function output   #
-    # position = 4 because counter starts at s = 0 #
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 0, 0, 0)#
-  )   #
-  expect_equal( # test whether formula matches for s = 3 (step) #
-    # Function output   #
-    model_test_step$formulae[['s = 1']],#
-    # Expected output#
-    "x + l_1_d_x "#
-  )#
-  expect_equal( # test whether the binomials are as expected for s = 3 (step)#
-    # Function output#
-    # position = 4 because counter starts at s = 0 #
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 1, 1, 1)#
-  ) #
-#
-  expect_equal( # test whether formula matches for LRM (step) #
-    # Function output   #
-    model_test_step$formulae[["LRM"]],#
-    # Expected output#
-    "(x+l_1_d_x)/(1)"#
-  )#
-#
-})
-model_test_pulse <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "pulse", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-  model_test_step <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "step", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)
-# required for package#
-library(mpoly)#
-library(car)#
-library(ggplot2)#
-library(see)#
-library(colorspace)#
-library(stats)#
-library(sandwich)#
-library(utils)#
-#
-# required for tester#
-library(testthat)#
-library(vdiffr)#
-#
-# For Soren#
-source("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/tseffects-nextversion-beta.R")#
-load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/approval.rda")#
-load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/toy.ts.interaction.data.rda")
-test_that("mpoly formulae are correct (x and lag x only)", { #
-  model <- lm(d_y ~ x + l_1_d_x, data = toy.ts.interaction.data)#
-#
-  #####################################################################################
-  # ADL(1,1), both inferences in levels, pulse and step#
-  ####################################################################################  #
-  model_test_pulse <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "pulse", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-  model_test_step <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "step", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-#
-  expect_equal( # test whether formula matches for s = 3 (pulse)#
-    # Function output    #
-    model_test_pulse$formulae[['s = 1']],#
-#
-    # Expected output#
-    "l_1_d_x "#
-  )   #
-  expect_equal( # test whether the binomials are as expected for s = 3 (pulse)#
-    # Function output   #
-    # position = 4 because counter starts at s = 0 #
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 0, 0, 0)#
-  )   #
-  expect_equal( # test whether formula matches for s = 3 (step) #
-    # Function output   #
-    model_test_step$formulae[['s = 1']],#
-    # Expected output#
-    "x + l_1_d_x "#
-  )#
-  expect_equal( # test whether the binomials are as expected for s = 3 (step)#
-    # Function output#
-    # position = 4 because counter starts at s = 0 #
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 1, 1, 1)#
-  ) #
-#
-  expect_equal( # test whether formula matches for LRM (step) #
-    # Function output   #
-    model_test_step$formulae[["LRM"]],#
-    # Expected output#
-    "(x+l_1_d_x)/(1)"#
-  )#
-#
-})
-model_test_pulse <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "pulse", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)#
-  model_test_step <- GDRF.adl.plot(model = model, #
-                               x.vrbl = c("x" = 0, "l_1_d_x" = 1), #
-                               # y.vrbl = c("l_1_d_y" = 1),#
-                               d.x = 0, #
-                               d.y = 0,#
-                               shock.history = "step", #
-                               inferences.y = "levels", #
-                               inferences.x = "levels",#
-                               s.limit = 3, #
-                               return.plot = TRUE,#
-                               return.formulae = TRUE)
-expect_equal( # test whether formula matches for s = 3 (pulse)#
-    # Function output    #
-    model_test_pulse$formulae[['s = 1']],#
-#
-    # Expected output#
-    "l_1_d_x "#
-  )
-expect_equal( # test whether the binomials are as expected for s = 3 (pulse)#
-    # Function output   #
-    # position = 4 because counter starts at s = 0 #
-    model_test_pulse$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 0, 0, 0)#
-  )
-expect_equal( # test whether formula matches for s = 3 (step) #
-    # Function output   #
-    model_test_step$formulae[['s = 1']],#
-    # Expected output#
-    "x + l_1_d_x "#
-  )
-expect_equal( # test whether formula matches for s = 3 (step) #
-    # Function output   #
-    model_test_step$formulae[['s = 1']],#
-    # Expected output#
-    "l_1_d_x + x "#
-  )
-expect_equal( # test whether formula matches for s = 3 (step) #
-    # Function output   #
-    model_test_step$formulae[['s = 1']],#
-    # Expected output#
-    "l_1_d_x  +  x "#
-  )
-expect_equal( # test whether the binomials are as expected for s = 3 (step)#
-    # Function output#
-    # position = 4 because counter starts at s = 0 #
-    model_test_step$binomials[[4]], # to get mpoly obj as character, you need to print#
-    # Expected output#
-    c(1, 1, 1, 1)#
-  )
-expect_equal( # test whether formula matches for LRM (step) #
-    # Function output   #
-    model_test_step$formulae[["LRM"]],#
-    # Expected output#
-    "(x+l_1_d_x)/(1)"#
-  )
-expect_equal( # test whether formula matches for LRM (step) #
-    # Function output   #
-    model_test_step$formulae[["LRM"]],#
-    # Expected output#
-    "(x+l_1_d_x)"#
-  )
-expect_error( # y vrbl not named vector#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c(1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "y.vrbl should be a named vector"#
-  )
-expect_error( # y.vrbl not in the model#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("Time Tot" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "y.vrbl not present in estimated model" #
-  )
-test_that("GDTE.adl.plot errors and warnings are issued correctly", {  #
-  # run a model to use for errors#
-  model <- lm(d_2_y ~ l_1_d_2_y + d_x + l_1_d_x, data = toy.ts.interaction.data)#
-  expect_error( # no x.vrbl#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   #x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Variables in treatment effect terms \\(x and possibly y\\) must be specified through x.vrbl"#
-  ) #
-  expect_warning( # no y.vrbl#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   # y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "No y.vrbl in treatment effect terms implies a static or finite dynamics model: are you sure you want this"#
-  )#
-  expect_error( # no d.x#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   # d.x = 1, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Order of differencing of variables in treatment effect terms must be specified"#
-  )#
-  expect_error( # no d.y#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   # d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Order of differencing of variables in treatment effect terms must be specified"#
-  )#
-  expect_error( # d.x must be integer#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1.82, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Order of differencing of variables in treatment effect terms \\(d.x"#
-  )#
-  expect_error( # d.y must be integer#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2.89,#
-                   te.type = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Order of differencing of variables in treatment effect terms \\(d.x"#
-  )#
-  expect_error( # invalid inference type specified - y#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "the doctor", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Invalid inferences.y. The counterfactual response for y" #
-  )#
-  expect_error( # invalid inference type specified - x#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "the Rani",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "Invalid inferences.x. The counterfactual treatment" #
-  )#
-  expect_error( # inference type mismatch: d.y/inferences differences#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pulse", #
-                   inferences.y = "differences", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "The counterfactual response for y cannot be in" #
-  )#
-  expect_error( # inference type mismatch: d.x/inferences differences#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "differences",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "The counterfactual treatment for x cannot be in a higher" #
-  )#
-  expect_error( # x vrbl not named vector#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c(0,1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "x.vrbl should be a named vector"#
-  )#
-  expect_error( # x vrbl vector has no values#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x", "l_1_d_x"),#
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "x.vrbl should be a named vector"#
-  )#
-  expect_error( # y vrbl not named vector#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c(1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "y.vrbl should be a named vector"#
-  )#
-  expect_error( # y vrbl values not given#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y"),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "y.vrbl should be a named vector"#
-  )#
-  expect_error( # invalid se.type#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("Time Lord" = 0, "Time Lady" = 1),#
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pte", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   se.type = "woof",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-#
-    # Expected output#
-    "Invalid se.type."#
-  )#
-  expect_error( # x vrbl not in the model#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("Time Lord" = 0, "Time Lady" = 1),#
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "pte", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "x.vrbl not present in estimated model"#
-  )#
-  expect_error( # y.vrbl not in the model#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("Time Tot" = 1),#
-                   d.x = 1, #
-                   d.y = 2,#
-                   te.type = "pulse", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-    # Expected output#
-    "y.vrbl not present in estimated model" #
-  )#
-#
-  expect_error( # no te.type#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = NULL, #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-#
-    # Expected output#
-    "Treatment effect type \\(te.type\\) " #
-  )#
-  expect_error( # te.type is not accepted input#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = "the Master", #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-#
-    # Expected output#
-    "Invalid te.type. te.type must be one of pte \\(pulse\\) or ste \\(step\\)" #
-  )#
-  expect_error( # te.type is not accepted input#
-    # Function output#
-    GDTE.adl.plot(model = model, #
-                   x.vrbl = c("d_x" = 0, "l_1_d_x" = 1), #
-                   y.vrbl = c("l_1_d_2_y" = 1),#
-                   d.x = 0, #
-                   d.y = 0,#
-                   te.type = 2.5, #
-                   inferences.y = "levels", #
-                   inferences.x = "levels",#
-                   s.limit = 5, #
-                   return.plot = TRUE, #
-                   return.formulae = TRUE),#
-#
-    # Expected output#
-    "Invalid te.type. te.type must be one of pte \\(pulse\\) or ste \\(step\\)" #
-  )#
-})
 test_that("mpoly formulae are correct (x and lag x only)", { #
   model <- lm(d_y ~ x + l_1_d_x, data = toy.ts.interaction.data)#
 #
@@ -6235,3 +5374,132 @@ test_that("Correct Plot: adl.interact.plot", {#
   expect_doppelganger("adlinteractstepslines", n) # Test the plot#
   expect_snapshot("adlinteractstepslines")#
 })
+# required for package#
+library(mpoly)#
+library(car)#
+library(ggplot2)#
+library(see)#
+library(colorspace)#
+library(stats)#
+library(sandwich)#
+library(utils)#
+#
+# required for tester#
+library(testthat)#
+library(vdiffr)#
+#
+# For Soren#
+source("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/tseffects-nextversion-beta.R")#
+load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/approval.rda")#
+load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/toy.ts.interaction.data.rda")
+source("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects-nextversion-beta.R")
+model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)#
+#
+  result.marginal <- GDRF.gecm.plot(model = model,#
+                                    x.vrbl = c("l_1_x" = 1),#
+                                    y.vrbl = c("l_1_y" = 1),#
+                                    x.vrbl.d.x = 0,#
+                                    y.vrbl.d.y = 0,#
+                                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),#
+                                    y.d.vrbl = c("l_1_d_y" = 1),#
+                                    x.d.vrbl.d.x = 1,#
+                                    y.d.vrbl.d.y = 1,#
+                                    shock.history = "pulse",#
+                                    inferences.y = "levels",#
+                                    inferences.x = "levels",#
+                                    effect.type = "marginal",#
+                                    s.limit = 5,#
+                                    return.plot = FALSE,#
+                                    return.formulae = FALSE,#
+                                    return.data = TRUE)
+result.fitted <- GDRF.gecm.plot(model = model,#
+                                  x.vrbl = c("l_1_x" = 1),#
+                                  y.vrbl = c("l_1_y" = 1),#
+                                  x.vrbl.d.x = 0,#
+                                  y.vrbl.d.y = 0,#
+                                  x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),#
+                                  y.d.vrbl = c("l_1_d_y" = 1),#
+                                  x.d.vrbl.d.x = 1,#
+                                  y.d.vrbl.d.y = 1,#
+                                  shock.history = "pulse",#
+                                  inferences.y = "levels",#
+                                  inferences.x = "levels",#
+                                  effect.type = "fitted",#
+                                  baseline.y = 5,#
+                                  shock.size = 1,#
+                                  s.limit = 5,#
+                                  return.plot = FALSE,#
+                                  return.formulae = FALSE,#
+                                  return.data = TRUE)
+expect_false( # fitted and marginal estimates should differ
+expect_false( # fitted and marginal estimates should differ#
+#
+    # Function output#
+    identical(result.marginal$GDRF, result.fitted$GDRF)#
+  )
+expect_equal( # fitted values offset from marginal by baseline.y#
+    # Function output#
+    result.fitted$GDRF - result.marginal$GDRF,#
+    # Expected output#
+    rep(5, nrow(result.marginal)),#
+    tolerance = 1e-6#
+  )
+result.fitted$GDRF
+result.marginal$GDRF
+result.fitted$GDRF - result.marginal$GDRF
+result.fitted
+expect_equal( # SE should be unchanged when baseline.y.se = 0#
+    # Function output#
+    result.fitted$SE,#
+#
+    # Expected output#
+    result.marginal$SE,#
+    tolerance = 1e-6#
+  )
+result.fitted$GDRF[2:6] - result.marginal$GDRF
+result.fitted$GDRF[2:6]
+result.fitted$GDRF[2:7] - result.marginal$GDRF
+expect_equal( # fitted values offset from marginal by baseline.y#
+    # Function output#
+    result.fitted$GDRF[2:7] - result.marginal$GDRF,#
+    # Expected output#
+    rep(5, nrow(result.marginal)),#
+    tolerance = 1e-6#
+  )
+result.fitted$SE
+result.marginal$SE
+source("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects-nextversion-beta.R")
+model <- lm(y ~ l_1_y + l_1_x, data = toy.ts.interaction.data)
+data(toy.ts.interaction.data)
+library(dynama)
+library(dynamac)
+model <- lm(y ~ l_1_y + l_1_x, data = toy.ts.interaction.data)
+toy.ts.interaction.data
+# required for package#
+library(mpoly)#
+library(car)#
+library(ggplot2)#
+library(see)#
+library(colorspace)#
+library(stats)#
+library(sandwich)#
+library(utils)#
+#
+# required for tester#
+library(testthat)#
+library(vdiffr)
+load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/approval.rda")#
+load("/Users/sorenjordan/Dropbox/Garrett-Soren/tseffects/tseffects/data/toy.ts.interaction.data.rda")
+model <- lm(y ~ l_1_y + l_1_x, data = toy.ts.interaction.data)
+expect_warning( # is.null(y.vrbl)#
+    # Function output#
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, d.x = 0, d.y = 0,#
+    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),#
+    				se.type = "const", type = "GDTE"),#
+#
+    # Expected output#
+    "No y.vrbl in treatment effect terms implies"#
+  )
+adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, d.x = 0, d.y = 0,#
+    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),#
+    				se.type = "const", type = "GDTE")

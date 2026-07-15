@@ -7,13 +7,13 @@
 gecm.to.adl(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl)
 }
 \arguments{
-\item{x.vrbl}{a named vector of the x variables (of the lower level of differencing, usually in levels d = 0) and corresponding lag orders in the GECM model}
+\item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable (of the lower level of differencing, usually in levels d = 0) and its lags and the numbers correspond to the specific lag order of each variable in the GECM model}
 
-\item{y.vrbl}{a named vector of the (lagged) y variables (of the lower level of differencing, usually in levels d = 0) and corresponding lag orders in the GECM model}
+\item{y.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable (of the lower level of differencing, usually in levels d = 0) and the numbers correspond to the specific lag order of each variable in the GECM model}
 
-\item{x.d.vrbl}{a named vector of the x variables (of the higher level of differencing, usually first differences d = 1) and corresponding lag orders in the GECM model}
+\item{x.d.vrbl}{a named numeric vector in which the names correspond to an independent variable (of the higher level of differencing, usually in first differences d = 1) and its lags and the numbers correspond to the specific lag order of each variable in the GECM model}
 
-\item{y.d.vrbl}{a named vector of the y variables (of the higher level of differencing, usually first differences d = 1) and corresponding lag orders in the GECM model}
+\item{y.d.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable (of the higher level of differencing, usually in first differences d = 1) and the numbers correspond to the specific lag order of each variable in the GECM model}
 }
 \value{
 a list of named vectors of translated ADL coefficients for the x and y variables of interest

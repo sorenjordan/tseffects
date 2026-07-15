@@ -68,28 +68,29 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
     # Expected output
     "Variables in shock history terms \\(x and y\\) and lagged differences"
   ) 
-  
-  expect_error( # no y.d.vrbl
-    # Function output
-    GDRF.gecm.plot(model = model, 
-                    x.vrbl = c("l_x" = 1), 
-                    y.vrbl = c("l_y" = 1),
-                    x.vrbl.d.x = 0, 
-                    y.vrbl.d.y = 0,
-                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
-                    # y.d.vrbl = c("l_1_d_y" = 1),
-                    x.d.vrbl.d.x = 1, 
-                    y.d.vrbl.d.y = 1,
-                    shock.history = "pte", 
-                    inferences.y = "levels", 
-                    inferences.x = "levels",
-                    s.limit = 2, 
-                    return.plot = TRUE, 
-                    return.formulae = TRUE),
 
-    # Expected output
-    "Variables in shock history terms \\(x and y\\) and lagged differences"
-  )
+	# y.d.vrbl not required  
+  # expect_error( # no y.d.vrbl
+    # # Function output
+    # GDRF.gecm.plot(model = model, 
+                    # x.vrbl = c("l_x" = 1), 
+                    # y.vrbl = c("l_y" = 1),
+                    # x.vrbl.d.x = 0, 
+                    # y.vrbl.d.y = 0,
+                    # x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1), 
+                    # # y.d.vrbl = c("l_1_d_y" = 1),
+                    # x.d.vrbl.d.x = 1, 
+                    # y.d.vrbl.d.y = 1,
+                    # shock.history = "pte", 
+                    # inferences.y = "levels", 
+                    # inferences.x = "levels",
+                    # s.limit = 2, 
+                    # return.plot = TRUE, 
+                    # return.formulae = TRUE),
+
+    # # Expected output
+    # "Variables in shock history terms \\(x and y\\) and lagged differences"
+  # )
 
   expect_error( # no x.vrbl.d.x
     # Function output
@@ -264,7 +265,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                     return.formulae = TRUE),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in shock history term \\(x.d.vrbl.d.x"  
+    "Order of differencing of variables in lagged differences in shock history term \\(y.d.vrbl.d.y"  
   )
 
   expect_error( # x vrbl not named vector
@@ -774,6 +775,559 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
       "Invalid shock.history. shock.history must be one of pulse or step"
   )
   
+})
+
+test_that("GDRF.gecm.plot errors and warnings are issued correctly, fitted values update", {
+  model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
+
+  expect_error( # prediction.values not supported for GECM
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   prediction.values = list("l_1_x" = 1),
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+    
+	# Expected output
+    "prediction.values not suppported for GECM"
+  )
+
+  expect_error( # invalid effect.type
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "cough",
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+   
+    # Expected output
+    "Invalid effect.type. effect.type must be one of marginal or fitted"
+  )
+
+  expect_error( # marginal + baseline.y supplied
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "marginal",
+                   baseline.y = 5,
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+    
+	# Expected output
+    "Do not supply baseline.y when effect.type = 'marginal'"
+  )
+
+  expect_error( # marginal + baseline.y.se supplied
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "marginal",
+                   baseline.y.se = 1,
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+    
+	# Expected output
+    "Do not supply baseline.y.se when effect.type = 'marginal'"
+  )
+
+  expect_error( # marginal + shock.size supplied
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "marginal",
+                   shock.size = 2,
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+    
+	# Expected output
+    "Do not supply shock.size when effect.type = 'marginal'"
+  )
+
+  expect_error( # fitted + baseline.y not numeric
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "fitted",
+                   baseline.y = "cough",
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+  
+    # Expected output
+    "If providing a baseline.y, it must be numeric"
+  )
+
+  expect_error( # fitted + baseline.y length > 1
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "fitted",
+                   baseline.y = c(1, 2),
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+   
+    # Expected output
+    "Only provide a single baseline.y value"
+  )
+
+  expect_error( # fitted + baseline.y.se not numeric
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "fitted",
+                   baseline.y = 5,
+                   baseline.y.se = "cough",
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+   
+    # Expected output
+    "If providing a baseline.y.se, it must be numeric"
+  )
+
+  expect_error( # fitted + baseline.y.se length > 1
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "fitted",
+                   baseline.y = 5,
+                   baseline.y.se = c(1, 2),
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+  
+    # Expected output
+    "Only provide a single baseline.y.se value"
+  )
+
+  expect_error( # fitted + shock.size not numeric
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "fitted",
+                   baseline.y = 5,
+                   shock.size = "cough",
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+   
+    # Expected output
+    "shock.size must be numeric"
+  )
+
+  expect_error( # fitted + y.d.vrbl.d.y = 1 + inferences.y = levels + no baseline.y
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "pulse",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   effect.type = "fitted",
+                   baseline.y = NULL,
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+   
+    # Expected output
+    "You must provide either a baseline.y"
+  )
+
+  expect_error( # no shock.history
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = NULL,
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+    
+	# Expected output
+    "Shock history type must be specified"
+  )
+
+  expect_error( # invalid shock.history string
+    # Function output
+    GDRF.gecm.plot(model = model,
+                   x.vrbl = c("l_1_x" = 1),
+                   y.vrbl = c("l_1_y" = 1),
+                   x.vrbl.d.x = 0,
+                   y.vrbl.d.y = 0,
+                   x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                   y.d.vrbl = c("l_1_d_y" = 1),
+                   x.d.vrbl.d.x = 1,
+                   y.d.vrbl.d.y = 1,
+                   shock.history = "the Master",
+                   inferences.y = "levels",
+                   inferences.x = "levels",
+                   s.limit = 5,
+                   return.plot = TRUE,
+                   return.formulae = TRUE),
+    # Expected output
+    "Invalid shock.history. shock.history must be one of pulse or step"
+  )
+})
+
+test_that("GDRF.gecm.plot fitted value output is correct (baseline.y supplied)", {
+  model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
+
+  result.marginal <- GDRF.gecm.plot(model = model,
+                                    x.vrbl = c("l_1_x" = 1),
+                                    y.vrbl = c("l_1_y" = 1),
+                                    x.vrbl.d.x = 0,
+                                    y.vrbl.d.y = 0,
+                                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                    y.d.vrbl = c("l_1_d_y" = 1),
+                                    x.d.vrbl.d.x = 1,
+                                    y.d.vrbl.d.y = 1,
+                                    shock.history = "pulse",
+                                    inferences.y = "levels",
+                                    inferences.x = "levels",
+                                    effect.type = "marginal",
+                                    s.limit = 5,
+                                    return.plot = FALSE,
+                                    return.formulae = FALSE,
+                                    return.data = TRUE)
+
+  result.fitted <- GDRF.gecm.plot(model = model,
+                                  x.vrbl = c("l_1_x" = 1),
+                                  y.vrbl = c("l_1_y" = 1),
+                                  x.vrbl.d.x = 0,
+                                  y.vrbl.d.y = 0,
+                                  x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                  y.d.vrbl = c("l_1_d_y" = 1),
+                                  x.d.vrbl.d.x = 1,
+                                  y.d.vrbl.d.y = 1,
+                                  shock.history = "pulse",
+                                  inferences.y = "levels",
+                                  inferences.x = "levels",
+                                  effect.type = "fitted",
+                                  baseline.y = 5,
+                                  shock.size = 1,
+                                  s.limit = 5,
+                                  return.plot = FALSE,
+                                  return.formulae = FALSE,
+                                  return.data = TRUE)
+
+  expect_false( # fitted and marginal estimates should differ
+
+    # Function output
+    identical(result.marginal$GDRF, result.fitted$GDRF)
+  )
+
+  expect_equal( # fitted values offset from marginal by baseline.y (ignore the baseline)
+    # Function output
+    result.fitted$GDRF[2:7] - result.marginal$GDRF,
+  
+    # Expected output
+    rep(5, nrow(result.marginal)),
+    tolerance = 1e-6
+  )
+
+  expect_equal( # SE should be unchanged when baseline.y.se = 0 (ignore the baseline)
+    # Function output
+    result.fitted$SE[2:7],
+
+    # Expected output
+    result.marginal$SE,
+    tolerance = 1e-6
+  )
+})
+
+
+test_that("GDRF.gecm.plot shock.size scales fitted values correctly", {
+  model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
+
+  result.size1 <- GDRF.gecm.plot(model = model,
+                                 x.vrbl = c("l_1_x" = 1),
+                                 y.vrbl = c("l_1_y" = 1),
+                                 x.vrbl.d.x = 0,
+                                 y.vrbl.d.y = 0,
+                                 x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                 y.d.vrbl = c("l_1_d_y" = 1),
+                                 x.d.vrbl.d.x = 1,
+                                 y.d.vrbl.d.y = 1,
+                                 shock.history = "pulse",
+                                 inferences.y = "levels",
+                                 inferences.x = "levels",
+                                 effect.type = "fitted",
+                                 baseline.y = 0,
+                                 shock.size = 1,
+                                 s.limit = 5,
+                                 return.plot = FALSE,
+                                 return.formulae = FALSE,
+                                 return.data = TRUE)
+
+  result.size2 <- GDRF.gecm.plot(model = model,
+                                 x.vrbl = c("l_1_x" = 1),
+                                 y.vrbl = c("l_1_y" = 1),
+                                 x.vrbl.d.x = 0,
+                                 y.vrbl.d.y = 0,
+                                 x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                 y.d.vrbl = c("l_1_d_y" = 1),
+                                 x.d.vrbl.d.x = 1,
+                                 y.d.vrbl.d.y = 1,
+                                 shock.history = "pulse",
+                                 inferences.y = "levels",
+                                 inferences.x = "levels",
+                                 effect.type = "fitted",
+                                 baseline.y = 0,
+                                 shock.size = 2,
+                                 s.limit = 5,
+                                 return.plot = FALSE,
+                                 return.formulae = FALSE,
+                                 return.data = TRUE)
+
+  expect_equal( # with baseline.y = 0, shock.size = 2 should double the GDRF
+    # Function output
+    result.size2$GDRF,
+  
+    # Expected output
+    result.size1$GDRF * 2,
+    tolerance = 1e-6
+  )
+})
+
+
+test_that("GDRF.gecm.plot baseline.y.se is added in quadrature correctly", {
+  model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
+
+  result.nose <- GDRF.gecm.plot(model = model,
+                                x.vrbl = c("l_1_x" = 1),
+                                y.vrbl = c("l_1_y" = 1),
+                                x.vrbl.d.x = 0,
+                                y.vrbl.d.y = 0,
+                                x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                y.d.vrbl = c("l_1_d_y" = 1),
+                                x.d.vrbl.d.x = 1,
+                                y.d.vrbl.d.y = 1,
+                                shock.history = "pulse",
+                                inferences.y = "levels",
+                                inferences.x = "levels",
+                                effect.type = "fitted",
+                                baseline.y = 5,
+                                baseline.y.se = 0,
+                                shock.size = 1,
+                                s.limit = 5,
+                                return.plot = FALSE,
+                                return.formulae = FALSE,
+                                return.data = TRUE)
+
+  result.withse <- GDRF.gecm.plot(model = model,
+                                  x.vrbl = c("l_1_x" = 1),
+                                  y.vrbl = c("l_1_y" = 1),
+                                  x.vrbl.d.x = 0,
+                                  y.vrbl.d.y = 0,
+                                  x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                  y.d.vrbl = c("l_1_d_y" = 1),
+                                  x.d.vrbl.d.x = 1,
+                                  y.d.vrbl.d.y = 1,
+                                  shock.history = "pulse",
+                                  inferences.y = "levels",
+                                  inferences.x = "levels",
+                                  effect.type = "fitted",
+                                  baseline.y = 5,
+                                  baseline.y.se = 2,
+                                  shock.size = 1,
+                                  s.limit = 5,
+                                  return.plot = FALSE,
+                                  return.formulae = FALSE,
+                                  return.data = TRUE)
+
+  expect_equal( # SE with baseline.y.se should equal sqrt(SE^2 + baseline.y.se^2)
+    # Function output
+    result.withse$SE,
+    # Expected output
+    sqrt(result.nose$SE^2 + 2^2),
+    tolerance = 1e-6
+  )
+
+  expect_false( # CIs should differ when baseline.y.se is added
+    # Function output
+    identical(result.nose$Lower, result.withse$Lower)
+  )
+})
+
+
+
+test_that("GDRF.gecm.plot LRM is suppressed for effect.type = fitted", {
+  model <- lm(d_y ~ l_1_y + l_1_x + l_1_d_y + d_x + l_1_d_x, data = toy.ts.interaction.data)
+
+  result.marginal <- GDRF.gecm.plot(model = model,
+                                    x.vrbl = c("l_1_x" = 1),
+                                    y.vrbl = c("l_1_y" = 1),
+                                    x.vrbl.d.x = 0,
+                                    y.vrbl.d.y = 0,
+                                    x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                    y.d.vrbl = c("l_1_d_y" = 1),
+                                    x.d.vrbl.d.x = 1,
+                                    y.d.vrbl.d.y = 1,
+                                    shock.history = "step",
+                                    inferences.y = "levels",
+                                    inferences.x = "levels",
+                                    effect.type = "marginal",
+                                    s.limit = 5,
+                                    return.plot = TRUE,
+                                    return.formulae = TRUE,
+                                    return.data = TRUE)
+
+  result.fitted <- GDRF.gecm.plot(model = model,
+                                  x.vrbl = c("l_1_x" = 1),
+                                  y.vrbl = c("l_1_y" = 1),
+                                  x.vrbl.d.x = 0,
+                                  y.vrbl.d.y = 0,
+                                  x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
+                                  y.d.vrbl = c("l_1_d_y" = 1),
+                                  x.d.vrbl.d.x = 1,
+                                  y.d.vrbl.d.y = 1,
+                                  shock.history = "step",
+                                  inferences.y = "levels",
+                                  inferences.x = "levels",
+                                  effect.type = "fitted",
+                                  baseline.y = 5,
+                                  shock.size = 1,
+                                  s.limit = 5,
+                                  return.plot = TRUE,
+                                  return.formulae = TRUE,
+                                  return.data = TRUE)
+
+  expect_true( # marginal effect with step should include LRM
+    # Function output
+    "LRM" %in% names(result.marginal$formulae)
+  )
+
+  expect_false( # fitted value with step should suppress LRM
+    # Function output
+    "LRM" %in% names(result.fitted$formulae)
+  )
+
+  expect_equal( # fitted value output should have s.limit + 1 rows + 1 (baseline) (no LRM row)
+    # Function output
+    nrow(result.fitted$estimates),
+    # Expected output
+    5 + 1 + 1
+  )
 })
 
 test_that("Warning for . issued correctly", {
