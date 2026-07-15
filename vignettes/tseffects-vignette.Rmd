@@ -695,6 +695,7 @@ The documentation for `bootstrap` and `kardl_longrun` presents the following cod
 
 ```{r}
 library(kardl)
+library(tidyverse)
 
 kardl_model <- kardl(imf_example_data,
                      CPI ~ ER + PPI + asy(ER) +
