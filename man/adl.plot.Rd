@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{adl.plot}
 \alias{adl.plot}
-\title{Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, assuming the underlying model is in levels (\code{d.x} = \code{d.y} = 0) and the user wants a marginal effect (the untransformed GDRF). (This is just a wrapper for \code{GDRF.adl.plot} with simplifying assumptions)}
+\title{Evaluate and/or plot the General Dynamic Response Function (GDRF) for an ADL assumed in levels}
 \usage{
 adl.plot(
   model = NULL,
@@ -25,24 +25,27 @@ adl.plot(
 
 \item{y.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable and the numbers correspond to the specific lag order of each variable. Can be \code{NULL} if the model has no lagged dependent variables}
 
-\item{shock.history}{the desired shock history. \code{shock.history} determines the shock history (h) (which can be expressed as an integer) that will be applied to the independent variable. -1 represents a pulse (Impulse Response Function). 0 represents a step (Step Response Function). These can also be specified via \code{pulse} and \code{step}. For others, see Vande Kamp, Jordan, and Rajan. The default is \code{pulse}}
+\item{shock.history}{either a character string, integer, or numeric vector for the desired shock history. \code{shock.history} determines the shock history (h) that will be applied to the independent variable. Vande Kamp, Jordan, and Rajan express this as the parameter h (an integer). -1 represents the Impulse Response Function; the equivalent string is \code{pulse} or \code{impulse}. 0 represents the Step Response Function; the equivalent string is \code{step}. For others, see Vande Kamp, Jordan, and Rajan. However, since any shock history can be decomposed into a series of dated Impulse Response Functions, users can also supply any numeric vector of the same length as s.limit + 1. The default is \code{pulse}}
 
-\item{dM.level}{a numeric significance level of the GDRF, calculated by the delta method. The default is 0.95}
+\item{dM.level}{a numeric value for the significance level of the GDRF, calculated by the delta method. The default is 0.95}
 
 \item{s.limit}{an integer for the number of periods to determine the GDRF (beginning at s = 0)}
 
-\item{se.type}{a string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
 
 \item{return.data}{logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}}
 
 \item{return.plot}{logical to return the visualized GDRFs as a list element under \code{plot}. The default is \code{TRUE}}
 
-\item{return.formulae}{logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{binomials} (for the shock history). The default is \code{FALSE}}
+\item{return.formulae}{logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}}
 
 \item{...}{other arguments to be passed to the call to plot}
 }
+\value{
+if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{adl.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the GDRF formula for each period as well as the applied shock history in integer form
+}
 \description{
-Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, assuming the underlying model is in levels (\code{d.x} = \code{d.y} = 0) and the user wants a marginal effect (the untransformed GDRF). (This is just a wrapper for \code{GDRF.adl.plot} with simplifying assumptions)
+Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan), assuming the underlying model is in levels (\code{d.x} = \code{d.y} = 0) and the user wants a discrete effect (the untransformed GDRF) with a shock size of 1. (This is just a wrapper for \code{GDRF.adl.plot} with simplifying assumptions)
 }
 \examples{
 
@@ -63,4 +66,4 @@ adl.plot(model = model.toydata,
 Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 }
 \keyword{ADL}
-\keyword{plot}
+\keyword{GDRF}

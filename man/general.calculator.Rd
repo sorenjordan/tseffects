@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{general.calculator}
 \alias{general.calculator}
-\title{Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history}
+\title{Generate the generalized (im)pulse formulae for a dynamic linear model}
 \usage{
 general.calculator(d.x, d.y, h, limit, pulses)
 }
@@ -18,13 +18,13 @@ general.calculator(d.x, d.y, h, limit, pulses)
 \item{pulses}{a list comprising the formulae for Impulse Response Functions, typically generated using \code{pulse.calculator}}
 }
 \value{
-a list of \code{limit} + 1 \code{mpoly} formulae containing the generalized effect formula in each period
+a list with two elements: \code{limit} + 1 \code{mpoly} formulae containing the generalized effect formula (for calculating the GDRF) in each period (under \code{formulae}) as well as the actual shock history (under \code{shocks})
 }
 \description{
-Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history
+Generate the generalized (im)pulse effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history. Take the period-specific impulse response functions (presumably pulses from pulse.calculator or convolution.calculator) and generalize them according to a shock history h and order of differencing of the independent and/or dependent variable
 }
 \details{
-\code{general.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the generalized effect in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. Note: \code{mpoly} does not allow variable names with a .; variables passed to \code{general.calculator} should not include this character
+\code{general.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the generalized effect in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. Note: avoid passing characters not allowed by \code{mpoly}
 }
 \examples{
 # ADL(1,1)

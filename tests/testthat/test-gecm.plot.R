@@ -6,7 +6,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
   # Core check: gecm.plot and the equivalent GDRF.gecm.plot call produce identical
   #  output for a pulse shock. This confirms the wrapper passes all arguments through
   ####################################################################################
-  out_gecm_pulse <- gecm.plot(
+  out_gecm_pulse <- suppressWarnings(gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -17,9 +17,9 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     return.data = TRUE,
     return.plot = TRUE,
     return.formulae = TRUE
-  )
+  ))
 
-  out_gdrf_pulse <- GDRF.gecm.plot(
+  out_gdrf_pulse <- suppressWarnings(GDRF.gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -32,7 +32,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     shock.history = "pulse",
     inferences.y = "levels",
     inferences.x = "levels",
-    effect.type = "marginal",
+    effect.type = "discrete",
     prediction.values = NULL,
     baseline.y = NULL,
     baseline.y.se = 0,
@@ -41,7 +41,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     return.data = TRUE,
     return.plot = TRUE,
     return.formulae = TRUE
-  )
+  ))
 
   expect_equal( # estimates match for pulse
     # Function output
@@ -59,18 +59,18 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     out_gdrf_pulse$formulae
   )
 
-  expect_equal( # binomials match for pulse
+  expect_equal( # shocks match for pulse
     # Function output
-    out_gecm_pulse$binomials,
+    out_gecm_pulse$shocks,
 
     # Expected output
-    out_gdrf_pulse$binomials
+    out_gdrf_pulse$shocks
   )
 
   ####################################################################################
   # Same core check for a step shock
   ####################################################################################
-  out_gecm_step <- gecm.plot(
+  out_gecm_step <- suppressWarnings(gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -81,9 +81,9 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     return.data = TRUE,
     return.plot = TRUE,
     return.formulae = TRUE
-  )
+  ))
 
-  out_gdrf_step <- GDRF.gecm.plot(
+  out_gdrf_step <- suppressWarnings(GDRF.gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -96,7 +96,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     shock.history = "step",
     inferences.y = "levels",
     inferences.x = "levels",
-    effect.type = "marginal",
+    effect.type = "discrete",
     prediction.values = NULL,
     baseline.y = NULL,
     baseline.y.se = 0,
@@ -105,7 +105,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     return.data = TRUE,
     return.plot = TRUE,
     return.formulae = TRUE
-  )
+  ))
 
   expect_equal( # estimates match for step
     # Function output
@@ -123,21 +123,21 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     out_gdrf_step$formulae
   )
 
-  expect_equal( # binomials match for step
+  expect_equal( # shocks match for step
     # Function output
-    out_gecm_step$binomials,
+    out_gecm_step$shocks,
 
     # Expected output
-    out_gdrf_step$binomials
+    out_gdrf_step$shocks
   )
 
   ####################################################################################
   # The fixed arguments gecm.plot imposes (x.vrbl.d.x = 0, y.vrbl.d.y = 0,
-  #  x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1, inferences in levels, effect.type = marginal)
+  #  x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1, inferences in levels, effect.type = discrete)
   #  cannot be overridden, so calling GDRF.gecm.plot with different values should NOT
   #  equal gecm.plot output
   ####################################################################################
-  out_gdrf_different <- GDRF.gecm.plot(
+  out_gdrf_different <- suppressWarnings(GDRF.gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -158,7 +158,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     return.data = TRUE,
     return.plot = TRUE,
     return.formulae = TRUE
-  )
+  ))
 
   expect_false( # fixed arguments are indeed fixed
     # Function output
@@ -168,7 +168,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
   ####################################################################################
   # s.limit is forwarded: check it changes the number of rows in estimates
   ####################################################################################
-  out_s5 <- gecm.plot(
+  out_s5 <- suppressWarnings(gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -176,9 +176,9 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     y.d.vrbl = c("l_1_d_y" = 1),
     s.limit = 5,
     return.data = TRUE
-  )
+  ))
 
-  out_s10 <- gecm.plot(
+  out_s10 <- suppressWarnings(gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -186,7 +186,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     y.d.vrbl = c("l_1_d_y" = 1),
     s.limit = 10,
     return.data = TRUE
-  )
+  ))
 
   expect_equal( # s.limit = 5 produces 6 rows (s = 0 ... 5)
     # Function output
@@ -207,7 +207,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
   ####################################################################################
   # return.* flags are forwarded correctly
   ####################################################################################
-  out_nodata <- gecm.plot(
+  out_nodata <- suppressWarnings(gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -217,7 +217,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     return.data = TRUE,
     return.plot = TRUE,
     return.formulae = FALSE
-  )
+  ))
 
   expect_true( # estimates not returned when return.data = TRUE
     # Function output
@@ -234,7 +234,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     "plot" %in% names(out_nodata)
   )
 
-  out_noplot <- gecm.plot(
+  out_noplot <- suppressWarnings(gecm.plot(
     model = model,
     x.vrbl = c("l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -244,7 +244,7 @@ test_that("gecm.plot passes arguments to GDRF.gecm.plot correctly", {
     return.data = TRUE,
     return.plot = FALSE,
     return.formulae = TRUE
-  )
+  ))
 
   expect_true( # estimates returned when return.data = TRUE
     # Function output
@@ -277,7 +277,7 @@ test_that("gecm.plot inherits errors from GDRF.gecm.plot for bad inputs", {
               s.limit = 5),
 
     # Expected output
-    "Variables in shock history terms \\(x and y\\) and lagged differences"
+    "Variables in GDRF terms \\(x and y\\) and lagged differences"
   )
 
   expect_error( # x.vrbl not in model reaches GDRF.gecm.plot

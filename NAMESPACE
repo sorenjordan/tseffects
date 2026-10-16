@@ -3,6 +3,7 @@
 export(GDRF.adl.plot)
 export(GDRF.gecm.plot)
 export(adl.plot)
+export(convolution.calculator)
 export(gecm.plot)
 export(gecm.to.adl)
 export(general.calculator)

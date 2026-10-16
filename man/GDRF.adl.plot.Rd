@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{GDRF.adl.plot}
 \alias{GDRF.adl.plot}
-\title{Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model}
+\title{Evaluate and/or plot the General Dynamic Response Function (GDRF) for an ADL}
 \usage{
 GDRF.adl.plot(
   model = NULL,
@@ -13,7 +13,8 @@ GDRF.adl.plot(
   shock.history = "pulse",
   inferences.y = "levels",
   inferences.x = "levels",
-  effect.type = "marginal",
+  effect.type = "discrete",
+  cumulative = FALSE,
   prediction.values = NULL,
   baseline.y = NULL,
   baseline.y.se = 0,
@@ -21,6 +22,7 @@ GDRF.adl.plot(
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
+  return.LRM = TRUE,
   return.data = FALSE,
   return.plot = TRUE,
   return.formulae = FALSE,
@@ -38,38 +40,48 @@ GDRF.adl.plot(
 
 \item{d.y}{an integer describing how many times the dependent variable was differenced before model estimation}
 
-\item{shock.history}{the desired shock history. \code{shock.history} determines the shock history (h) (which can be expressed as an integer) that will be applied to the independent variable. -1 represents a pulse (Impulse Response Function). 0 represents a step (Step Response Function). These can also be specified via \code{pulse} and \code{step}. For others, see Vande Kamp, Jordan, and Rajan. The default is \code{pulse}}
+\item{shock.history}{either a character string, integer, or numeric vector for the desired shock history. \code{shock.history} determines the shock history (h) that will be applied to the independent variable. Vande Kamp, Jordan, and Rajan express this as the parameter h (an integer). -1 represents the Impulse Response Function; the equivalent string is \code{pulse} or \code{impulse}. 0 represents the Step Response Function; the equivalent string is \code{step}. For others, see Vande Kamp, Jordan, and Rajan. However, since any shock history can be decomposed into a series of dated Impulse Response Functions, users can also supply any numeric vector of the same length as s.limit + 1. The default is \code{pulse}}
 
-\item{inferences.y}{does the user want resulting inferences about the dependent variable in \code{levels} or in \code{differences}? (For y variables where \code{d.y} is 0, this is automatically levels.) The default is \code{levels}}
+\item{inferences.y}{a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include \code{levels} or \code{differences}. (For y variables where \code{d.y} is 0, this is automatically \code{levels}.) The default is \code{levels}}
 
-\item{inferences.x}{does the user want to apply the shock history to the independent variable in \code{levels} or in \code{differences}? (For x variables where \code{d.x} is 0, this is automatically levels.) The default is \code{levels}}
+\item{inferences.x}{a character string specifying whether the shock to the independent variable is applied in levels or differences. Valid arguments include \code{levels} or \code{differences}. (For independent variables where \code{d.x} is 0, this is automatically \code{levels}.) The default is \code{levels}}
 
-\item{effect.type}{whether to return marginal effects or fitted values. \code{marginal} returns the GDRF as a marginal effect. \code{fitted} returns the GDRF as a fitted value, relative to a baseline value of y. The default is \code{marginal}}
+\item{effect.type}{a character string indicating whether to return discrete effects or fitted values. \code{discrete} returns the GDRF as a discrete effect estimate. \code{fitted} returns the GDRF as a fitted value, relative to a baseline value of the dependent variable. The default is \code{discrete}}
 
-\item{prediction.values}{a named list of values for non-y variables in the model, used to calculate a steady-state baseline when \code{effect.type = "fitted"} and \code{d.y = 0} and \code{baseline.y} is not supplied. This allows for the calculation of model-based uncertainty. If any differenced variables are included in the model, they should be set to 0. Ignored when \code{d.y > 0}}
+\item{cumulative}{logical to return the cumulative effects or the period-specific effects of the given \code{shock.history}. For instance, to obtain the Cumulative Impulse Response Function, set \code{shock.history} to -1 and \code{cumulative = TRUE}. The default is \code{FALSE}}
 
-\item{baseline.y}{a user-supplied baseline value of y in levels. For \code{d.y = 0}, this overrides the steady-state calculation from \code{prediction.values} if provided. For \code{d.y > 0} with \code{inferences.y = "levels"}, this is required (otherwise it is just marginal effects). Only used when \code{effect.type = "fitted"}}
+\item{prediction.values}{a named list of values for non-y variables in the model, used to calculate a steady-state baseline of the dependent variable when \code{effect.type = "fitted"} and \code{d.y = 0} and \code{baseline.y} is not supplied. Model-based uncertainty will be calculated around the formula for this value. If any differenced variables are included in the model, they should be set to 0. If multiple lags of the same variable are included, they should be set to the same value. Ignored when \code{d.y > 0}}
 
-\item{baseline.y.se}{a user-supplied standard error for the baseline value of y (to suggest uncertainty around predictions). If supplied, this is added in quadrature to the standard errors of the GDRF estimates. Only used when \code{effect.type = "fitted"} and \code{inferences.y = "levels"}. The default is 0: in recognition that this is user-constructed uncertainty. Possible values would be the square root of the standard deviation of y (in levels)}
+\item{baseline.y}{a numeric value for the user-supplied baseline value of y in levels (i.e. the baseline value for effects to accumulate from). Only used when \code{effect.type = "fitted"}. For \code{d.y = 0}, this overrides the steady-state calculation from \code{prediction.values} if provided}
 
-\item{shock.size}{the size of the shock to x in the units of x. Only used when \code{effect.type = "fitted"}; marginal effects are not scaled. Defaults to 1 (a marginal effect)}
+\item{baseline.y.se}{a numeric value for the user-supplied standard error for the baseline value of y (to suggest uncertainty around predictions). Only used when \code{effect.type = "fitted"} and \code{inferences.y = "levels"}. If supplied, this is added in quadrature to the standard errors of the GDRF estimates. The default is 0: in recognition that this is user-constructed uncertainty. Possible values would be the square root of the standard deviation of y (in levels)}
 
-\item{dM.level}{a numeric significance level of the GDRF, calculated by the delta method. The default is 0.95}
+\item{shock.size}{a numeric value for the size of the shock to x in the units of x. Defaults to 1 (a discrete effect similar to traditional marginal effects)}
+
+\item{dM.level}{a numeric value for the significance level of the GDRF, calculated by the delta method. The default is 0.95}
 
 \item{s.limit}{an integer for the number of periods to determine the GDRF (beginning at s = 0)}
 
-\item{se.type}{a string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+
+\item{return.LRM}{logical to return the LRM in the estimates and plots, should the LRM exist for that combination of \code{shock.history} and \code{cumulative}. The default is \code{TRUE}}
 
 \item{return.data}{logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}}
 
 \item{return.plot}{logical to return the visualized GDRFs as a list element under \code{plot}. The default is \code{TRUE}}
 
-\item{return.formulae}{logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{binomials} (for the shock history). The default is \code{FALSE}}
+\item{return.formulae}{logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}}
 
 \item{...}{other arguments to be passed to the call to plot}
 }
+\value{
+if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{GDRF.adl.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the GDRF formula for each period as well as the applied shock history in integer form
+}
 \description{
-Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model
+Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan)
+}
+\details{
+Internally, GDRF.adl.plot uses the separate subfunctions \code{pulse.calculator}, \code{convolution.calculator}/\code{general.calculator}, and (possibly) \code{yhat.calculator} to generate the effect estimates representing the GDRF. These estimates represent the effect of the independent variable (in levels or differences, depending on \code{d.x}) on the dependent variable (in levels or differences, depending on \code{d.y}), given a shock applied to the independent variable (in levels or differences, depending on \code{inferences.x}). The effect on the dependent variable can be calculated in its differenced form or levels form, depending on \code{inferences.y}. The shock history is determined by \code{shock.history}. For more information, see Vande Kamp, Jordan, and Rajan. We assume that the ADL model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities
 }
 \examples{
 
@@ -90,12 +102,26 @@ GDRF.adl.plot(model = model.toydata,
 
 # Step effect of x. You can store the data to draw your own plot,
 #  if you prefer
-test.cumulative <- GDRF.adl.plot(model = model.toydata,
+test.step <- GDRF.adl.plot(model = model.toydata,
 	x.vrbl = c("x" = 0, "l_1_x" = 1),
 	y.vrbl = c("l_1_y" = 1),
 	d.x = 0,
 	d.y = 0,
 	shock.history = "step",
+	inferences.y = "levels",
+	inferences.x = "levels",
+	s.limit = 20)
+test.step$plot
+
+# Cumulative Impulse Response effect of x. For the dynamic linear model,
+#  this is equivalent to the step effect
+test.cumulative <- GDRF.adl.plot(model = model.toydata,
+	x.vrbl = c("x" = 0, "l_1_x" = 1),
+	y.vrbl = c("l_1_y" = 1),
+	d.x = 0,
+	d.y = 0,
+	shock.history = "pulse",
+ cumulative = TRUE,
 	inferences.y = "levels",
 	inferences.x = "levels",
 	s.limit = 20)
@@ -120,4 +146,3 @@ Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 }
 \keyword{ADL}
 \keyword{GDRF}
-\keyword{plot}

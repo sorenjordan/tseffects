@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{gecm.plot}
 \alias{gecm.plot}
-\title{Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1) model, assuming the underlying model is in first differences (\code{x.vrbl.d.x} = \code{y.vrbl.d.y} = 0 and \code{x.d.vrbl.d.x} = \code{y.d.vrbl.d.y} = 1) and the user wants a marginal effect (the untransformed GDRF) and inferences about y in levels to a treatment applied to x in levels. (This is just a wrapper for \code{GDRF.gecm.plot} with simplifying assumptions)}
+\title{Evaluate and/or plot the General Dynamic Response Function (GDRF) for a GECM assumed in levels/first differences}
 \usage{
 gecm.plot(
   model = NULL,
@@ -23,35 +23,35 @@ gecm.plot(
 \arguments{
 \item{model}{the \code{lm} model containing the GECM estimates}
 
-\item{x.vrbl}{a named numeric vector of the x variables (of the lower level of differencing, usually in levels d = 0) and corresponding lag orders in the GECM model}
+\item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags (of the lower order of differencing, in levels d = 0) and the numbers correspond to the specific lag order of each variable}
 
-\item{y.vrbl}{a named numeric vector of the (lagged) y variables (of the lower level of differencing, usually in levels d = 0) and corresponding lag orders in the GECM model}
+\item{y.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable (of the lower order of differencing, in levels d = 0) and the numbers correspond to the specific lag order of each variable}
 
-\item{x.d.vrbl}{a named numeric vector of the x variables (of the higher level of differencing, usually first differences d = 1) and corresponding lag orders in the GECM model}
+\item{x.d.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags (of the higher order of differencing, in first differences d = 1) and the numbers correspond to the specific lag order of each variable}
 
-\item{y.d.vrbl}{a named numeric vector of the y variables (of the higher level of differencing, usually first differences d = 1) and corresponding lag orders in the GECM model. Can be \code{NULL} if the model has no lags of the differenced dependent variables}
+\item{y.d.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable (of the higher order of differencing, in first differences d = 1) and the numbers correspond to the specific lag order of each variable}
 
-\item{shock.history}{the desired shock history. \code{shock.history} determines the shock history (h) that will be applied to the independent variable. -1 represents a pulse. 0 represents a step. These can also be specified via \code{pulse} and \code{step}. For others, see Vande Kamp, Jordan, and Rajan. The default is \code{pulse}}
+\item{shock.history}{either a character string, integer, or numeric vector for the desired shock history. \code{shock.history} determines the shock history (h) that will be applied to the independent variable. Vande Kamp, Jordan, and Rajan express this as the parameter h (an integer). -1 represents the Impulse Response Function; the equivalent string is \code{pulse} or \code{impulse}. 0 represents the Step Response Function; the equivalent string is \code{step}. For others, see Vande Kamp, Jordan, and Rajan. However, since any shock history can be decomposed into a series of dated Impulse Response Functions, users can also supply any numeric vector of the same length as s.limit + 1. The default is \code{pulse}}
 
-\item{dM.level}{a numeric significance level of the GDRF, calculated by the delta method. The default is 0.95}
+\item{dM.level}{a numeric value for the significance level of the GDRF, calculated by the delta method. The default is 0.95}
 
 \item{s.limit}{an integer for the number of periods to determine the GDRF (beginning at s = 0)}
 
-\item{se.type}{a string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
 
 \item{return.data}{logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}}
 
 \item{return.plot}{logical to return the visualized GDRFs as a list element under \code{plot}. The default is \code{TRUE}}
 
-\item{return.formulae}{logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{binomials} (for the shock history). The default is \code{FALSE}}
+\item{return.formulae}{logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}}
 
 \item{...}{other arguments to be passed to the call to plot}
 }
 \value{
-depending on \code{return.data}, \code{return.plot}, and \code{return.formulae}, a list of elements relating to the GDRF
+if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{gecm.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the GDRF formula for each period as well as the applied shock history in integer form
 }
 \description{
-Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1) model, assuming the underlying model is in first differences (\code{x.vrbl.d.x} = \code{y.vrbl.d.y} = 0 and \code{x.d.vrbl.d.x} = \code{y.d.vrbl.d.y} = 1) and the user wants a marginal effect (the untransformed GDRF) and inferences about y in levels to a treatment applied to x in levels. (This is just a wrapper for \code{GDRF.gecm.plot} with simplifying assumptions)
+Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1), making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan), assuming the underlying model is in first differences (\code{x.vrbl.d.x} = \code{y.vrbl.d.y} = 0 and \code{x.d.vrbl.d.x} = \code{y.d.vrbl.d.y} = 1), the user wants a discrete effect (the untransformed GDRF) and inferences about y in levels to a shock applied to x in levels, with a shock size of 1. (This is just a wrapper for \code{GDRF.gecm.plot} with simplifying assumptions)
 }
 \details{
 We assume that the GECM model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities. Given that, to obtain inferences for the specified shock history, the user only needs a named vector of the x and y variables, as well as the order of the differencing. Internally, the GECM to ADL equivalences are used to calculate the GDRFs from the GECM
@@ -78,4 +78,3 @@ Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 }
 \keyword{GDRF}
 \keyword{GECM}
-\keyword{plot}

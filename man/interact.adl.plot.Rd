@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{interact.adl.plot}
 \alias{interact.adl.plot}
-\title{Plot the interaction in a single-equation time series model estimated via \code{lm}.}
+\title{Evaluate and/or plot dynamic interactions from dynamic linear models}
 \usage{
 interact.adl.plot(
   model = NULL,
@@ -11,6 +11,12 @@ interact.adl.plot(
   x.z.vrbl = NULL,
   y.vrbl = NULL,
   shock.history = "impulse",
+  cumulative = FALSE,
+  effect.type = "discrete",
+  prediction.values = NULL,
+  baseline.y = NULL,
+  baseline.y.se = 0,
+  shock.size = 1,
   plot.type = "lines",
   line.options = "z.lines",
   heatmap.options = "significant",
@@ -23,6 +29,7 @@ interact.adl.plot(
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
+  return.LRM = TRUE,
   return.data = FALSE,
   return.plot = TRUE,
   return.formulae = FALSE,
@@ -32,53 +39,67 @@ interact.adl.plot(
 \arguments{
 \item{model}{the \code{lm} model containing the ADL estimates}
 
-\item{x.vrbl}{named numeric vector of the ``main'' x variables and corresponding lag orders in the ADL model}
+\item{x.vrbl}{a named numeric vector in which the names correspond to the ``main'' x variables and its lags and the numbers correspond to the specific lag order of each variable}
 
-\item{z.vrbl}{named numeric vector of the ``moderating'' z variables and corresponding lag orders in the ADL model}
+\item{z.vrbl}{a named numeric vector in which the names correspond to the ``moderating'' z variables and its lags and the numbers correspond to the specific lag order of each variable}
 
-\item{x.z.vrbl}{named numeric vector with the interaction variables and corresponding lag orders in the ADL model. IMPORTANT: enter the lag order that pertains to the ``main'' x variable. For instance, x_l_1_z (contemporaneous x times lagged z) would be 0 and l_1_x_z (lagged x times contemporaneous z) would be 1}
+\item{x.z.vrbl}{a named numeric vector in which the names correspond to the ``interaction'' x:z variables and its lags and the numbers correspond to the specific lag order of each variable. IMPORTANT: enter the lag order that pertains to the ``main'' x variable. For instance, x_l_1_z (contemporaneous x times lagged z) would be 0 and l_1_x_z (lagged x times contemporaneous z) would be 1}
 
-\item{y.vrbl}{named numeric vector of the (lagged) y variables and corresponding lag orders in the ADL model. Can be \code{NULL} if the model has no lagged dependent variables}
+\item{y.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable and the numbers correspond to the specific lag order of each variable. Can be \code{NULL} if the model has no lagged dependent variables}
 
-\item{shock.history}{whether impulse/pulse or cumulative/step effects should be calculated. \code{impulse} (or \code{pulse}) generates impulse effects (the Impulse Response Function), or short-run/instantaneous effects specific to each period. \code{cumulative} (or \code{step}: the Step Response Function) generates the accumulated, or long-run/cumulative effects up to each period (including the long-run multiplier). The default is \code{impulse}}
+\item{shock.history}{either a character string, integer, or numeric vector for the desired shock history. \code{shock.history} determines the shock history (h) that will be applied to the independent variable. Vande Kamp, Jordan, and Rajan express this as the parameter h (an integer). -1 represents the Impulse Response Function; the equivalent string is \code{pulse} or \code{impulse}. 0 represents the Step Response Function; the equivalent string is \code{step}. For others, see Vande Kamp, Jordan, and Rajan. However, since any shock history can be decomposed into a series of dated Impulse Response Functions, users can also supply any numeric vector of the same length as s.limit + 1. The default is \code{pulse}}
 
-\item{plot.type}{a string for whether to feature marginal effects at discrete values of s/z as \code{lines}, or across a range of values through a \code{heatmap}. The default is \code{lines}}
+\item{cumulative}{logical to return the cumulative effects or the period-specific effects of the given \code{shock.history}. For instance, to obtain the Cumulative Impulse Response Function, set \code{shock.history} to -1 and \code{cumulative = TRUE}. The default is \code{FALSE}}
 
-\item{line.options}{if drawing lines, a string for whether the moderator should be values of z (\code{z.lines}) or values of s (\code{s.lines}). The default is \code{z.lines}}
+\item{effect.type}{a character string indicating whether to return discrete effects or fitted values. \code{discrete} returns a discrete effect estimate. \code{fitted} returns a fitted value, relative to a baseline value of the dependent variable. The default is \code{discrete}}
 
-\item{heatmap.options}{if drawing a heatmap, a string for whether \code{all} marginal effects should be shown or just statistically significant ones. (Note: this just sets the insignificant effects to the numeric value of 0. If the middle value of your scale gradient is white, these will effectively ``disappear.'' If another gradient is used, they will take on the color assigned to 0 values.) The default is \code{significant}}
+\item{prediction.values}{a named list of values for non-y non-z variables in the model, used to calculate a steady-state baseline of the dependent variable when \code{effect.type = "fitted"} and \code{baseline.y} is not supplied. Model-based uncertainty will be calculated around the formula for this value. If any differenced variables are included in the model, they should be set to 0. If multiple lags of the same variable are included, they should be set to the same value (including for interactions). When working with interactions, these should be provided for any ``main'' x terms as well as the intended value of x for any ``interaction'' x:z terms. It is most sensible to use the same value of x for interaction terms with the same lag order: i.e. \code{x} and \code{x:z} would both be contemporaneous x, so \code{prediction.values = list("x" = 0, "x:z" = 0)} would set both values of contemporaneous x to 0. \code{prediction.values = list("x" = 0, "x:z" = 1)} would set one contemporaneous x to 0 and the other to 1; this is inconsistent. See the vignette for more examples. The ``interaction'' x.z terms will then be multiplied by a value of z, passed either by \code{z.vals} or internally defined by the function. If \code{return.formulae = TRUE}, a generic placeholder \code{z_val} is used in the formula to represent where the relevant \code{z.val} has been inserted to estimated the value}
 
-\item{line.colors}{a string for what color lines would you like for line plots? This defaults to the color-safe Okabe-Ito (\code{okabe-ito}) colors. There is also a grayscale option through \code{bw}. Users can also include whatever colors they like. The number of colors must match the number of lines drawn. This is passed to \code{scale_color_discrete}}
+\item{baseline.y}{a numeric value for the user-supplied baseline value of y in levels (i.e. the baseline value for effects to accumulate from). Only used when \code{effect.type = "fitted"}}
 
-\item{heatmap.colors}{a string for what color scale would you like for the heatmap? The default is \code{Blue-Red}. Alternate colors must be one of \code{hcl.pals()}. For grayscale plots, use \code{Grays}. This is passed to \code{scale_fill_gradientn}}
+\item{baseline.y.se}{a numeric value for the user-supplied standard error for the baseline value of y (to suggest uncertainty around predictions). Only used when \code{effect.type = "fitted"}. If supplied, this is added in quadrature to the standard errors of the predictions. The default is 0: in recognition that this is user-constructed uncertainty. Possible values would be the square root of the standard deviation of y}
 
-\item{z.vals}{numeric values for the moderating variable. If \code{plot.type = lines}, these are treated as discrete levels of z. If \code{plot.type = heatmap}, these are treated as a lower and upper level of a range of values of z. If none are provided, \code{interact.adl.plot} will pick}
+\item{shock.size}{a numeric value for the size of the shock to x in the units of x. Defaults to 1 (a discrete effect similar to traditional marginal effects)}
 
-\item{s.vals}{numeric values for the time since the shock. This is only used if \code{line.options = s.lines}, meaning s is treated as the moderator. The default is 0 (short-run) and the \code{LRM}}
+\item{plot.type}{a character string for the type of plot to create. \code{heatmap} features the combination of estimated effects across a set of values of z as well as a range of values of s. This is computationally intensive, as many effects are estimated. \code{lines} features the estimated effects at discrete values of s/z. The default is \code{lines}}
 
-\item{z.label.rounding}{number of digits to round to for the z labels in the legend (if those values are automatically calculated)}
+\item{line.options}{a character string for the type of effect to calculate, if \code{plot.type = "lines"}. \code{z.lines} evaluates the moderator as discrete values of z across a range of s. \code{s.lines} evalautes the moderator as discrete values of s across a range of z. The default is \code{z.lines}}
 
-\item{z.vrbl.label}{the name of the moderating z variable, used in plotting}
+\item{heatmap.options}{a character string for the type of heatmap to draw, if \code{plot.type = "heatmap"}. \code{all} indicates that all discrete effects should be shown. \code{significant} indicates that only statistically significant discrete effects should be shown (since signficance indicators cannot appear on the heatmap). Note: this just sets the insignificant effects to the numeric value of 0. If the middle value of your scale gradient is white, these will effectively ``disappear.'' If another gradient is used, they will take on the color assigned to 0 values. If estimating fitted values, the function automatically switches to \code{all}, since \code{significant} fitted values are a bit nonsensical. The default is \code{significant}}
 
-\item{dM.level}{significance level of the (cumulative) marginal effects, calculated by the delta method. The default is 0.95}
+\item{line.colors}{a character string for the line colors. This defaults to the color-safe Okabe-Ito (\code{okabe-ito}) colors. There is also a grayscale option through \code{bw}. Users can also include whatever colors they like; the number of colors must match the number of lines drawn. This is passed to \code{scale_color_discrete}}
 
-\item{s.limit}{an integer for the number of periods to determine the (cumulative) marginal effects (beginning at s = 0)}
+\item{heatmap.colors}{a character string for the heatmap colors. This defaults to the diverging gradient \code{Blue-Red}. Alternate colors must be one of \code{hcl.pals()}. For grayscale plots, use \code{Grays}. This is passed to \code{scale_fill_gradientn}}
 
-\item{se.type}{the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{z.vals}{a vector of numeric values for the moderating variable. If \code{plot.type = "lines"}, these are treated as discrete levels of z. If \code{plot.type = "heatmap"}, these are treated as a lower and upper limit of a range of values of z. If none are provided, \code{interact.adl.plot} will pick based on the \code{plot.type}}
 
-\item{return.data}{logical to return the raw calculated (cumulative) marginal effects as a list element under \code{estimates}. The default is \code{FALSE}}
+\item{s.vals}{a vector of values for the time since the shock at which to evaluate the discrete effects. This is only used if \code{line.options = s.lines}, meaning s is treated as the moderator. The default is 0 (short-run) and the \code{LRM}}
 
-\item{return.plot}{logical to return the visualized (cumulative) marginal effects as a list element under \code{plot}. The default is \code{TRUE}}
+\item{z.label.rounding}{a numeric value for the digits to round to for the z labels in the legend (if those values are automatically calculated). The default is 3}
 
-\item{return.formulae}{logical to return the formulae for the (cumulative) marginal effects as a list element under \code{formulae} (for the (cumulative) marginal effects) and \code{binomials} (for the shock history). The default is \code{FALSE}}
+\item{z.vrbl.label}{an optional string to give as the name of the moderating z variable, used in plotting (to avoid ugly variable names in plot labels and legends)}
+
+\item{dM.level}{a numeric value for the significance level of the (cumulative) discrete effects, calculated by the delta method. The default is 0.95}
+
+\item{s.limit}{an integer for the number of periods to determine the (cumulative) discrete effects (beginning at s = 0)}
+
+\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+
+\item{return.LRM}{logical to return the LRM in the estimates and plots, should the LRM exist for that combination of \code{shock.history} and \code{cumulative}. The default is \code{TRUE}}
+
+\item{return.data}{logical to return the raw calculated (cumulative) discrete effects as a list element under \code{estimates}. The default is \code{FALSE}}
+
+\item{return.plot}{logical to return the visualized (cumulative) discrete effects as a list element under \code{plot}. The default is \code{TRUE}}
+
+\item{return.formulae}{logical to return the formulae for the (cumulative) discrete effects as a list element under \code{formulae} (for the (cumulative) discrete effects) and \code{shocks} (for the shock history). For interactions, the placeholder of \code{z_val} is used to denote where a specific value of z is substituted. The default is \code{FALSE}}
 
 \item{...}{other arguments to be passed to the call to plot}
 }
 \value{
-depending on \code{return.data}, \code{return.plot}, and \code{return.formulae}, a list of elements relating to the interaction
+if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{interact.adl.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the (cumulative) conditional effects for each period as well as the applied shock history in integer form
 }
 \description{
-Plot the interaction in a single-equation time series model estimated via \code{lm}.
+Evaluate (and possibly plot) the dynamic conditional effect from an autoregressive distributed lag (ADL) model (following the framework of Warner, Vande Kamp and Jordan). The description here matches the prose of Warner, Vande Kamp, and Jordan
 }
 \details{
 We assume that the ADL model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities. It is imperative that you double-check you have referenced all x, y, z, and interaction terms through \code{x.vrbl}, \code{y.vrbl}, \code{z.vrbl}, and \code{x.z.vrbl}. You must also have their orders correctly entered. \code{interact.adl.plot} has no way of determining, from the variable list, which correspond with which
@@ -98,7 +119,7 @@ cavari.model <- lm(APPROVE ~ APPROVE_ECONOMY + APPROVE_FOREIGN + MIP_MACROECONOM
      APPROVE_L1 + PARTY_IN + PARTY_OUT + UNRATE + 
      DIVIDEDGOV + ELECTION + HONEYMOON + as.factor(PRESIDENT), data = approval)
 
-# Now: marginal effect of X at different levels of Z
+# Now: discrete effect of X at different levels of Z
 interact.adl.plot(model = cavari.model, 
 	x.vrbl = c("APPROVE_ECONOMY" = 0), y.vrbl = c("APPROVE_L1" = 1),
 		z.vrbl = c("MIP_MACROECONOMICS" = 0), x.z.vrbl = c("ECONAPP_ECONMIP" = 0),
@@ -110,7 +131,7 @@ model.toydata <- lm(y ~ l_1_y + x + l_1_x + z + l_1_z +
 	x_z + z_l_1_x +
 	x_l_1_z + l_1_x_l_1_z, data = toy.ts.interaction.data)
 
-# Marginal effect of z (not run: computational time)
+# Discrete effect of z (not run: computational time)
 # Be sure to specify x.z.vrbl orders with respect to x term
 \dontrun{interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1), 
 				y.vrbl = c("l_1_y" = 1), z.vrbl = c("z" = 0, "l_1_z" = 1),
@@ -123,7 +144,7 @@ model.toydata <- lm(y ~ l_1_y + x + l_1_x + z + l_1_z +
 				s.limit = 20)
 }
 
-# Heatmap of marginal effects, since X and Z are actually continuous
+# Heatmap of discrete effects, since X and Z are actually continuous
 #  (not run: computational time)
 \dontrun{interact.adl.plot(model = model.toydata, x.vrbl = c("x" = 0, "l_1_x" = 1), 
 				y.vrbl = c("l_1_y" = 1), z.vrbl = c("z" = 0, "l_1_z" = 1),
@@ -139,5 +160,5 @@ model.toydata <- lm(y ~ l_1_y + x + l_1_x + z + l_1_z +
 \author{
 Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 }
-\keyword{interaction}
-\keyword{plot}
+\keyword{ADL}
+\keyword{interactions}

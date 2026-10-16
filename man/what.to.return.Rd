@@ -14,15 +14,20 @@ what.to.return(
 )
 }
 \arguments{
-\item{return.plot}{a TRUE/FALSE on whether the plot should be returned from the function}
+\item{return.plot}{logical to return the visualized GDRFs as a list element under \code{plot}. The default is \code{TRUE}}
 
-\item{return.formulae}{a TRUE/FALSE on whether the data from the effect should be returned from the function}
+\item{return.formulae}{logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}}
+
+\item{return.data}{logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}}
 
 \item{plot.out}{the created plot from the GDRF ADL/GECM}
 
 \item{dat.out}{the created data from the GDRF ADL/GECM}
 
 \item{the.final.formulae}{the created formulae from the GDRF ADL/GECM}
+}
+\value{
+a list of the requested objects
 }
 \description{
 Consistently return the correct objects after a GDRF ADL/GECM

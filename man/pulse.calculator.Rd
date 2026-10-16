@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{pulse.calculator}
 \alias{pulse.calculator}
-\title{Generate pulse effect formulae for a given autoregressive distributed lag (ADL) model}
+\title{Generate the (im)pulse formulae for a dynamic linear model}
 \usage{
 pulse.calculator(x.vrbl, y.vrbl = NULL, limit)
 }
@@ -17,10 +17,10 @@ pulse.calculator(x.vrbl, y.vrbl = NULL, limit)
 a list of limit + 1 \code{mpoly} formulae containing the pulse effect formula in each period
 }
 \description{
-Generate pulse effect formulae for a given autoregressive distributed lag (ADL) model
+Generate the (im)pulse effect formulae for a given autoregressive distributed lag (ADL) model. This is the Impulse Response Function (a one-unit, one-period increase) for the supplied lag structure, assumed to be from a dynamic linear model
 }
 \details{
-\code{pulse.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the pulse effect in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. Note: \code{mpoly} does not allow variable names with a .; variables passed to \code{pulse.calculator} should not include this character
+\code{pulse.calculator} does no calculation. It generates a list of \code{mpoly} formulae that contain variable names that represent the pulse effect in each period. The expectation is that these will be evaluated using coefficients from an object containing an ADL model with corresponding variables. Note: avoid passing characters not allowed by \code{mpoly}
 }
 \examples{
 # ADL(1,1)

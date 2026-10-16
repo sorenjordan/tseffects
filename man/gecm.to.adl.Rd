@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{gecm.to.adl}
 \alias{gecm.to.adl}
-\title{Translate the coefficients from the General Error Correction Model (GECM) to the autoregressive distributed lag (ADL) model}
+\title{Use equivalencies to translate GECM coefficients to ADL coefficients}
 \usage{
 gecm.to.adl(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl)
 }
@@ -19,7 +19,7 @@ gecm.to.adl(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl)
 a list of named vectors of translated ADL coefficients for the x and y variables of interest
 }
 \description{
-Translate the coefficients from the General Error Correction Model (GECM) to the autoregressive distributed lag (ADL) model
+Translate the coefficients from the General Error Correction Model (GECM) to the autoregressive distributed lag (ADL) model. The ADL and the GECM are isomorphic, so this translation loses no information from the model
 }
 \details{
 \code{gecm.to.adl} utilizes the mathematical equivalence between the GECM and ADL models to translate the coefficients from one to the other. This way, we can apply a single function using the ADL math to calculate effects

@@ -7,6 +7,8 @@
 adl.dummy.checks(
   x.vrbl,
   y.vrbl,
+  z.vrbl,
+  x.z.vrbl,
   d.x,
   d.y,
   inferences.x,
@@ -17,23 +19,26 @@ adl.dummy.checks(
 )
 }
 \arguments{
-\item{x.vrbl}{a named vector of the x variables and corresponding lag orders in an ADL model}
+\item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags and the numbers correspond to the specific lag order of each variable}
 
-\item{y.vrbl}{a named vector of the y variables and corresponding lag orders in an ADL model}
+\item{y.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable and the numbers correspond to the specific lag order of each variable. Can be \code{NULL} if the model has no lagged dependent variables}
 
-\item{d.x}{the order of differencing of the x variable in the ADL model}
+\item{d.x}{an integer describing how many times the independent variable was differenced before model estimation}
 
-\item{d.y}{the order of differencing of the y variable in the ADL model}
+\item{d.y}{an integer describing how many times the dependent variable was differenced before model estimation}
 
-\item{inferences.x}{is the independent variable treated in levels or in differences?}
+\item{inferences.x}{a character string specifying whether the shock to the independent variable is applied in levels or differences. Valid arguments include \code{levels} or \code{differences}. (For independent variables where \code{d.x} is 0, this is automatically \code{levels}.) The default is \code{levels}}
 
-\item{inferences.y}{are the inferences for the dependent variable expected in levels or in differences?}
+\item{inferences.y}{a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include \code{levels} or \code{differences}. (For y variables where \code{d.y} is 0, this is automatically \code{levels}.) The default is \code{levels}}
 
 \item{the.coef}{the coefficient vector from the estimated ADL model}
 
-\item{se.type}{the type of standard error calculated}
+\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
 
-\item{type}{whether the effects are estimated in the context of a GDRF}
+\item{type}{a string whether the effects are estimated from a GDRF model or the interaction model. Accepts either \code{GDRF} or \code{interact}}
+}
+\value{
+nothing is returned
 }
 \description{
 Do consistent dummy checks for functions that use an ADL model

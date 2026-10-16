@@ -21,31 +21,34 @@ gecm.dummy.checks(
 )
 }
 \arguments{
-\item{x.vrbl}{a named vector of the x variables and corresponding lag orders of lower order of integration (typically levels, 0) in a GECM model}
+\item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags (of the lower order of differencing, usually in levels d = 0) and the numbers correspond to the specific lag order of each variable}
 
-\item{y.vrbl}{a named vector of the y variables and corresponding lag orders of lower order of integration (typically levels, 0) in a GECM model}
+\item{y.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable (of the lower order of differencing, usually in levels d = 0) and the numbers correspond to the specific lag order of each variable}
 
-\item{x.d.vrbl}{a named vector of the x variables and corresponding lag orders of higher order of integration (typically first differences, 1) in a GECM model}
+\item{x.d.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags (of the higher order of differencing, usually in first differences d = 1) and the numbers correspond to the specific lag order of each variable}
 
-\item{y.d.vrbl}{a named vector of the y variables and corresponding lag orders of higher order of integration (typically first differences, 1) in a GECM model}
+\item{y.d.vrbl}{a named numeric vector in which the names correspond to lags of the dependent variable (of the higher order of differencing, usually in first differences d = 1) and the numbers correspond to the specific lag order of each variable}
 
-\item{x.vrbl.d.x}{the order of differencing of the x variable of lower order of integration (typically levels, 0) in a GECM model}
+\item{x.vrbl.d.x}{an integer describing how many times the independent variable (of the lower order of differencing, usually in levels d = 0) was differenced before model estimation}
 
-\item{y.vrbl.d.y}{the order of differencing of the y variable of lower order of integration (typically levels, 0) in a GECM model}
+\item{y.vrbl.d.y}{an integer describing how many times the dependent variable (of the lower order of differencing, usually in levels d = 0) was differenced before model estimation}
 
-\item{x.d.vrbl.d.x}{the order of differencing of the x variable of higher order of integration (typically first differences, 1) in a GECM model}
+\item{x.d.vrbl.d.x}{an integer describing how many times the independent variable (of the higher order of differencing, usually in first differences d = 1) was differenced before model estimation}
 
-\item{y.d.vrbl.d.y}{the order of differencing of the y variable of higher order of integration (typically first differences, 1) in a GECM model}
+\item{y.d.vrbl.d.y}{an integer describing how many times the dependent variable (of the higher order of differencing, usually in first differences d = 1) was differenced before model estimation}
 
-\item{inferences.x}{is the independent variable treated in levels or in differences?}
+\item{inferences.x}{a character string specifying whether the shock to the independent variable is applied in levels or differences. Valid arguments include \code{levels} or \code{differences}. (For independent variables where \code{d.x} is 0, this is automatically \code{levels}.) The default is \code{levels}}
 
-\item{inferences.y}{are the inferences for the dependent variable expected in levels or in differences?}
+\item{inferences.y}{a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include \code{levels} or \code{differences}. (For y variables where \code{d.y} is 0, this is automatically \code{levels}.) The default is \code{levels}}
 
 \item{the.coef}{the coefficient vector from the estimated GECM model}
 
-\item{se.type}{the type of standard error calculated}
+\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
 
-\item{type}{whether the effects are estimated in the context of a GDRF}
+\item{type}{a string whether the effects are estimated from a GDRF model or the interaction model. For now, just \code{GDRF}. But we will eventually develop \code{interact.gecm.plot}}
+}
+\value{
+nothing is returned
 }
 \description{
 Do consistent dummy checks for functions that use a GECM model

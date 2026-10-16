@@ -7,11 +7,14 @@
 get.value(var, prediction.values, model)
 }
 \arguments{
-\item{var}{the variable to establish a prediction value for}
+\item{var}{a string for var the variable to establish a prediction value for}
 
-\item{prediction.values}{(possible) user-supplied list of values for variables}
+\item{prediction.values}{a named list of values for non-y variables in the model, used to calculate a steady-state baseline of the dependent variable when \code{effect.type = "fitted"} and \code{d.y = 0} and \code{baseline.y} is not supplied. Model-based uncertainty will be calculated around the formula for this value. If any differenced variables are included in the model, they should be set to 0. If multiple lags of the same variable are included, they should be set to the same value. Ignored when \code{d.y > 0}}
 
 \item{model}{the model containing the dataframe for mean estimation if values are not user-supplied (and warn the user if we're taking the mean)}
+}
+\value{
+the numeric value of the relevant variable
 }
 \description{
 Find starting values for predicted values plots from the data in the model frame, if not supplied

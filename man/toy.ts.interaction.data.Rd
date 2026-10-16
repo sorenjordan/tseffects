@@ -5,7 +5,7 @@
 \alias{toy.ts.interaction.data}
 \title{Simulated interactive time series data}
 \format{
-A data frame with 50 rows and 23 variables:
+A data frame with 50 rows and 32 variables:
 \describe{
  \item{time}{Indicator for time period}
  \item{x}{Contemporaneous x}

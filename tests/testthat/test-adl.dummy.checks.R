@@ -1,363 +1,342 @@
-test_that("adl.dummy.checks produces the correct warnings (GDTE type)", {
+test_that("adl.dummy.checks produces the correct errors and warnings (GDRF type)", {
 
-  # run a model to use for errors
+  # run a model to use for tests
   model <- lm(y ~ l_1_y + l_1_x, data = toy.ts.interaction.data)
-  
-  expect_error( # is.null(x.vrbl)
+
+  # is.null(x.vrbl)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = NULL, y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = NULL, y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Variables in treatment effect terms \\(x and possibly y\\) must be"
+    "Variables in GDRF terms \\(x and possibly y\\) must be"
   )
 
-  expect_warning( # is.null(y.vrbl)
+  # is.null(y.vrbl) warns
+  expect_warning(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "No y.vrbl in treatment effect terms implies"
+    "No y.vrbl in GDRF terms implies"
   )
 
-  expect_error( # d.x missing
+  # x.vrbl not numeric (unnamed character vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = NULL, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Order of differencing of variables in treatment effect terms must be specified through d.x and d.y"
-  ) 
-
-  expect_error( # d.y missing (y.vrbl)
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = NULL,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Order of differencing of variables in treatment effect terms must be specified through d.x and d.y"
-  ) 
-
-  expect_error( # d.y missing (no y.vrbl)
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, d.x = 0, d.y = NULL,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Even if there is no y.vrbl in"
-  ) 
-  
-  expect_error( # d.x not integer
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 1.5, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Order of differencing of variables in treatment effect terms \\(d.x and d.y\\) must be an integer"
-  ) 
-
-  expect_error( # d.y not integer
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 1.5,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Order of differencing of variables in treatment effect terms \\(d.x and d.y\\) must be an integer"
-  ) 
-
-  expect_error( # inferences.x not supported
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "cough", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Invalid inferences.x. The counterfactual treatment"
-  ) 
-
-  expect_error( # inferences.x not supported
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "cough", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Invalid inferences.y. The counterfactual response"
-  ) 
-
-  expect_error( # inferences.x nonsensical
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "differences", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Invalid inferences.x. The counterfactual treatment for x cannot be in a higher order"
-  ) 
-
-  expect_error( # inferences.y nonsensical
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "differences", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
-
-    # Expected output
-    "Invalid inferences.y. The counterfactual response for y cannot be in a higher order"
-  ) 
-
-  expect_error( # x.vrbl not numeric
-    # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x"), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c("l_1_x"), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "x.vrbl should be a named vector"
-  ) 
+  )
 
-  expect_error( # x.vrbl not named
+  # x.vrbl not named (unnamed numeric vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c(1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c(1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "x.vrbl should be a named vector"
-  ) 
+  )
 
-  expect_error( # y.vrbl not numeric
+  # y.vrbl not numeric (unnamed character vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y"), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y"), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "y.vrbl should be a named vector"
-  ) 
+  )
 
-  expect_error( # y.vrbl not named
+  # y.vrbl not named (unnamed numeric vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c(1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c(1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "y.vrbl should be a named vector"
-  ) 
+  )
 
-  expect_error( # se.type bad
+  # se.type not valid
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "cough", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "cough", type = "GDRF"),
 
     # Expected output
     "Invalid se.type"
-  ) 
+  )
 
-  expect_error( # x.vrbl not in model
+  # x.vrbl not in model
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("cough" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c("cough" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "x.vrbl not present"
-  ) 
+  )
 
-  expect_error( # y.vrbl not in model
+  # y.vrbl not in model
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("cough" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDTE"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("cough" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "y.vrbl not present"
-  ) 
-
-})
-
-test_that("adl.dummy.checks produces the correct warnings (GDRF type)", {
-
-  # run a model to use for errors
-  model <- lm(y ~ l_1_y + l_1_x, data = toy.ts.interaction.data)
-  
-  expect_error( # is.null(x.vrbl)
-    # Function output
-    adl.dummy.checks(x.vrbl = NULL, y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
-
-    # Expected output
-    "Variables in shock history terms \\(x and possibly y\\) must be"
   )
 
-  expect_warning( # is.null(y.vrbl)
+  # d.x missing
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = NULL, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "No y.vrbl in shock history terms"
+    "Order of differencing of variables in GDRF terms must be specified through d.x and d.y"
   )
 
-  expect_error( # d.x missing
+  # d.y missing with y.vrbl supplied
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = NULL, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = NULL, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in shock history terms must be specified through d.x and d.y"
-  ) 
+    "Order of differencing of variables in GDRF terms must be specified through d.x and d.y"
+  )
 
-  expect_error( # d.y missing (y.vrbl)
+  # d.y missing with no y.vrbl (suppressing the y.vrbl = NULL warning)
+  suppressWarnings(expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = NULL,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = NULL, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in shock history terms must be specified through d.x and d.y"
-  ) 
+    "Even if there is no y.vrbl in GDRF"
+  ))
 
-  expect_error( # d.x not integer
+  # d.x not integer
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 1.5, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 1.5, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in shock history terms \\(d.x and d.y\\) must be an integer"
-  ) 
+    "Order of differencing of variables in GDRF terms \\(d.x and d.y\\) must be an integer"
+  )
 
-  expect_error( # d.y not integer
+  # d.y not integer
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 1.5,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 1.5, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in shock history terms \\(d.x and d.y\\) must be an integer"
-  ) 
+    "Order of differencing of variables in GDRF terms \\(d.x and d.y\\) must be an integer"
+  )
 
-  expect_error( # inferences.x not supported
+  # inferences.x not a valid string
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "cough", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "cough", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Invalid inferences.x. The shock history"
-  ) 
+    "Invalid inferences.x. The shock.history"
+  )
 
-  expect_error( # inferences.x not supported
+  # inferences.y not a valid string
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "cough", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "cough",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "Invalid inferences.y. The response function"
-  ) 
+  )
 
-  expect_error( # inferences.x nonsensical
+  # inferences.x = "differences" nonsensical when d.x = 0
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "differences", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "differences", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
-    "Invalid inferences.x. The shock history for x cannot be in a higher order"
-  ) 
+    "Invalid inferences.x. The shock.history for x cannot be in a higher order"
+  )
 
-  expect_error( # inferences.y nonsensical
+  # inferences.y = "differences" nonsensical when d.y = 0
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "differences", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "differences",
+      the.coef = coef(model), se.type = "const", type = "GDRF"),
 
     # Expected output
     "Invalid inferences.y. The response function for y cannot be in a higher order"
-  ) 
+  )
 
-  expect_error( # x.vrbl not numeric
+  # valid inputs with d.x = 0 produce no error
+  expect_no_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x"), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 0, inferences.x = "levels", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF")
+  )
+
+  # inferences.x = "differences" is valid when d.x = 1
+  expect_no_error(
+    # Function output
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 1, d.y = 0, inferences.x = "differences", inferences.y = "levels",
+      the.coef = coef(model), se.type = "const", type = "GDRF")
+  )
+
+  # inferences.y = "differences" is valid when d.y = 1
+  expect_no_error(
+    # Function output
+    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_d_y" = 1), z.vrbl = NULL, x.z.vrbl = NULL,
+      d.x = 0, d.y = 1, inferences.x = "levels", inferences.y = "differences",
+      the.coef = coef(lm(d_y ~ l_1_d_y + l_1_x, data = toy.ts.interaction.data)),
+      se.type = "const", type = "GDRF")
+  )
+
+})
+
+test_that("adl.dummy.checks produces the correct errors and warnings (interact type)", {
+
+  # run a model to use for tests
+  model <- lm(y ~ l_1_y + x + l_1_x + z + l_1_z + x_z + z_l_1_x + x_l_1_z + l_1_x_l_1_z,
+    data = toy.ts.interaction.data)
+
+  # is.null(z.vrbl)
+  expect_error(
+    # Function output
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = NULL, x.z.vrbl = c("x_z" = 0),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
 
     # Expected output
-    "x.vrbl should be a named vector"
-  ) 
+    "Variables in interaction term \\(x, z, and x.z\\) must be specified"
+  )
 
-  expect_error( # x.vrbl not named
+  # is.null(x.z.vrbl)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c(1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c("z" = 0), x.z.vrbl = NULL,
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
 
     # Expected output
-    "x.vrbl should be a named vector"
-  ) 
+    "Variables in interaction term \\(x, z, and x.z\\) must be specified"
+  )
 
-  expect_error( # y.vrbl not numeric
+  # z.vrbl not numeric (unnamed character vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y"), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c("z"), x.z.vrbl = c("x_z" = 0),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
 
     # Expected output
-    "y.vrbl should be a named vector"
-  ) 
+    "z.vrbl should be a named vector"
+  )
 
-  expect_error( # y.vrbl not named
+  # z.vrbl not named (unnamed numeric vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c(1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c(0), x.z.vrbl = c("x_z" = 0),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
 
     # Expected output
-    "y.vrbl should be a named vector"
-  ) 
+    "z.vrbl should be a named vector"
+  )
 
-  expect_error( # se.type bad
+  # x.z.vrbl not numeric (unnamed character vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "cough", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c("z" = 0), x.z.vrbl = c("x_z"),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
 
     # Expected output
-    "Invalid se.type"
-  ) 
+    "x.z.vrbl should be a named vector"
+  )
 
-  expect_error( # x.vrbl not in model
+  # x.z.vrbl not named (unnamed numeric vector)
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("cough" = 1), y.vrbl = c("l_1_y" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c("z" = 0), x.z.vrbl = c(0),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
 
     # Expected output
-    "x.vrbl not present"
-  ) 
+    "x.z.vrbl should be a named vector"
+  )
 
-  expect_error( # y.vrbl not in model
+  # z.vrbl not in model
+  expect_error(
     # Function output
-    adl.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("cough" = 1), d.x = 0, d.y = 0,
-    				inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-    				se.type = "const", type = "GDRF"),
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c("cough" = 0), x.z.vrbl = c("x_z" = 0),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
 
     # Expected output
-    "y.vrbl not present"
-  ) 
+    "z.vrbl not present"
+  )
+
+  # x.z.vrbl not in model
+  expect_error(
+    # Function output
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c("z" = 0), x.z.vrbl = c("cough" = 0),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact"),
+
+    # Expected output
+    "x.z.vrbl not present"
+  )
+
+  # valid inputs produce no error
+  expect_no_error(
+    # Function output
+    adl.dummy.checks(x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
+      z.vrbl = c("z" = 0), x.z.vrbl = c("x_z" = 0),
+      d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL,
+      the.coef = coef(model), se.type = "const", type = "interact")
+  )
 
 })

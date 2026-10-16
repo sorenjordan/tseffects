@@ -2,7 +2,7 @@
 % Please edit documentation in R/tseffects.R
 \name{yhat.calculator}
 \alias{yhat.calculator}
-\title{Transform the GDRF formulae to fitted value formulae}
+\title{Transform GDRF formulae to fitted value formulae}
 \usage{
 yhat.calculator(
   formulae,
@@ -13,11 +13,14 @@ yhat.calculator(
   inferences.y = NULL,
   prediction.values = NULL,
   baseline.y = NULL,
-  shock.size = 1
+  shock.size = 1,
+  z.val = NULL,
+  z.vrbl = NULL,
+  x.z.vrbl = NULL
 )
 }
 \arguments{
-\item{formulae}{the list of formulae from \code{general.calculator}}
+\item{formulae}{the list of formulae from \code{general.calculator} or \code{convolution.calculator}}
 
 \item{d.y}{an integer for the order of differencing of the y variable in the ADL model}
 
@@ -27,22 +30,28 @@ yhat.calculator(
 
 \item{y.vrbl}{a named vector of the (lagged) y variables and corresponding lag orders in the ADL model}
 
-\item{inferences.y}{whether the inferences for the dependent variable are in levels or differences. Must be one of \code{levels} or \code{differences}}
+\item{inferences.y}{a character string that determines whether the inferences for the dependent variable are in levels or differences. Must be one of \code{levels} or \code{differences}}
 
-\item{prediction.values}{a named list of values for non-y variables in the model, used to calculate a steady-state baseline when \code{d.y = 0} and \code{baseline.y} is not supplied. If any differenced variables are included in the model, they should be set to 0. Ignored when \code{d.y > 0}}
+\item{prediction.values}{a named list of values for non-y variables in the model, used to calculate a steady-state baseline when \code{d.y = 0} and \code{baseline.y} is not supplied. If any differenced variables are included in the model, they should be set to 0. If multiple lags of the same variable are included, they should be set to the same value (including for interactions). Ignored when \code{d.y > 0}}
 
-\item{baseline.y}{a user-supplied baseline value of y in levels. For \code{d.y = 0}, this overrides the steady-state calculation from \code{prediction.values}. For \code{d.y > 0} with \code{inferences.y = "levels"}, this is required. Optional uncertainty around this baseline can be supplied through \code{baseline.y.se} in the calling function}
+\item{baseline.y}{a user-supplied numeric baseline value of y in levels. For \code{d.y = 0}, this overrides the steady-state calculation from \code{prediction.values}. For \code{d.y > 0} with \code{inferences.y = "levels"}, this is required. Optional uncertainty around this baseline can be supplied through \code{baseline.y.se} in the calling function}
 
-\item{shock.size}{the size of the shock to x in the units of x. Defaults to 1 (the marginal effect)}
+\item{shock.size}{a numeric value for the size of the shock to x in the units of x. Defaults to 1 (a discrete effect similar to traditional marginal effects)}
+
+\item{z.val}{a numeric value for the current value of the moderating variable, if the baseline formula contains an interaction}
+
+\item{z.vrbl}{a named numeric vector in which the names correspond to the ``moderating'' z variables and its lags and the numbers correspond to the specific lag order of each variable, if the baseline formula contains an interaction}
+
+\item{x.z.vrbl}{a named numeric vector in which the names correspond to the ``interaction'' x:z variables and its lags and the numbers correspond to the specific lag order of each variable. IMPORTANT: enter the lag order that pertains to the ``main'' x variable. For instance, x_l_1_z (contemporaneous x times lagged z) would be 0 and l_1_x_z (lagged x times contemporaneous z) would be 1}
 }
 \value{
-a list of \code{limit} + 1 formula strings containing the fitted value formula in each period, for evaluation by \code{deltaMethod} in the calling function
+a list of \code{limit} + 1 formula strings containing the fitted value formula in each period
 }
 \description{
-Transform the GDRF formulae to fitted value formulae
+By default, the GDRF assumes the user is interested in effect estimates (the effect of an independent variable on a dependent variable, calculated in levels or differences, as appropriate). yhat.calculator ``adds'' these effects to a baseline value of the dependent variable to observe how its trajectory changes
 }
 \details{
-\code{yhat.calculator} does no calculation. It transforms the formulae from \code{general.calculator} into fitted value formulae by prepending a baseline value of y. For \code{d.y = 0}, the baseline is either a user-supplied value or a model-implied steady-state prediction, the latter of which incorporates model-based uncertainty. For \code{d.y > 0}, the baseline must be user-supplied through \code{baseline.y}, as the model in differences contains no information about the level of y. Optional uncertainty around a user-supplied baseline can be added through \code{baseline.y.se}, it is added as a post-processing step in the calling function
+\code{yhat.calculator} does no calculation. It transforms the formulae from \code{general.calculator} into fitted value formulae by prepending a baseline value of y. For \code{d.y = 0}, the baseline is either a user-supplied value or a model-implied steady-state prediction, the latter of which incorporates model-based uncertainty. For \code{d.y > 0}, the baseline must be user-supplied through \code{baseline.y}, as the model in differences contains no information about the level of y. Optional uncertainty around a user-supplied baseline can be added through \code{baseline.y.se}, it is added as a post-processing step in the calling function. This ability to observe fitted values of y is most sensible when the underlying model is originally estimated in levels of the dependent variable (so that a pre-shock baseline can be calculated and model-based uncertainty can be added). When the dependent variable is differenced, the baseline is arbitrary (as the model is ignorant of any underlying history or level of the dependent variable). These formulae are evaluated by \code{deltaMethod} in the calling function
 }
 \examples{
 # ADL model with y in levels
@@ -92,13 +101,13 @@ yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
 	y.vrbl = c("l_1_y" = 1), inferences.y = "differences",
 	baseline.y = 3, shock.size = 1)
 	
-# inferences in differences, shock size of 1: identical to marginal effect (warns)
+# inferences in differences, shock size of 1: identical to discrete effect (warns)
 yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
 	model = model.diffs, the.coef = coef(model.diffs),
 	y.vrbl = c("l_1_y" = 1), inferences.y = "differences",
 	baseline.y = NULL, shock.size = 1)
 
-# inferences in differences, shock size of 2: scales the marginal effect
+# inferences in differences, shock size of 2: scales the discrete effect
 #  Since we're asking for inferences.y in differences, the baseline will automatically be 0
 yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
 	model = model.diffs, the.coef = coef(model.diffs),

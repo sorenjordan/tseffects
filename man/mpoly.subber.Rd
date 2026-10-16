@@ -9,6 +9,9 @@ mpoly.subber(env = environment())
 \arguments{
 \item{env}{the environment with names to substitute. Defaults to the parent environment}
 }
+\value{
+the environment with the substituted names
+}
 \description{
 Replace characters that mpoly does not take with underscores
 }

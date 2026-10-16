@@ -11,23 +11,29 @@ GDRF.dummy.checks(
   baseline.y.se,
   shock.size,
   d.y,
-  inferences.y
+  inferences.y,
+  type = NULL
 )
 }
 \arguments{
-\item{effect.type}{whether to return marginal effects or fitted values. \code{marginal} returns the GDRF as a marginal effect. \code{fitted} returns the GDRF as a fitted value, relative to a baseline value of y. The default is \code{marginal}}
+\item{effect.type}{a character string indicating whether to return discrete effects or fitted values. \code{discrete} returns the GDRF as a discrete effect estimate. \code{fitted} returns the GDRF as a fitted value, relative to a baseline value of the dependent variable. The default is \code{discrete}}
 
-\item{prediction.values}{a named list of values for non-y variables in the model, used to calculate a steady-state baseline when \code{effect.type = "fitted"} and \code{d.y = 0} and \code{baseline.y} is not supplied. This allows for the calculation of model-based uncertainty. If any differenced variables are included in the model, they should be set to 0. Ignored when \code{d.y > 0}}
+\item{prediction.values}{a named list of values for non-y variables in the model, used to calculate a steady-state baseline of the dependent variable when \code{effect.type = "fitted"} and \code{d.y = 0} and \code{baseline.y} is not supplied. Model-based uncertainty will be calculated around the formula for this value. If any differenced variables are included in the model, they should be set to 0. If multiple lags of the same variable are included, they should be set to the same value. Ignored when \code{d.y > 0}}
 
-\item{baseline.y}{a user-supplied baseline value of y in levels. For \code{d.y = 0}, this overrides the steady-state calculation from \code{prediction.values} if provided. For \code{d.y > 0} with \code{inferences.y = "levels"}, this is required (otherwise it is just marginal effects). Only used when \code{effect.type = "fitted"}}
+\item{baseline.y}{a numeric value for the user-supplied baseline value of y in levels (i.e. the baseline value for effects to accumulate from). Only used when \code{effect.type = "fitted"}. For \code{d.y = 0}, this overrides the steady-state calculation from \code{prediction.values} if provided}
 
-\item{baseline.y.se}{a user-supplied standard error for the baseline value of y (to suggest uncertainty around predictions). If supplied, this is added in quadrature to the standard errors of the GDRF estimates. Only used when \code{effect.type = "fitted"} and \code{inferences.y = "levels"}. The default is 0: in recognition that this is user-constructed uncertainty. Possible values would be the square root of the standard deviation of y (in levels)}
+\item{baseline.y.se}{a numeric value for the user-supplied standard error for the baseline value of y (to suggest uncertainty around predictions). Only used when \code{effect.type = "fitted"} and \code{inferences.y = "levels"}. If supplied, this is added in quadrature to the standard errors of the GDRF estimates. The default is 0: in recognition that this is user-constructed uncertainty. Possible values would be the square root of the standard deviation of y (in levels)}
 
-\item{shock.size}{the size of the shock to x in the units of x. Only used when \code{effect.type = "fitted"}; marginal effects are not scaled. Defaults to 1 (a marginal effect)}
+\item{shock.size}{a numeric value for the size of the shock to x in the units of x. Defaults to 1 (a discrete effect similar to traditional marginal effects)}
 
-\item{d.y}{the order of differencing of the y variable in the ADL model}
+\item{d.y}{an integer describing how many times the dependent variable was differenced before model estimation}
 
-\item{inferences.y}{does the user want resulting inferences about the dependent variable in levels or in differences? (For y variables where \code{d.y} is 0, this is automatically levels.) The default is \code{levels}}
+\item{inferences.y}{a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include \code{levels} or \code{differences}. (For y variables where \code{d.y} is 0, this is automatically \code{levels}.) The default is \code{levels}}
+
+\item{type}{a character string whether the effects are estimated from a GDRF model or the interaction model. Accepts either \code{GDRF} or \code{interact}}
+}
+\value{
+nothing is returned
 }
 \description{
 Do consistent dummy checks for GDRF functions that might take fitted values

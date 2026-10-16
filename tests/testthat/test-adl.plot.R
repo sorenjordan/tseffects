@@ -7,20 +7,20 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
   #  output for a pulse shock. This confirms the wrapper passes all arguments through
   ####################################################################################
   
-  out_adl_pulse <- adl.plot(
+  out_adl_pulse <- suppressWarnings(adl.plot(
     model = model, x.vrbl = c("x" = 0, "l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1), shock.history = "pulse", s.limit = 5,
-	return.data = TRUE, return.plot = TRUE, return.formulae = TRUE)
+	return.data = TRUE, return.plot = TRUE, return.formulae = TRUE))
 
-  out_gdrf_pulse <- GDRF.adl.plot(
+  out_gdrf_pulse <- suppressWarnings(GDRF.adl.plot(
     model = model,
     x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
     d.x = 0, d.y = 0, shock.history = "pulse",
-    inferences.y = "levels", inferences.x = "levels", effect.type = "marginal",
+    inferences.y = "levels", inferences.x = "levels", effect.type = "discrete",
     prediction.values = NULL, baseline.y = NULL,
     baseline.y.se = 0, shock.size = 1, s.limit = 5,
     return.data = TRUE, return.plot = TRUE, return.formulae = TRUE
-  )
+  ))
 
   expect_equal( # estimates match for pulse
     # Function output
@@ -40,29 +40,29 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
 
   expect_equal( # binomials match for pulse
     # Function output
-    out_adl_pulse$binomials,
+    out_adl_pulse$shocks,
 
     # Expected output
-    out_gdrf_pulse$binomials
+    out_gdrf_pulse$shocks
   )
 
   ####################################################################################
   # Same core check for a step shock
   ####################################################################################
-  out_adl_step <- adl.plot(
+  out_adl_step <- suppressWarnings(adl.plot(
     model = model, x.vrbl = c("x" = 0, "l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1), shock.history = "step", s.limit = 5,
-	return.data = TRUE, return.plot = TRUE, return.formulae = TRUE)
+	return.data = TRUE, return.plot = TRUE, return.formulae = TRUE))
 
-  out_gdrf_step <- GDRF.adl.plot(
+  out_gdrf_step <- suppressWarnings(GDRF.adl.plot(
     model = model,
     x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
     d.x = 0, d.y = 0, shock.history = "step",
-    inferences.y = "levels", inferences.x = "levels", effect.type = "marginal",
+    inferences.y = "levels", inferences.x = "levels", effect.type = "discrete",
     prediction.values = NULL, baseline.y = NULL,
     baseline.y.se = 0, shock.size = 1, s.limit = 5,
     return.data = TRUE, return.plot = TRUE, return.formulae = TRUE
-  )
+  ))
 
   expect_equal( # estimates match for step
     # Function output
@@ -82,26 +82,26 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
 
   expect_equal( # binomials match for step
     # Function output
-    out_adl_step$binomials,
+    out_adl_step$shocks,
 
     # Expected output
-    out_gdrf_step$binomials
+    out_gdrf_step$shocks
   )
 
   ####################################################################################
   # The fixed arguments adl.plot imposes (d.x = 0, d.y = 0, inferences in levels,
-  #  effect.type = marginal) cannot be overridden, so calling GDRF.adl.plot with
+  #  effect.type = discrete) cannot be overridden, so calling GDRF.adl.plot with
   #  different values should NOT equal adl.plot output
   ####################################################################################
-  out_gdrf_different <- GDRF.adl.plot(
+  out_gdrf_different <- suppressWarnings(GDRF.adl.plot(
     model = model,
     x.vrbl = c("x" = 0, "l_1_x" = 1), y.vrbl = c("l_1_y" = 1),
     d.x = 1, d.y = 1, shock.history = "step",
-    inferences.y = "levels", inferences.x = "levels", effect.type = "marginal",
+    inferences.y = "levels", inferences.x = "levels", effect.type = "discrete",
     prediction.values = NULL, baseline.y = NULL,
     baseline.y.se = 0, shock.size = 1, s.limit = 5,
     return.data = TRUE, return.plot = TRUE, return.formulae = TRUE
-  )
+  ))
 
   expect_false( # fixed arguments are indeed fixed
     # Function output
@@ -111,21 +111,21 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
   ####################################################################################
   # s.limit is forwarded: check it changes the number of rows in estimates
   ####################################################################################
-  out_s5 <- adl.plot(
+  out_s5 <- suppressWarnings(adl.plot(
     model = model,
     x.vrbl = c("x" = 0, "l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
     s.limit = 5,
     return.data = TRUE
-  )
+  ))
 
-  out_s10 <- adl.plot(
+  out_s10 <- suppressWarnings(adl.plot(
     model = model,
     x.vrbl = c("x" = 0, "l_1_x" = 1),
     y.vrbl  = c("l_1_y" = 1),
     s.limit = 10,
     return.data = TRUE
-  )
+  ))
 
   expect_equal( # s.limit = 5 produces 6 rows (s = 0 ... 5)
     # Function output
@@ -146,7 +146,7 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
   ####################################################################################
   # return.* flags are forwarded correctly
   ####################################################################################
-  out_nodata <- adl.plot(
+  out_nodata <- suppressWarnings(adl.plot(
     model = model,
     x.vrbl = c("x" = 0, "l_1_x" = 1),
     y.vrbl = c("l_1_y" = 1),
@@ -154,7 +154,7 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
     return.data = FALSE,
     return.plot = TRUE,
     return.formulae = FALSE
-  )
+  ))
 
   expect_false( # estimates not returned when return.data = FALSE
     # Function output
@@ -171,7 +171,7 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
     "plot" %in% names(out_nodata)
   )
 
-  out_noplot <- adl.plot(
+  out_noplot <- suppressWarnings(adl.plot(
 	model = model,
 	x.vrbl = c("x" = 0, "l_1_x" = 1),
 	y.vrbl = c("l_1_y" = 1),
@@ -179,7 +179,7 @@ test_that("adl.plot passes arguments to GDRF.adl.plot correctly", {
 	return.data = TRUE,
 	return.plot = FALSE,
 	return.formulae = TRUE
-  )
+  ))
 
   expect_true( # estimates returned when return.data = TRUE
     # Function output

@@ -27,7 +27,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
 
     # Expected output
     c(1, 0, 0, 0)
@@ -43,7 +43,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -71,7 +71,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -88,7 +88,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -116,7 +116,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -133,7 +133,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -161,7 +161,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -178,7 +178,7 @@ test_that("general.calculator generates correct equations (pulse treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -215,7 +215,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
 
     # Expected output
     c(1, 1, 1, 1)
@@ -231,7 +231,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s=5
+    length(gdte.test$shocks), # counter goes from s = 0 to s=5
 
     # Expected output
     s+1
@@ -259,7 +259,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -276,7 +276,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -304,7 +304,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -321,7 +321,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -349,7 +349,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -366,7 +366,7 @@ test_that("general.calculator generates correct equations (step treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -402,7 +402,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
 
     # Expected output
     c(1, 2, 3, 4)
@@ -418,7 +418,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -446,7 +446,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -463,7 +463,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -491,7 +491,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -508,7 +508,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
@@ -536,7 +536,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   expect_equal( # test whether the binomials are as expected for s = 3
     # Function output
     # Increment s.test because counter starts at s = 0
-    gdte.test$binomials[[s.test+1]], # to get mpoly obj as character, you need to print
+    gdte.test$shocks[[s.test+1]], # to get mpoly obj as character, you need to print
     # position = 4 bc counter starts at s = 0
 
     # Expected output
@@ -553,7 +553,7 @@ test_that("general.calculator generates correct equations (trend treatments)", {
   
   expect_equal( # test whether the correct number of binomials have been produced
     # Function output
-    length(gdte.test$binomials), # counter goes from s = 0 to s = 5
+    length(gdte.test$shocks), # counter goes from s = 0 to s = 5
 
     # Expected output
     s+1
