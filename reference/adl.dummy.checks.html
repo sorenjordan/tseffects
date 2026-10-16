@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adl.dummy.checks</span><span class="op">(</span></span>
 <span>  <span class="va">x.vrbl</span>,</span>
 <span>  <span class="va">y.vrbl</span>,</span>
+<span>  <span class="va">z.vrbl</span>,</span>
+<span>  <span class="va">x.z.vrbl</span>,</span>
 <span>  <span class="va">d.x</span>,</span>
 <span>  <span class="va">d.y</span>,</span>
 <span>  <span class="va">inferences.x</span>,</span>
@@ -59,27 +61,27 @@
 
 
 <dl><dt id="arg-x-vrbl">x.vrbl<a class="anchor" aria-label="anchor" href="#arg-x-vrbl"></a></dt>
-<dd><p>a named vector of the x variables and corresponding lag orders in an ADL model</p></dd>
+<dd><p>a named numeric vector in which the names correspond to an independent variable and its lags and the numbers correspond to the specific lag order of each variable</p></dd>
 
 
 <dt id="arg-y-vrbl">y.vrbl<a class="anchor" aria-label="anchor" href="#arg-y-vrbl"></a></dt>
-<dd><p>a named vector of the y variables and corresponding lag orders in an ADL model</p></dd>
+<dd><p>a named numeric vector in which the names correspond to lags of the dependent variable and the numbers correspond to the specific lag order of each variable. Can be <code>NULL</code> if the model has no lagged dependent variables</p></dd>
 
 
 <dt id="arg-d-x">d.x<a class="anchor" aria-label="anchor" href="#arg-d-x"></a></dt>
-<dd><p>the order of differencing of the x variable in the ADL model</p></dd>
+<dd><p>an integer describing how many times the independent variable was differenced before model estimation</p></dd>
 
 
 <dt id="arg-d-y">d.y<a class="anchor" aria-label="anchor" href="#arg-d-y"></a></dt>
-<dd><p>the order of differencing of the y variable in the ADL model</p></dd>
+<dd><p>an integer describing how many times the dependent variable was differenced before model estimation</p></dd>
 
 
 <dt id="arg-inferences-x">inferences.x<a class="anchor" aria-label="anchor" href="#arg-inferences-x"></a></dt>
-<dd><p>is the independent variable treated in levels or in differences?</p></dd>
+<dd><p>a character string specifying whether the shock to the independent variable is applied in levels or differences. Valid arguments include <code>levels</code> or <code>differences</code>. (For independent variables where <code>d.x</code> is 0, this is automatically <code>levels</code>.) The default is <code>levels</code></p></dd>
 
 
 <dt id="arg-inferences-y">inferences.y<a class="anchor" aria-label="anchor" href="#arg-inferences-y"></a></dt>
-<dd><p>are the inferences for the dependent variable expected in levels or in differences?</p></dd>
+<dd><p>a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include <code>levels</code> or <code>differences</code>. (For y variables where <code>d.y</code> is 0, this is automatically <code>levels</code>.) The default is <code>levels</code></p></dd>
 
 
 <dt id="arg-the-coef">the.coef<a class="anchor" aria-label="anchor" href="#arg-the-coef"></a></dt>
@@ -87,13 +89,17 @@
 
 
 <dt id="arg-se-type">se.type<a class="anchor" aria-label="anchor" href="#arg-se-type"></a></dt>
-<dd><p>the type of standard error calculated</p></dd>
+<dd><p>a character string for the type of standard error to extract from the model. The default is <code>const</code>, but any argument to <code>vcovHC</code> from the <code>sandwich</code> package is accepted</p></dd>
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
-<dd><p>whether the effects are estimated in the context of a GDRF</p></dd>
+<dd><p>a string whether the effects are estimated from a GDRF model or the interaction model. Accepts either <code>GDRF</code> or <code>interact</code></p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>nothing is returned</p>
+    </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan</p>

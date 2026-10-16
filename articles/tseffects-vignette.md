@@ -269,23 +269,23 @@ general.calculator(d.x = 0, d.y = 0, h = -1, limit = 5, pulses = ADL1.2.pulses)
 #> [1] "l1_policy**3 * l2_mood  +  l1_policy**4 * l1_mood  +  l1_policy**5 * mood "
 #> 
 #> 
-#> $binomials
-#> $binomials[[1]]
+#> $shocks
+#> $shocks[[1]]
 #> [1] 1
 #> 
-#> $binomials[[2]]
+#> $shocks[[2]]
 #> [1] 1 0
 #> 
-#> $binomials[[3]]
+#> $shocks[[3]]
 #> [1] 1 0 0
 #> 
-#> $binomials[[4]]
+#> $shocks[[4]]
 #> [1] 1 0 0 0
 #> 
-#> $binomials[[5]]
+#> $shocks[[5]]
 #> [1] 1 0 0 0 0
 #> 
-#> $binomials[[6]]
+#> $shocks[[6]]
 #> [1] 1 0 0 0 0 0
 ```
 
@@ -334,23 +334,23 @@ general.calculator(d.x = 1, d.y = 0, h = -1, limit = 5, pulses = ADL1.2.d.pulses
 #> [1] "l1_policy**3 * l2_d_mood  +  l1_policy**4 * l1_d_mood  +  l1_policy**5 * d_mood  -  l1_policy**2 * l2_d_mood  -  l1_policy**3 * l1_d_mood  -  l1_policy**4 * d_mood "
 #> 
 #> 
-#> $binomials
-#> $binomials[[1]]
+#> $shocks
+#> $shocks[[1]]
 #> [1] 1
 #> 
-#> $binomials[[2]]
+#> $shocks[[2]]
 #> [1]  1 -1
 #> 
-#> $binomials[[3]]
+#> $shocks[[3]]
 #> [1]  1 -1  0
 #> 
-#> $binomials[[4]]
+#> $shocks[[4]]
 #> [1]  1 -1  0  0
 #> 
-#> $binomials[[5]]
+#> $shocks[[5]]
 #> [1]  1 -1  0  0  0
 #> 
-#> $binomials[[6]]
+#> $shocks[[6]]
 #> [1]  1 -1  0  0  0  0
 ```
 
@@ -384,23 +384,23 @@ general.calculator(d.x = 1, d.y = 0, h = 1, limit = 5, pulses = ADL1.2.d.pulses)
 #> [1] "l1_policy**3 * l2_d_mood  +  l1_policy**4 * l1_d_mood  +  l1_policy**5 * d_mood  +  l1_policy**2 * l2_d_mood  +  l1_policy**3 * l1_d_mood  +  l1_policy**4 * d_mood  +  l1_policy * l2_d_mood  +  l1_policy**2 * l1_d_mood  +  l1_policy**3 * d_mood  +  l2_d_mood  +  l1_policy * l1_d_mood  +  l1_policy**2 * d_mood  +  l1_d_mood  +  l1_policy * d_mood  +  d_mood "
 #> 
 #> 
-#> $binomials
-#> $binomials[[1]]
+#> $shocks
+#> $shocks[[1]]
 #> [1] 1
 #> 
-#> $binomials[[2]]
+#> $shocks[[2]]
 #> [1] 1 1
 #> 
-#> $binomials[[3]]
+#> $shocks[[3]]
 #> [1] 1 1 1
 #> 
-#> $binomials[[4]]
+#> $shocks[[4]]
 #> [1] 1 1 1 1
 #> 
-#> $binomials[[5]]
+#> $shocks[[5]]
 #> [1] 1 1 1 1 1
 #> 
-#> $binomials[[6]]
+#> $shocks[[6]]
 #> [1] 1 1 1 1 1 1
 ```
 
@@ -504,7 +504,9 @@ test.pulse <- GDRF.adl.plot(model = model.adl,
                                    s.limit = 20, 
                                    return.plot = TRUE, 
                                    return.formulae = TRUE)
-  
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 This recovers the IRF. We can also observe the formulae and associated
@@ -558,6 +560,9 @@ GDRF.adl.plot(model = model.adl.diffs,
                                    inferences.x = "levels",
                                    s.limit = 20, 
                                    return.plot = TRUE)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 ![](tseffects-vignette_files/figure-html/unnamed-chunk-10-1.png)
@@ -578,6 +583,9 @@ GDRF.adl.plot(model = model.adl.diffs,
                                    inferences.x = "differences",
                                    s.limit = 20, 
                                    return.plot = TRUE)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 ![](tseffects-vignette_files/figure-html/unnamed-chunk-11-1.png)
@@ -642,9 +650,11 @@ test.pulse <- GDRF.adl.plot(model = model.adl,
                                    s.limit = 20, 
                                    return.plot = TRUE, 
                                    return.formulae = TRUE)
-#> Warning in GDRF.dummy.checks(effect.type, prediction.values, baseline.y, : If
-#> any differenced variables are included in the model, ensure they are set to 0
-#> in prediction.values for a meaningful steady-state prediction
+#> Warning in GDRF.dummy.checks(effect.type = effect.type, prediction.values =
+#> prediction.values, : If any differenced variables are included in the model,
+#> ensure they are set to 0 in prediction.values for a meaningful steady-state
+#> prediction. Multiple lags of the same variable should also be set to the same
+#> value
 ```
 
 This would show the pulse effect against the steady-state value of $`y`$
@@ -809,6 +819,9 @@ gecm.pulse <- GDRF.gecm.plot(model = model.gecm,
                                    s.limit = 20, 
                                    return.plot = TRUE, 
                                    return.formulae = TRUE)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 Examining the formulae show that the conversion from GECM coefficients
@@ -945,7 +958,7 @@ interact.model <- lm(y ~ l_1_y + x + l_1_x + z + l_1_z +
 
 Let’s first illustrate a line type, where the moderation is shown a
 different values of $`z`$ over time. The shock history is a simple
-`effect.type = "impulse"`
+`effect.type = "discrete"`
 
 ``` r
 
@@ -954,8 +967,11 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     z.vrbl = c("z" = 0, "l_1_z" = 1),
                     x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                     z.vals = -1:1,
-                    effect.type = "impulse", plot.type = "lines", line.options = "z.lines",
+                    effect.type = "discrete", plot.type = "lines", line.options = "z.lines",
                     s.limit = 20)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 ![](tseffects-vignette_files/figure-html/unnamed-chunk-18-1.png)
@@ -970,8 +986,11 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                     z.vals = c(-1, 1),
                     s.vals = c(0, 5),
-                    effect.type = "impulse", plot.type = "lines", line.options = "s.lines",
+                    effect.type = "discrete", plot.type = "lines", line.options = "s.lines",
                     s.limit = 20)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 ![](tseffects-vignette_files/figure-html/unnamed-chunk-19-1.png)
@@ -989,7 +1008,7 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
                     z.vals = c(-1, 1),
                     s.vals = c(0, 5),
-                    effect.type = "step", plot.type = "lines", line.options = "s.lines",
+                    effect.type = "discrete", shock.history = "step", plot.type = "lines", line.options = "s.lines",
                     s.limit = 20)
 ```
 
@@ -1006,8 +1025,11 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     y.vrbl = c("l_1_y" = 1), 
                     z.vrbl = c("z" = 0, "l_1_z" = 1),
                     x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
-                    effect.type = "pulse", plot.type = "heatmap", heatmap.options = "all",
+                    effect.type = "discrete", plot.type = "heatmap", heatmap.options = "all",
                     s.limit = 20)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 ![](tseffects-vignette_files/figure-html/unnamed-chunk-21-1.png)
@@ -1021,8 +1043,11 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     y.vrbl = c("l_1_y" = 1), 
                     z.vrbl = c("z" = 0, "l_1_z" = 1),
                     x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
-                    effect.type = "pulse", plot.type = "heatmap", heatmap.options = "significant",
+                    effect.type = "discrete", plot.type = "heatmap", heatmap.options = "significant",
                     s.limit = 20)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 ```
 
 ![](tseffects-vignette_files/figure-html/unnamed-chunk-22-1.png)
@@ -1271,6 +1296,9 @@ mult_inter12_IBO <- GDRF.gecm.plot(model = uecm_3132_replication,
                y.d.vrbl = c("LRM_d1_l1" = 1, "LRM_d1_l2" = 2), shock.history = "pulse",
                x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
                s.limit = 12, return.data = TRUE, return.plot = FALSE)
+#> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
+#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> returned
 
 all.equal(mult_inter12_IBO$GDRF, mult_inter12$IBO$Delay) 
 #> [1] TRUE

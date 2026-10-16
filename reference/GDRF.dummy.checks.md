@@ -13,7 +13,8 @@ GDRF.dummy.checks(
   baseline.y.se,
   shock.size,
   d.y,
-  inferences.y
+  inferences.y,
+  type = NULL
 )
 ```
 
@@ -21,53 +22,66 @@ GDRF.dummy.checks(
 
 - effect.type:
 
-  whether to return marginal effects or fitted values. `marginal`
-  returns the GDRF as a marginal effect. `fitted` returns the GDRF as a
-  fitted value, relative to a baseline value of y. The default is
-  `marginal`
+  a character string indicating whether to return discrete effects or
+  fitted values. `discrete` returns the GDRF as a discrete effect
+  estimate. `fitted` returns the GDRF as a fitted value, relative to a
+  baseline value of the dependent variable. The default is `discrete`
 
 - prediction.values:
 
   a named list of values for non-y variables in the model, used to
-  calculate a steady-state baseline when `effect.type = "fitted"` and
-  `d.y = 0` and `baseline.y` is not supplied. This allows for the
-  calculation of model-based uncertainty. If any differenced variables
-  are included in the model, they should be set to 0. Ignored when
-  `d.y > 0`
+  calculate a steady-state baseline of the dependent variable when
+  `effect.type = "fitted"` and `d.y = 0` and `baseline.y` is not
+  supplied. Model-based uncertainty will be calculated around the
+  formula for this value. If any differenced variables are included in
+  the model, they should be set to 0. If multiple lags of the same
+  variable are included, they should be set to the same value. Ignored
+  when `d.y > 0`
 
 - baseline.y:
 
-  a user-supplied baseline value of y in levels. For `d.y = 0`, this
-  overrides the steady-state calculation from `prediction.values` if
-  provided. For `d.y > 0` with `inferences.y = "levels"`, this is
-  required (otherwise it is just marginal effects). Only used when
-  `effect.type = "fitted"`
+  a numeric value for the user-supplied baseline value of y in levels
+  (i.e. the baseline value for effects to accumulate from). Only used
+  when `effect.type = "fitted"`. For `d.y = 0`, this overrides the
+  steady-state calculation from `prediction.values` if provided
 
 - baseline.y.se:
 
-  a user-supplied standard error for the baseline value of y (to suggest
-  uncertainty around predictions). If supplied, this is added in
-  quadrature to the standard errors of the GDRF estimates. Only used
-  when `effect.type = "fitted"` and `inferences.y = "levels"`. The
-  default is 0: in recognition that this is user-constructed
-  uncertainty. Possible values would be the square root of the standard
-  deviation of y (in levels)
+  a numeric value for the user-supplied standard error for the baseline
+  value of y (to suggest uncertainty around predictions). Only used when
+  `effect.type = "fitted"` and `inferences.y = "levels"`. If supplied,
+  this is added in quadrature to the standard errors of the GDRF
+  estimates. The default is 0: in recognition that this is
+  user-constructed uncertainty. Possible values would be the square root
+  of the standard deviation of y (in levels)
 
 - shock.size:
 
-  the size of the shock to x in the units of x. Only used when
-  `effect.type = "fitted"`; marginal effects are not scaled. Defaults to
-  1 (a marginal effect)
+  a numeric value for the size of the shock to x in the units of x.
+  Defaults to 1 (a discrete effect similar to traditional marginal
+  effects)
 
 - d.y:
 
-  the order of differencing of the y variable in the ADL model
+  an integer describing how many times the dependent variable was
+  differenced before model estimation
 
 - inferences.y:
 
-  does the user want resulting inferences about the dependent variable
-  in levels or in differences? (For y variables where `d.y` is 0, this
-  is automatically levels.) The default is `levels`
+  a character string specifying whether the shock to the independent
+  variable is interpreted in levels or differences (of the dependent
+  variable). Valid arguments include `levels` or `differences`. (For y
+  variables where `d.y` is 0, this is automatically `levels`.) The
+  default is `levels`
+
+- type:
+
+  a character string whether the effects are estimated from a GDRF model
+  or the interaction model. Accepts either `GDRF` or `interact`
+
+## Value
+
+nothing is returned
 
 ## Author
 

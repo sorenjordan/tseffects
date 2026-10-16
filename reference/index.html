@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,21 +48,21 @@
           <code><a href="GDRF.adl.plot.html">GDRF.adl.plot()</a></code>
 
         </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model</dd>
+        <dd>Evaluate and/or plot the General Dynamic Response Function (GDRF) for an ADL</dd>
 
         <dt>
 
           <code><a href="GDRF.gecm.plot.html">GDRF.gecm.plot()</a></code>
 
         </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a Generalized Error Correction Model (GECM)</dd>
+        <dd>Evaluate and/or plot the General Dynamic Response Function (GDRF) for a GECM</dd>
 
         <dt>
 
           <code><a href="adl.plot.html">adl.plot()</a></code>
 
         </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, assuming the underlying model is in levels (<code>d.x</code> = <code>d.y</code> = 0) and the user wants a marginal effect (the untransformed GDRF). (This is just a wrapper for <code>GDRF.adl.plot</code> with simplifying assumptions)</dd>
+        <dd>Evaluate and/or plot the General Dynamic Response Function (GDRF) for an ADL assumed in levels</dd>
 
         <dt>
 
@@ -73,38 +73,45 @@
 
         <dt>
 
+          <code><a href="convolution.calculator.html">convolution.calculator()</a></code>
+
+        </dt>
+        <dd>Generate the convolved arbitrary (im)pulses formulae for a dynamic linear model</dd>
+
+        <dt>
+
           <code><a href="gecm.plot.html">gecm.plot()</a></code>
 
         </dt>
-        <dd>Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1) model, assuming the underlying model is in first differences (<code>x.vrbl.d.x</code> = <code>y.vrbl.d.y</code> = 0 and <code>x.d.vrbl.d.x</code> = <code>y.d.vrbl.d.y</code> = 1) and the user wants a marginal effect (the untransformed GDRF) and inferences about y in levels to a treatment applied to x in levels. (This is just a wrapper for <code>GDRF.gecm.plot</code> with simplifying assumptions)</dd>
+        <dd>Evaluate and/or plot the General Dynamic Response Function (GDRF) for a GECM assumed in levels/first differences</dd>
 
         <dt>
 
           <code><a href="gecm.to.adl.html">gecm.to.adl()</a></code>
 
         </dt>
-        <dd>Translate the coefficients from the General Error Correction Model (GECM) to the autoregressive distributed lag (ADL) model</dd>
+        <dd>Use equivalencies to translate GECM coefficients to ADL coefficients</dd>
 
         <dt>
 
           <code><a href="general.calculator.html">general.calculator()</a></code>
 
         </dt>
-        <dd>Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history</dd>
+        <dd>Generate the generalized (im)pulse formulae for a dynamic linear model</dd>
 
         <dt>
 
           <code><a href="interact.adl.plot.html">interact.adl.plot()</a></code>
 
         </dt>
-        <dd>Plot the interaction in a single-equation time series model estimated via <code>lm</code>.</dd>
+        <dd>Evaluate and/or plot dynamic interactions from dynamic linear models</dd>
 
         <dt>
 
           <code><a href="pulse.calculator.html">pulse.calculator()</a></code>
 
         </dt>
-        <dd>Generate pulse effect formulae for a given autoregressive distributed lag (ADL) model</dd>
+        <dd>Generate the (im)pulse formulae for a dynamic linear model</dd>
 
         <dt>
 
@@ -118,7 +125,7 @@
           <code><a href="yhat.calculator.html">yhat.calculator()</a></code>
 
         </dt>
-        <dd>Transform the GDRF formulae to fitted value formulae</dd>
+        <dd>Transform GDRF formulae to fitted value formulae</dd>
       </dl></div>
   </main></div>
 

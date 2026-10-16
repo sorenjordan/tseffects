@@ -10,7 +10,7 @@ data(toy.ts.interaction.data)
 
 ## Format
 
-A data frame with 50 rows and 23 variables:
+A data frame with 50 rows and 32 variables:
 
 - time:
 

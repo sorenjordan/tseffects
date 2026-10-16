@@ -1,7 +1,9 @@
-# Translate the coefficients from the General Error Correction Model (GECM) to the autoregressive distributed lag (ADL) model
+# Use equivalencies to translate GECM coefficients to ADL coefficients
 
 Translate the coefficients from the General Error Correction Model
-(GECM) to the autoregressive distributed lag (ADL) model
+(GECM) to the autoregressive distributed lag (ADL) model. The ADL and
+the GECM are isomorphic, so this translation loses no information from
+the model
 
 ## Usage
 

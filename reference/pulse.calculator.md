@@ -1,7 +1,9 @@
-# Generate pulse effect formulae for a given autoregressive distributed lag (ADL) model
+# Generate the (im)pulse formulae for a dynamic linear model
 
-Generate pulse effect formulae for a given autoregressive distributed
-lag (ADL) model
+Generate the (im)pulse effect formulae for a given autoregressive
+distributed lag (ADL) model. This is the Impulse Response Function (a
+one-unit, one-period increase) for the supplied lag structure, assumed
+to be from a dynamic linear model
 
 ## Usage
 
@@ -40,8 +42,7 @@ in each period
 formulae that contain variable names that represent the pulse effect in
 each period. The expectation is that these will be evaluated using
 coefficients from an object containing an ADL model with corresponding
-variables. Note: `mpoly` does not allow variable names with a .;
-variables passed to `pulse.calculator` should not include this character
+variables. Note: avoid passing characters not allowed by `mpoly`
 
 ## Author
 

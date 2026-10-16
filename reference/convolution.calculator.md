@@ -1,0 +1,117 @@
+# Generate the convolved arbitrary (im)pulses formulae for a dynamic linear model
+
+Generate the convolved arbitrary (im)pulse effect formulae for an
+autoregressive distributed lag (ADL) model, given pulse effects. Take
+the period-specific impulse response functions (presumably pulses from
+pulse.calculator) and construct an arbitrary set of effects, given an
+arbitrary shock history and order of differencing of the independent
+and/or dependent variable
+
+## Usage
+
+``` r
+convolution.calculator(d.x, d.y, shocks, pulses)
+```
+
+## Arguments
+
+- d.x:
+
+  an integer determining the order of differencing of the x variable
+  before a shock is applied when parametrized as an ADL model.
+  (Generally, this is the same x variable used in `pulse.calculator`)
+
+- d.y:
+
+  an integer determining the order of differencing of the y variable
+  when parametrized as an ADL model. (Generally, this is the same y
+  variable used in `pulse.calculator`)
+
+- shocks:
+
+  a numeric vector of dated impulses of the same length as the pulses, 0
+  to some limit s, determining the shock history applied to the
+  independent variable in levels
+
+- pulses:
+
+  a list comprising the formulae for Impulse Response Functions,
+  typically generated using `pulse.calculator`
+
+## Value
+
+a list with two elements: `limit` + 1 `mpoly` formulae containing the
+generalized effect formula (for calculating the GDRF) in each period
+(under `formulae`) as well as the actual shock history (under `shocks`)
+
+## Details
+
+`convolution.calculator` does no calculation. It generates a list of
+`mpoly` formulae that contain variable names that represent the effect
+in each period for an arbitrary shock history. This is possible because
+any arbitrary shock history can be decomposed into a sum of dated
+impulses, and any shock history in differences has an algebraic
+equivalence to one in levels. The expectation is that these will be
+evaluated using coefficients from an object containing an ADL model with
+corresponding variables. Note: avoid passing characters not allowed by
+`mpoly`
+
+## Author
+
+Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
+
+## Examples
+
+``` r
+# ADL(1,1)
+x.lags <- c("x" = 0, "l_1_x" = 1) # lags of x
+y.lags <- c("l_1_y" = 1)
+s <- 5
+pulse.effects <- pulse.calculator(x.vrbl = x.lags, y.vrbl = y.lags, limit = s)
+# Instead of a generic h-order shock history, suppose we want something bespoke
+#  like an interrupted trend. Note this is of length s+1 
+my.shocks <- c(1, 2, 3, 0, 0, 4)
+custom.shock.formulae <- convolution.calculator(d.x = 0, d.y = 0, 
+              shocks = my.shocks, pulses = pulse.effects)
+custom.shock.formulae
+#> $formulae
+#> $formulae[[1]]
+#> [1] "x "
+#> 
+#> $formulae[[2]]
+#> [1] "l_1_x  +  l_1_y * x  +  2 * x "
+#> 
+#> $formulae[[3]]
+#> [1] "l_1_y * l_1_x  +  l_1_y**2 * x  +  2 * l_1_x  +  2 * l_1_y * x  +  3 * x "
+#> 
+#> $formulae[[4]]
+#> [1] "l_1_y**2 * l_1_x  +  l_1_y**3 * x  +  2 * l_1_y * l_1_x  +  2 * l_1_y**2 * x  +  3 * l_1_x  +  3 * l_1_y * x "
+#> 
+#> $formulae[[5]]
+#> [1] "l_1_y**3 * l_1_x  +  l_1_y**4 * x  +  2 * l_1_y**2 * l_1_x  +  2 * l_1_y**3 * x  +  3 * l_1_y * l_1_x  +  3 * l_1_y**2 * x "
+#> 
+#> $formulae[[6]]
+#> [1] "l_1_y**4 * l_1_x  +  l_1_y**5 * x  +  2 * l_1_y**3 * l_1_x  +  2 * l_1_y**4 * x  +  3 * l_1_y**2 * l_1_x  +  3 * l_1_y**3 * x  +  4 * x "
+#> 
+#> 
+#> $shocks
+#> $shocks[[1]]
+#> [1] 1
+#> 
+#> $shocks[[2]]
+#> [1] 1 2
+#> 
+#> $shocks[[3]]
+#> [1] 1 2 3
+#> 
+#> $shocks[[4]]
+#> [1] 1 2 3 0
+#> 
+#> $shocks[[5]]
+#> [1] 1 2 3 0 0
+#> 
+#> $shocks[[6]]
+#> [1] 1 2 3 0 0 4
+#> 
+#> 
+```

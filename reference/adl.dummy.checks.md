@@ -8,6 +8,8 @@ Do consistent dummy checks for functions that use an ADL model
 adl.dummy.checks(
   x.vrbl,
   y.vrbl,
+  z.vrbl,
+  x.z.vrbl,
   d.x,
   d.y,
   inferences.x,
@@ -22,30 +24,41 @@ adl.dummy.checks(
 
 - x.vrbl:
 
-  a named vector of the x variables and corresponding lag orders in an
-  ADL model
+  a named numeric vector in which the names correspond to an independent
+  variable and its lags and the numbers correspond to the specific lag
+  order of each variable
 
 - y.vrbl:
 
-  a named vector of the y variables and corresponding lag orders in an
-  ADL model
+  a named numeric vector in which the names correspond to lags of the
+  dependent variable and the numbers correspond to the specific lag
+  order of each variable. Can be `NULL` if the model has no lagged
+  dependent variables
 
 - d.x:
 
-  the order of differencing of the x variable in the ADL model
+  an integer describing how many times the independent variable was
+  differenced before model estimation
 
 - d.y:
 
-  the order of differencing of the y variable in the ADL model
+  an integer describing how many times the dependent variable was
+  differenced before model estimation
 
 - inferences.x:
 
-  is the independent variable treated in levels or in differences?
+  a character string specifying whether the shock to the independent
+  variable is applied in levels or differences. Valid arguments include
+  `levels` or `differences`. (For independent variables where `d.x` is
+  0, this is automatically `levels`.) The default is `levels`
 
 - inferences.y:
 
-  are the inferences for the dependent variable expected in levels or in
-  differences?
+  a character string specifying whether the shock to the independent
+  variable is interpreted in levels or differences (of the dependent
+  variable). Valid arguments include `levels` or `differences`. (For y
+  variables where `d.y` is 0, this is automatically `levels`.) The
+  default is `levels`
 
 - the.coef:
 
@@ -53,11 +66,18 @@ adl.dummy.checks(
 
 - se.type:
 
-  the type of standard error calculated
+  a character string for the type of standard error to extract from the
+  model. The default is `const`, but any argument to `vcovHC` from the
+  `sandwich` package is accepted
 
 - type:
 
-  whether the effects are estimated in the context of a GDRF
+  a string whether the effects are estimated from a GDRF model or the
+  interaction model. Accepts either `GDRF` or `interact`
+
+## Value
+
+nothing is returned
 
 ## Author
 

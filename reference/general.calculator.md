@@ -1,7 +1,11 @@
-# Generate the generalized effect formulae for an autoregressive distributed lag (ADL) model, given pulse effects and shock history
+# Generate the generalized (im)pulse formulae for a dynamic linear model
 
-Generate the generalized effect formulae for an autoregressive
-distributed lag (ADL) model, given pulse effects and shock history
+Generate the generalized (im)pulse effect formulae for an autoregressive
+distributed lag (ADL) model, given pulse effects and shock history. Take
+the period-specific impulse response functions (presumably pulses from
+pulse.calculator or convolution.calculator) and generalize them
+according to a shock history h and order of differencing of the
+independent and/or dependent variable
 
 ## Usage
 
@@ -42,8 +46,9 @@ general.calculator(d.x, d.y, h, limit, pulses)
 
 ## Value
 
-a list of `limit` + 1 `mpoly` formulae containing the generalized effect
-formula in each period
+a list with two elements: `limit` + 1 `mpoly` formulae containing the
+generalized effect formula (for calculating the GDRF) in each period
+(under `formulae`) as well as the actual shock history (under `shocks`)
 
 ## Details
 
@@ -51,9 +56,8 @@ formula in each period
 formulae that contain variable names that represent the generalized
 effect in each period. The expectation is that these will be evaluated
 using coefficients from an object containing an ADL model with
-corresponding variables. Note: `mpoly` does not allow variable names
-with a .; variables passed to `general.calculator` should not include
-this character
+corresponding variables. Note: avoid passing characters not allowed by
+`mpoly`
 
 ## Author
 
@@ -91,23 +95,23 @@ general.pulse.effects
 #> [1] "l_1_y**4 * l_1_x  +  l_1_y**5 * x "
 #> 
 #> 
-#> $binomials
-#> $binomials[[1]]
+#> $shocks
+#> $shocks[[1]]
 #> [1] 1
 #> 
-#> $binomials[[2]]
+#> $shocks[[2]]
 #> [1] 1 0
 #> 
-#> $binomials[[3]]
+#> $shocks[[3]]
 #> [1] 1 0 0
 #> 
-#> $binomials[[4]]
+#> $shocks[[4]]
 #> [1] 1 0 0 0
 #> 
-#> $binomials[[5]]
+#> $shocks[[5]]
 #> [1] 1 0 0 0 0
 #> 
-#> $binomials[[6]]
+#> $shocks[[6]]
 #> [1] 1 0 0 0 0 0
 #> 
 #> 
@@ -135,23 +139,23 @@ general.step.effects
 #> [1] "l_1_y**4 * l_1_x  +  l_1_y**5 * x  +  l_1_y**3 * l_1_x  +  l_1_y**4 * x  +  l_1_y**2 * l_1_x  +  l_1_y**3 * x  +  l_1_y * l_1_x  +  l_1_y**2 * x  +  l_1_x  +  l_1_y * x  +  x "
 #> 
 #> 
-#> $binomials
-#> $binomials[[1]]
+#> $shocks
+#> $shocks[[1]]
 #> [1] 1
 #> 
-#> $binomials[[2]]
+#> $shocks[[2]]
 #> [1] 1 1
 #> 
-#> $binomials[[3]]
+#> $shocks[[3]]
 #> [1] 1 1 1
 #> 
-#> $binomials[[4]]
+#> $shocks[[4]]
 #> [1] 1 1 1 1
 #> 
-#> $binomials[[5]]
+#> $shocks[[5]]
 #> [1] 1 1 1 1 1
 #> 
-#> $binomials[[6]]
+#> $shocks[[6]]
 #> [1] 1 1 1 1 1 1
 #> 
 #> 

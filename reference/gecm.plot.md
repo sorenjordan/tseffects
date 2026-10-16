@@ -1,12 +1,13 @@
-# Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1) model, assuming the underlying model is in first differences (`x.vrbl.d.x` = `y.vrbl.d.y` = 0 and `x.d.vrbl.d.x` = `y.d.vrbl.d.y` = 1) and the user wants a marginal effect (the untransformed GDRF) and inferences about y in levels to a treatment applied to x in levels. (This is just a wrapper for `GDRF.gecm.plot` with simplifying assumptions)
+# Evaluate and/or plot the General Dynamic Response Function (GDRF) for a GECM assumed in levels/first differences
 
 Evaluate (and possibly plot) the General Dynamic Response Function
-(GDRF) for a GECM(1,1) model, assuming the underlying model is in first
-differences (`x.vrbl.d.x` = `y.vrbl.d.y` = 0 and `x.d.vrbl.d.x` =
-`y.d.vrbl.d.y` = 1) and the user wants a marginal effect (the
-untransformed GDRF) and inferences about y in levels to a treatment
-applied to x in levels. (This is just a wrapper for `GDRF.gecm.plot`
-with simplifying assumptions)
+(GDRF) for a GECM(1,1), making use of the GDRF framework (described
+below and in Vande Kamp, Jordan, and Rajan), assuming the underlying
+model is in first differences (`x.vrbl.d.x` = `y.vrbl.d.y` = 0 and
+`x.d.vrbl.d.x` = `y.d.vrbl.d.y` = 1), the user wants a discrete effect
+(the untransformed GDRF) and inferences about y in levels to a shock
+applied to x in levels, with a shock size of 1. (This is just a wrapper
+for `GDRF.gecm.plot` with simplifying assumptions)
 
 ## Usage
 
@@ -36,41 +37,49 @@ gecm.plot(
 
 - x.vrbl:
 
-  a named numeric vector of the x variables (of the lower level of
-  differencing, usually in levels d = 0) and corresponding lag orders in
-  the GECM model
+  a named numeric vector in which the names correspond to an independent
+  variable and its lags (of the lower order of differencing, in levels d
+  = 0) and the numbers correspond to the specific lag order of each
+  variable
 
 - y.vrbl:
 
-  a named numeric vector of the (lagged) y variables (of the lower level
-  of differencing, usually in levels d = 0) and corresponding lag orders
-  in the GECM model
+  a named numeric vector in which the names correspond to lags of the
+  dependent variable (of the lower order of differencing, in levels d
+  = 0) and the numbers correspond to the specific lag order of each
+  variable
 
 - x.d.vrbl:
 
-  a named numeric vector of the x variables (of the higher level of
-  differencing, usually first differences d = 1) and corresponding lag
-  orders in the GECM model
+  a named numeric vector in which the names correspond to an independent
+  variable and its lags (of the higher order of differencing, in first
+  differences d = 1) and the numbers correspond to the specific lag
+  order of each variable
 
 - y.d.vrbl:
 
-  a named numeric vector of the y variables (of the higher level of
-  differencing, usually first differences d = 1) and corresponding lag
-  orders in the GECM model. Can be `NULL` if the model has no lags of
-  the differenced dependent variables
+  a named numeric vector in which the names correspond to lags of the
+  dependent variable (of the higher order of differencing, in first
+  differences d = 1) and the numbers correspond to the specific lag
+  order of each variable
 
 - shock.history:
 
-  the desired shock history. `shock.history` determines the shock
-  history (h) that will be applied to the independent variable. -1
-  represents a pulse. 0 represents a step. These can also be specified
-  via `pulse` and `step`. For others, see Vande Kamp, Jordan, and Rajan.
-  The default is `pulse`
+  either a character string, integer, or numeric vector for the desired
+  shock history. `shock.history` determines the shock history (h) that
+  will be applied to the independent variable. Vande Kamp, Jordan, and
+  Rajan express this as the parameter h (an integer). -1 represents the
+  Impulse Response Function; the equivalent string is `pulse` or
+  `impulse`. 0 represents the Step Response Function; the equivalent
+  string is `step`. For others, see Vande Kamp, Jordan, and Rajan.
+  However, since any shock history can be decomposed into a series of
+  dated Impulse Response Functions, users can also supply any numeric
+  vector of the same length as s.limit + 1. The default is `pulse`
 
 - dM.level:
 
-  a numeric significance level of the GDRF, calculated by the delta
-  method. The default is 0.95
+  a numeric value for the significance level of the GDRF, calculated by
+  the delta method. The default is 0.95
 
 - s.limit:
 
@@ -79,9 +88,9 @@ gecm.plot(
 
 - se.type:
 
-  a string for the type of standard error to extract from the model. The
-  default is `const`, but any argument to `vcovHC` from the `sandwich`
-  package is accepted
+  a character string for the type of standard error to extract from the
+  model. The default is `const`, but any argument to `vcovHC` from the
+  `sandwich` package is accepted
 
 - return.data:
 
@@ -96,8 +105,8 @@ gecm.plot(
 - return.formulae:
 
   logical to return the formulae for the GDRFs as a list element under
-  `formulae` (for the GDRFs) and `binomials` (for the shock history).
-  The default is `FALSE`
+  `formulae` (for the GDRFs) and `shocks` (for the shock history). The
+  default is `FALSE`
 
 - ...:
 
@@ -105,8 +114,12 @@ gecm.plot(
 
 ## Value
 
-depending on `return.data`, `return.plot`, and `return.formulae`, a list
-of elements relating to the GDRF
+if just one of `return.data`, `return.plot`, and `return.formulae` is
+`TRUE`, `gecm.plot` will return just the requested output. If more than
+one is selected (or just `return.data` is selected), it will return a
+list with elements `plot` (for the plot), `estimates` (for the data),
+and `formulae` and `shocks` for the GDRF formula for each period as well
+as the applied shock history in integer form
 
 ## Details
 
@@ -137,6 +150,7 @@ test.pulse <- gecm.plot(model = model,
                                   s.limit = 10, 
                                   return.plot = TRUE, 
                                   return.formulae = TRUE)
+#> Warning: return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
 names(test.pulse)
-#> [1] "plot"      "formulae"  "binomials"
+#> [1] "plot"     "formulae" "shocks"  
 ```

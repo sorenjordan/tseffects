@@ -19,12 +19,19 @@ what.to.return(
 
 - return.plot:
 
-  a TRUE/FALSE on whether the plot should be returned from the function
+  logical to return the visualized GDRFs as a list element under `plot`.
+  The default is `TRUE`
 
 - return.formulae:
 
-  a TRUE/FALSE on whether the data from the effect should be returned
-  from the function
+  logical to return the formulae for the GDRFs as a list element under
+  `formulae` (for the GDRFs) and `shocks` (for the shock history). The
+  default is `FALSE`
+
+- return.data:
+
+  logical to return the raw calculated GDRFs as a list element under
+  `estimates`. The default is `FALSE`
 
 - plot.out:
 
@@ -37,6 +44,10 @@ what.to.return(
 - the.final.formulae:
 
   the created formulae from the GDRF ADL/GECM
+
+## Value
+
+a list of the requested objects
 
 ## Author
 

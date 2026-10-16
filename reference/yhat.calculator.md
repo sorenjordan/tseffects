@@ -1,6 +1,10 @@
-# Transform the GDRF formulae to fitted value formulae
+# Transform GDRF formulae to fitted value formulae
 
-Transform the GDRF formulae to fitted value formulae
+By default, the GDRF assumes the user is interested in effect estimates
+(the effect of an independent variable on a dependent variable,
+calculated in levels or differences, as appropriate). yhat.calculator
+“adds” these effects to a baseline value of the dependent variable to
+observe how its trajectory changes
 
 ## Usage
 
@@ -14,7 +18,10 @@ yhat.calculator(
   inferences.y = NULL,
   prediction.values = NULL,
   baseline.y = NULL,
-  shock.size = 1
+  shock.size = 1,
+  z.val = NULL,
+  z.vrbl = NULL,
+  x.z.vrbl = NULL
 )
 ```
 
@@ -22,7 +29,8 @@ yhat.calculator(
 
 - formulae:
 
-  the list of formulae from `general.calculator`
+  the list of formulae from `general.calculator` or
+  `convolution.calculator`
 
 - d.y:
 
@@ -44,34 +52,58 @@ yhat.calculator(
 
 - inferences.y:
 
-  whether the inferences for the dependent variable are in levels or
-  differences. Must be one of `levels` or `differences`
+  a character string that determines whether the inferences for the
+  dependent variable are in levels or differences. Must be one of
+  `levels` or `differences`
 
 - prediction.values:
 
   a named list of values for non-y variables in the model, used to
   calculate a steady-state baseline when `d.y = 0` and `baseline.y` is
   not supplied. If any differenced variables are included in the model,
-  they should be set to 0. Ignored when `d.y > 0`
+  they should be set to 0. If multiple lags of the same variable are
+  included, they should be set to the same value (including for
+  interactions). Ignored when `d.y > 0`
 
 - baseline.y:
 
-  a user-supplied baseline value of y in levels. For `d.y = 0`, this
-  overrides the steady-state calculation from `prediction.values`. For
-  `d.y > 0` with `inferences.y = "levels"`, this is required. Optional
-  uncertainty around this baseline can be supplied through
+  a user-supplied numeric baseline value of y in levels. For `d.y = 0`,
+  this overrides the steady-state calculation from `prediction.values`.
+  For `d.y > 0` with `inferences.y = "levels"`, this is required.
+  Optional uncertainty around this baseline can be supplied through
   `baseline.y.se` in the calling function
 
 - shock.size:
 
-  the size of the shock to x in the units of x. Defaults to 1 (the
-  marginal effect)
+  a numeric value for the size of the shock to x in the units of x.
+  Defaults to 1 (a discrete effect similar to traditional marginal
+  effects)
+
+- z.val:
+
+  a numeric value for the current value of the moderating variable, if
+  the baseline formula contains an interaction
+
+- z.vrbl:
+
+  a named numeric vector in which the names correspond to the
+  “moderating” z variables and its lags and the numbers correspond to
+  the specific lag order of each variable, if the baseline formula
+  contains an interaction
+
+- x.z.vrbl:
+
+  a named numeric vector in which the names correspond to the
+  “interaction” x:z variables and its lags and the numbers correspond to
+  the specific lag order of each variable. IMPORTANT: enter the lag
+  order that pertains to the “main” x variable. For instance, x_l_1_z
+  (contemporaneous x times lagged z) would be 0 and l_1_x_z (lagged x
+  times contemporaneous z) would be 1
 
 ## Value
 
 a list of `limit` + 1 formula strings containing the fitted value
-formula in each period, for evaluation by `deltaMethod` in the calling
-function
+formula in each period
 
 ## Details
 
@@ -83,7 +115,14 @@ incorporates model-based uncertainty. For `d.y > 0`, the baseline must
 be user-supplied through `baseline.y`, as the model in differences
 contains no information about the level of y. Optional uncertainty
 around a user-supplied baseline can be added through `baseline.y.se`, it
-is added as a post-processing step in the calling function
+is added as a post-processing step in the calling function. This ability
+to observe fitted values of y is most sensible when the underlying model
+is originally estimated in levels of the dependent variable (so that a
+pre-shock baseline can be calculated and model-based uncertainty can be
+added). When the dependent variable is differenced, the baseline is
+arbitrary (as the model is ignorant of any underlying history or level
+of the dependent variable). These formulae are evaluated by
+`deltaMethod` in the calling function
 
 ## Author
 
@@ -107,26 +146,51 @@ yhat.calculator(formulae = general.levels$formulae, d.y = 0,
   model = model.levels, the.coef = coef(model.levels),
   y.vrbl = c("l_1_y" = 1), inferences.y = "levels",
   prediction.values = NULL, baseline.y = 0, shock.size = 1)
-#> [[1]]
+#> $modified.formulae
+#> $modified.formulae[[1]]
 #> [1] "0"
 #> 
-#> [[2]]
+#> $modified.formulae[[2]]
 #> [1] "0 + 1 * (x )"
 #> 
-#> [[3]]
+#> $modified.formulae[[3]]
 #> [1] "0 + 1 * (l_1_x  +  l_1_y * x )"
 #> 
-#> [[4]]
+#> $modified.formulae[[4]]
 #> [1] "0 + 1 * (l_1_y * l_1_x  +  l_1_y**2 * x )"
 #> 
-#> [[5]]
+#> $modified.formulae[[5]]
 #> [1] "0 + 1 * (l_1_y**2 * l_1_x  +  l_1_y**3 * x )"
 #> 
-#> [[6]]
+#> $modified.formulae[[6]]
 #> [1] "0 + 1 * (l_1_y**3 * l_1_x  +  l_1_y**4 * x )"
 #> 
-#> [[7]]
+#> $modified.formulae[[7]]
 #> [1] "0 + 1 * (l_1_y**4 * l_1_x  +  l_1_y**5 * x )"
+#> 
+#> 
+#> $modified.symbolic.formulae
+#> $modified.symbolic.formulae[[1]]
+#> [1] "0"
+#> 
+#> $modified.symbolic.formulae[[2]]
+#> [1] "0 + 1 * (x )"
+#> 
+#> $modified.symbolic.formulae[[3]]
+#> [1] "0 + 1 * (l_1_x  +  l_1_y * x )"
+#> 
+#> $modified.symbolic.formulae[[4]]
+#> [1] "0 + 1 * (l_1_y * l_1_x  +  l_1_y**2 * x )"
+#> 
+#> $modified.symbolic.formulae[[5]]
+#> [1] "0 + 1 * (l_1_y**2 * l_1_x  +  l_1_y**3 * x )"
+#> 
+#> $modified.symbolic.formulae[[6]]
+#> [1] "0 + 1 * (l_1_y**3 * l_1_x  +  l_1_y**4 * x )"
+#> 
+#> $modified.symbolic.formulae[[7]]
+#> [1] "0 + 1 * (l_1_y**4 * l_1_x  +  l_1_y**5 * x )"
+#> 
 #> 
 
 # I(0) y: steady state from supplied prediction.values (same values for both x/l_1_x)
@@ -135,26 +199,51 @@ yhat.calculator(formulae = general.levels$formulae, d.y = 0,
   y.vrbl = c("l_1_y" = 1), inferences.y = "levels",
   prediction.values = list("x" = 1, "l_1_x" = 1),
   baseline.y = NULL, shock.size = 1)
-#> [[1]]
+#> $modified.formulae
+#> $modified.formulae[[1]]
 #> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y))"
 #> 
-#> [[2]]
+#> $modified.formulae[[2]]
 #> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (x )"
 #> 
-#> [[3]]
+#> $modified.formulae[[3]]
 #> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_x  +  l_1_y * x )"
 #> 
-#> [[4]]
+#> $modified.formulae[[4]]
 #> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y * l_1_x  +  l_1_y**2 * x )"
 #> 
-#> [[5]]
+#> $modified.formulae[[5]]
 #> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y**2 * l_1_x  +  l_1_y**3 * x )"
 #> 
-#> [[6]]
+#> $modified.formulae[[6]]
 #> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y**3 * l_1_x  +  l_1_y**4 * x )"
 #> 
-#> [[7]]
+#> $modified.formulae[[7]]
 #> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y**4 * l_1_x  +  l_1_y**5 * x )"
+#> 
+#> 
+#> $modified.symbolic.formulae
+#> $modified.symbolic.formulae[[1]]
+#> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y))"
+#> 
+#> $modified.symbolic.formulae[[2]]
+#> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (x )"
+#> 
+#> $modified.symbolic.formulae[[3]]
+#> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_x  +  l_1_y * x )"
+#> 
+#> $modified.symbolic.formulae[[4]]
+#> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y * l_1_x  +  l_1_y**2 * x )"
+#> 
+#> $modified.symbolic.formulae[[5]]
+#> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y**2 * l_1_x  +  l_1_y**3 * x )"
+#> 
+#> $modified.symbolic.formulae[[6]]
+#> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y**3 * l_1_x  +  l_1_y**4 * x )"
+#> 
+#> $modified.symbolic.formulae[[7]]
+#> [1] "((Intercept) + 1 * x + 1 * l_1_x) / (1 - (l_1_y)) + 1 * (l_1_y**4 * l_1_x  +  l_1_y**5 * x )"
+#> 
 #> 
 
 # I(0) y: user-supplied baseline.y overrides prediction.values
@@ -163,26 +252,51 @@ yhat.calculator(formulae = general.levels$formulae, d.y = 0,
   y.vrbl = c("l_1_y" = 1), inferences.y = "levels",
   prediction.values = list("x" = 0, "l_1_x" = 1),
   baseline.y = 5, shock.size = 1)
-#> [[1]]
+#> $modified.formulae
+#> $modified.formulae[[1]]
 #> [1] "5"
 #> 
-#> [[2]]
+#> $modified.formulae[[2]]
 #> [1] "5 + 1 * (x )"
 #> 
-#> [[3]]
+#> $modified.formulae[[3]]
 #> [1] "5 + 1 * (l_1_x  +  l_1_y * x )"
 #> 
-#> [[4]]
+#> $modified.formulae[[4]]
 #> [1] "5 + 1 * (l_1_y * l_1_x  +  l_1_y**2 * x )"
 #> 
-#> [[5]]
+#> $modified.formulae[[5]]
 #> [1] "5 + 1 * (l_1_y**2 * l_1_x  +  l_1_y**3 * x )"
 #> 
-#> [[6]]
+#> $modified.formulae[[6]]
 #> [1] "5 + 1 * (l_1_y**3 * l_1_x  +  l_1_y**4 * x )"
 #> 
-#> [[7]]
+#> $modified.formulae[[7]]
 #> [1] "5 + 1 * (l_1_y**4 * l_1_x  +  l_1_y**5 * x )"
+#> 
+#> 
+#> $modified.symbolic.formulae
+#> $modified.symbolic.formulae[[1]]
+#> [1] "5"
+#> 
+#> $modified.symbolic.formulae[[2]]
+#> [1] "5 + 1 * (x )"
+#> 
+#> $modified.symbolic.formulae[[3]]
+#> [1] "5 + 1 * (l_1_x  +  l_1_y * x )"
+#> 
+#> $modified.symbolic.formulae[[4]]
+#> [1] "5 + 1 * (l_1_y * l_1_x  +  l_1_y**2 * x )"
+#> 
+#> $modified.symbolic.formulae[[5]]
+#> [1] "5 + 1 * (l_1_y**2 * l_1_x  +  l_1_y**3 * x )"
+#> 
+#> $modified.symbolic.formulae[[6]]
+#> [1] "5 + 1 * (l_1_y**3 * l_1_x  +  l_1_y**4 * x )"
+#> 
+#> $modified.symbolic.formulae[[7]]
+#> [1] "5 + 1 * (l_1_y**4 * l_1_x  +  l_1_y**5 * x )"
+#> 
 #> 
 
 # ADL model with differenced y
@@ -202,13 +316,13 @@ yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
   y.vrbl = c("l_1_y" = 1), inferences.y = "differences",
   baseline.y = 3, shock.size = 1)
   
-# inferences in differences, shock size of 1: identical to marginal effect (warns)
+# inferences in differences, shock size of 1: identical to discrete effect (warns)
 yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
   model = model.diffs, the.coef = coef(model.diffs),
   y.vrbl = c("l_1_y" = 1), inferences.y = "differences",
   baseline.y = NULL, shock.size = 1)
 
-# inferences in differences, shock size of 2: scales the marginal effect
+# inferences in differences, shock size of 2: scales the discrete effect
 #  Since we're asking for inferences.y in differences, the baseline will automatically be 0
 yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
   model = model.diffs, the.coef = coef(model.diffs),
@@ -235,25 +349,50 @@ yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
   y.vrbl = c("l_1_y" = 1), inferences.y = "levels",
   prediction.values = list("x" = 1, "l_1_x" = 1),
   baseline.y = 5, shock.size = 2)
-#> [[1]]
+#> $modified.formulae
+#> $modified.formulae[[1]]
 #> [1] "5"
 #> 
-#> [[2]]
+#> $modified.formulae[[2]]
 #> [1] "5 + 2 * (x )"
 #> 
-#> [[3]]
+#> $modified.formulae[[3]]
 #> [1] "5 + 2 * (l_1_x  +  l_1_d_y * x  +  x )"
 #> 
-#> [[4]]
+#> $modified.formulae[[4]]
 #> [1] "5 + 2 * (l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
 #> 
-#> [[5]]
+#> $modified.formulae[[5]]
 #> [1] "5 + 2 * (l_1_d_y**2 * l_1_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
 #> 
-#> [[6]]
+#> $modified.formulae[[6]]
 #> [1] "5 + 2 * (l_1_d_y**3 * l_1_x  +  l_1_d_y**4 * x  +  l_1_d_y**2 * l_1_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
 #> 
-#> [[7]]
+#> $modified.formulae[[7]]
 #> [1] "5 + 2 * (l_1_d_y**4 * l_1_x  +  l_1_d_y**5 * x  +  l_1_d_y**3 * l_1_x  +  l_1_d_y**4 * x  +  l_1_d_y**2 * l_1_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
+#> 
+#> 
+#> $modified.symbolic.formulae
+#> $modified.symbolic.formulae[[1]]
+#> [1] "5"
+#> 
+#> $modified.symbolic.formulae[[2]]
+#> [1] "5 + 2 * (x )"
+#> 
+#> $modified.symbolic.formulae[[3]]
+#> [1] "5 + 2 * (l_1_x  +  l_1_d_y * x  +  x )"
+#> 
+#> $modified.symbolic.formulae[[4]]
+#> [1] "5 + 2 * (l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
+#> 
+#> $modified.symbolic.formulae[[5]]
+#> [1] "5 + 2 * (l_1_d_y**2 * l_1_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
+#> 
+#> $modified.symbolic.formulae[[6]]
+#> [1] "5 + 2 * (l_1_d_y**3 * l_1_x  +  l_1_d_y**4 * x  +  l_1_d_y**2 * l_1_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
+#> 
+#> $modified.symbolic.formulae[[7]]
+#> [1] "5 + 2 * (l_1_d_y**4 * l_1_x  +  l_1_d_y**5 * x  +  l_1_d_y**3 * l_1_x  +  l_1_d_y**4 * x  +  l_1_d_y**2 * l_1_x  +  l_1_d_y**3 * x  +  l_1_d_y * l_1_x  +  l_1_d_y**2 * x  +  l_1_x  +  l_1_d_y * x  +  x )"
+#> 
 #> 
 ```

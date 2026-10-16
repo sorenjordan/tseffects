@@ -2,21 +2,21 @@
 
 Autoregressive distributed lag (A\[R\]DL) models (and their
 reparameterized equivalent, the Generalized Error-Correction Model
-\[GECM\]) are the workhorse models in uncovering dynamic inferences. ADL
-models are simple to estimate; this is what makes them attractive. Once
-these models are estimated, what is less clear is how to uncover a rich
-set of dynamic inferences from these models. We provide tools for
-recovering those inferences. These tools apply to traditional
-time-series quantities of interest and are built from the Impulse
-Response Function and Step Response Function (sometimes described as a
-pulse effect or a cumulative effect). They also allow for a variety of
-shock histories to be applied to the independent variable (beyond just a
-one-time, one-unit increase) as well as the recovery of inferences in
-levels for shocks applied to (in)dependent variables in differences
-(what we call the Generalized Dynamic Response Function). These effects
-are also available for the general conditional dynamic model advocated
-by Warner, Vande Kamp, and Jordan (2026 <doi:10.1017/psrm.2026.10087>).
-We also provide the formulae for these effects.
+\[GECM\]) are the workhorse dynamic linear models in uncovering dynamic
+inferences. ADL models are simple to estimate; this is what makes them
+attractive. Once these models are estimated, what is less clear is how
+to uncover a rich set of dynamic inferences from these models. We
+provide tools for recovering those inferences. These tools apply to
+traditional time-series quantities of interest and are built from the
+Impulse Response Function and Step Response Function (sometimes
+described as a pulse effect or a cumulative effect). They also allow for
+a variety of shock histories to be applied to the independent variable
+(beyond just a one-time, one-unit increase) as well as the recovery of
+inferences in levels for shocks applied to (in)dependent variables in
+differences through the Generalized Dynamic Response Function. These
+tools are also available for the general conditional dynamic model
+advocated by Warner, Vande Kamp, and Jordan (2026
+<doi:10.1017/psrm.2026.10087>).
 
 Two ultra-simple examples are shown below: see the vignette and manual
 for many, many more!
@@ -33,10 +33,10 @@ to CRAN, install as normal:
 
 Drawing inferences from ADL and GECM models is easy. From an ADL(1,1),
 just specify the independent and dependent variables, as well as the
-treatment history desired.
+shock history desired.
 
     # ADL(1,1)
-    # Use the toy data to run an ADL. No argument is made this is well specified; it is just expository
+    # Use the included toy data to run an ADL. No argument is made this is well specified; it is just expository
     model.toydata <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
 
     GDRF.adl.plot(model = model.toydata,
@@ -71,59 +71,35 @@ model, we just specify the interaction and its terms.
 ## All functions
 
 - [`GDRF.adl.plot()`](https://sorenjordan.github.io/tseffects/reference/GDRF.adl.plot.md)
-  : Evaluate (and possibly plot) the General Dynamic Response Function
-  (GDRF) for an autoregressive distributed lag (ADL) model
-
+  : Evaluate and/or plot the General Dynamic Response Function (GDRF)
+  for an ADL
 - [`GDRF.gecm.plot()`](https://sorenjordan.github.io/tseffects/reference/GDRF.gecm.plot.md)
-  : Evaluate (and possibly plot) the General Dynamic Response Function
-  (GDRF) for a Generalized Error Correction Model (GECM)
-
+  : Evaluate and/or plot the General Dynamic Response Function (GDRF)
+  for a GECM
 - [`adl.plot()`](https://sorenjordan.github.io/tseffects/reference/adl.plot.md)
-  :
-
-  Evaluate (and possibly plot) the General Dynamic Response Function
-  (GDRF) for an autoregressive distributed lag (ADL) model, assuming the
-  underlying model is in levels (`d.x` = `d.y` = 0) and the user wants a
-  marginal effect (the untransformed GDRF). (This is just a wrapper for
-  `GDRF.adl.plot` with simplifying assumptions)
-
+  : Evaluate and/or plot the General Dynamic Response Function (GDRF)
+  for an ADL assumed in levels
 - [`approval`](https://sorenjordan.github.io/tseffects/reference/approval.md)
   : Data on US Presidential Approval
-
+- [`convolution.calculator()`](https://sorenjordan.github.io/tseffects/reference/convolution.calculator.md)
+  : Generate the convolved arbitrary (im)pulses formulae for a dynamic
+  linear model
 - [`gecm.plot()`](https://sorenjordan.github.io/tseffects/reference/gecm.plot.md)
-  :
-
-  Evaluate (and possibly plot) the General Dynamic Response Function
-  (GDRF) for a GECM(1,1) model, assuming the underlying model is in
-  first differences (`x.vrbl.d.x` = `y.vrbl.d.y` = 0 and `x.d.vrbl.d.x`
-  = `y.d.vrbl.d.y` = 1) and the user wants a marginal effect (the
-  untransformed GDRF) and inferences about y in levels to a treatment
-  applied to x in levels. (This is just a wrapper for `GDRF.gecm.plot`
-  with simplifying assumptions)
-
+  : Evaluate and/or plot the General Dynamic Response Function (GDRF)
+  for a GECM assumed in levels/first differences
 - [`gecm.to.adl()`](https://sorenjordan.github.io/tseffects/reference/gecm.to.adl.md)
-  : Translate the coefficients from the General Error Correction Model
-  (GECM) to the autoregressive distributed lag (ADL) model
-
+  : Use equivalencies to translate GECM coefficients to ADL coefficients
 - [`general.calculator()`](https://sorenjordan.github.io/tseffects/reference/general.calculator.md)
-  : Generate the generalized effect formulae for an autoregressive
-  distributed lag (ADL) model, given pulse effects and shock history
-
+  : Generate the generalized (im)pulse formulae for a dynamic linear
+  model
 - [`interact.adl.plot()`](https://sorenjordan.github.io/tseffects/reference/interact.adl.plot.md)
-  :
-
-  Plot the interaction in a single-equation time series model estimated
-  via `lm`.
-
+  : Evaluate and/or plot dynamic interactions from dynamic linear models
 - [`pulse.calculator()`](https://sorenjordan.github.io/tseffects/reference/pulse.calculator.md)
-  : Generate pulse effect formulae for a given autoregressive
-  distributed lag (ADL) model
-
+  : Generate the (im)pulse formulae for a dynamic linear model
 - [`toy.ts.interaction.data`](https://sorenjordan.github.io/tseffects/reference/toy.ts.interaction.data.md)
   : Simulated interactive time series data
-
 - [`yhat.calculator()`](https://sorenjordan.github.io/tseffects/reference/yhat.calculator.md)
-  : Transform the GDRF formulae to fitted value formulae
+  : Transform GDRF formulae to fitted value formulae
 
 # Articles
 

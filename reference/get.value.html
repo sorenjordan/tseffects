@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,17 +49,21 @@
 
 
 <dl><dt id="arg-var">var<a class="anchor" aria-label="anchor" href="#arg-var"></a></dt>
-<dd><p>the variable to establish a prediction value for</p></dd>
+<dd><p>a string for var the variable to establish a prediction value for</p></dd>
 
 
 <dt id="arg-prediction-values">prediction.values<a class="anchor" aria-label="anchor" href="#arg-prediction-values"></a></dt>
-<dd><p>(possible) user-supplied list of values for variables</p></dd>
+<dd><p>a named list of values for non-y variables in the model, used to calculate a steady-state baseline of the dependent variable when <code>effect.type = "fitted"</code> and <code>d.y = 0</code> and <code>baseline.y</code> is not supplied. Model-based uncertainty will be calculated around the formula for this value. If any differenced variables are included in the model, they should be set to 0. If multiple lags of the same variable are included, they should be set to the same value. Ignored when <code>d.y &gt; 0</code></p></dd>
 
 
 <dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
 <dd><p>the model containing the dataframe for mean estimation if values are not user-supplied (and warn the user if we're taking the mean)</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>the numeric value of the relevant variable</p>
+    </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan</p>

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tseffects</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Soren Jordan,
 Garrett N. Vande Kamp, and Reshi Rajan</h4>
             
-            <h4 data-toc-skip class="date">2026-07-15</h4>
+            <h4 data-toc-skip class="date">2026-10-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sorenjordan/tseffects/blob/main/vignettes/tseffects-vignette.Rmd" class="external-link"><code>vignettes/tseffects-vignette.Rmd</code></a></small>
       <div class="d-none name"><code>tseffects-vignette.Rmd</code></div>
@@ -357,23 +357,23 @@ GDRF of a pulse shock, assuming that both <code>mood</code> and
 <span><span class="co">#&gt; [1] "l1_policy**3 * l2_mood  +  l1_policy**4 * l1_mood  +  l1_policy**5 * mood "</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials</span></span>
-<span><span class="co">#&gt; $binomials[[1]]</span></span>
+<span><span class="co">#&gt; $shocks</span></span>
+<span><span class="co">#&gt; $shocks[[1]]</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[2]]</span></span>
+<span><span class="co">#&gt; $shocks[[2]]</span></span>
 <span><span class="co">#&gt; [1] 1 0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[3]]</span></span>
+<span><span class="co">#&gt; $shocks[[3]]</span></span>
 <span><span class="co">#&gt; [1] 1 0 0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[4]]</span></span>
+<span><span class="co">#&gt; $shocks[[4]]</span></span>
 <span><span class="co">#&gt; [1] 1 0 0 0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[5]]</span></span>
+<span><span class="co">#&gt; $shocks[[5]]</span></span>
 <span><span class="co">#&gt; [1] 1 0 0 0 0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[6]]</span></span>
+<span><span class="co">#&gt; $shocks[[6]]</span></span>
 <span><span class="co">#&gt; [1] 1 0 0 0 0 0</span></span></code></pre></div>
 <p>(Since <code>general.calculator</code> is “under the hood,”
 <code>h</code> can only be specified as an integer. Later, in a more
@@ -419,23 +419,23 @@ do is specify the <code>d.x</code> order.</p>
 <span><span class="co">#&gt; [1] "l1_policy**3 * l2_d_mood  +  l1_policy**4 * l1_d_mood  +  l1_policy**5 * d_mood  -  l1_policy**2 * l2_d_mood  -  l1_policy**3 * l1_d_mood  -  l1_policy**4 * d_mood "</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials</span></span>
-<span><span class="co">#&gt; $binomials[[1]]</span></span>
+<span><span class="co">#&gt; $shocks</span></span>
+<span><span class="co">#&gt; $shocks[[1]]</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[2]]</span></span>
+<span><span class="co">#&gt; $shocks[[2]]</span></span>
 <span><span class="co">#&gt; [1]  1 -1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[3]]</span></span>
+<span><span class="co">#&gt; $shocks[[3]]</span></span>
 <span><span class="co">#&gt; [1]  1 -1  0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[4]]</span></span>
+<span><span class="co">#&gt; $shocks[[4]]</span></span>
 <span><span class="co">#&gt; [1]  1 -1  0  0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[5]]</span></span>
+<span><span class="co">#&gt; $shocks[[5]]</span></span>
 <span><span class="co">#&gt; [1]  1 -1  0  0  0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[6]]</span></span>
+<span><span class="co">#&gt; $shocks[[6]]</span></span>
 <span><span class="co">#&gt; [1]  1 -1  0  0  0  0</span></span></code></pre></div>
 <p>As Vande Kamp, Jordan, and Rajan <span class="citation">(2025)</span>
 suggest, scholars should be very thoughtful about the shock history
@@ -467,23 +467,23 @@ expectation and apply a new shock history, we would run</p>
 <span><span class="co">#&gt; [1] "l1_policy**3 * l2_d_mood  +  l1_policy**4 * l1_d_mood  +  l1_policy**5 * d_mood  +  l1_policy**2 * l2_d_mood  +  l1_policy**3 * l1_d_mood  +  l1_policy**4 * d_mood  +  l1_policy * l2_d_mood  +  l1_policy**2 * l1_d_mood  +  l1_policy**3 * d_mood  +  l2_d_mood  +  l1_policy * l1_d_mood  +  l1_policy**2 * d_mood  +  l1_d_mood  +  l1_policy * d_mood  +  d_mood "</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials</span></span>
-<span><span class="co">#&gt; $binomials[[1]]</span></span>
+<span><span class="co">#&gt; $shocks</span></span>
+<span><span class="co">#&gt; $shocks[[1]]</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[2]]</span></span>
+<span><span class="co">#&gt; $shocks[[2]]</span></span>
 <span><span class="co">#&gt; [1] 1 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[3]]</span></span>
+<span><span class="co">#&gt; $shocks[[3]]</span></span>
 <span><span class="co">#&gt; [1] 1 1 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[4]]</span></span>
+<span><span class="co">#&gt; $shocks[[4]]</span></span>
 <span><span class="co">#&gt; [1] 1 1 1 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[5]]</span></span>
+<span><span class="co">#&gt; $shocks[[5]]</span></span>
 <span><span class="co">#&gt; [1] 1 1 1 1 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binomials[[6]]</span></span>
+<span><span class="co">#&gt; $shocks[[6]]</span></span>
 <span><span class="co">#&gt; [1] 1 1 1 1 1 1</span></span></code></pre></div>
 <p>(Notice that the pulses do not change.) Recall that these are “under
 the hood”: we publish them so that educators in time-series courses can
@@ -619,7 +619,9 @@ model. We do not advocate for this model.</p>
 <span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                   return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  </span></code></pre></div>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p>This recovers the IRF. We can also observe the formulae and
 associated binomials in <code>test.pulse$formulae</code> and
 <code>test.pulse$binomials</code>. <code>test.pulse$plot</code> contains
@@ -665,7 +667,10 @@ the model in differences.</p>
 <span>                                   inferences.y <span class="op">=</span> <span class="st">"levels"</span>, </span>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
 <span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
-<span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="700"></p>
 <p>(Notice the change in <code>d.x</code> and the <code>x.vrbl</code>).
 Suppose, though, that we wanted to apply this pulse to
@@ -681,7 +686,10 @@ Suppose, though, that we wanted to apply this pulse to
 <span>                                   inferences.y <span class="op">=</span> <span class="st">"levels"</span>, </span>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"differences"</span>,</span>
 <span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
-<span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="700"></p>
 <p>The same changes could be made to <code>inferences.y</code> (if
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
@@ -755,9 +763,11 @@ the steady state:</p>
 <span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                   return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in GDRF.dummy.checks(effect.type, prediction.values, baseline.y, : If</span></span>
-<span><span class="co">#&gt; any differenced variables are included in the model, ensure they are set to 0</span></span>
-<span><span class="co">#&gt; in prediction.values for a meaningful steady-state prediction</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning in GDRF.dummy.checks(effect.type = effect.type, prediction.values =</span></span>
+<span><span class="co">#&gt; prediction.values, : If any differenced variables are included in the model,</span></span>
+<span><span class="co">#&gt; ensure they are set to 0 in prediction.values for a meaningful steady-state</span></span>
+<span><span class="co">#&gt; prediction. Multiple lags of the same variable should also be set to the same</span></span>
+<span><span class="co">#&gt; value</span></span></code></pre></div>
 <p>This would show the pulse effect against the steady-state value of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 when
@@ -943,7 +953,10 @@ would be</p>
 <span>                                   inferences.x <span class="op">=</span> <span class="st">"levels"</span>,</span>
 <span>                                   s.limit <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>                                   return.plot <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>                                   return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>                                   return.formulae <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p>Examining the formulae show that the conversion from GECM
 coefficients to ADL coefficients is automatic. As before, if we wanted a
 different shock history, we would just adjust <code>shock.history</code>
@@ -1134,15 +1147,18 @@ exposition: we are just assuming it is well behaved)</p>
 different values of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
 over time. The shock history is a simple
-<code>effect.type = "impulse"</code></p>
+<code>effect.type = "discrete"</code></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/interact.adl.plot.html">interact.adl.plot</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">interact.model</span>, x.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    z.vals <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>,</span>
-<span>                    effect.type <span class="op">=</span> <span class="st">"impulse"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"z.lines"</span>,</span>
-<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span>                    effect.type <span class="op">=</span> <span class="st">"discrete"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"z.lines"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="700"></p>
 <p>If we wanted to moderate by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
@@ -1154,8 +1170,11 @@ instead</p>
 <span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    z.vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    s.vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span>
-<span>                    effect.type <span class="op">=</span> <span class="st">"impulse"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"s.lines"</span>,</span>
-<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span>                    effect.type <span class="op">=</span> <span class="st">"discrete"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"s.lines"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="700"></p>
 <p>We observe two lines: the instantaneous effect at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s = 0</annotation></semantics></math>
@@ -1170,7 +1189,7 @@ we would just change the <code>effect.type</code>.</p>
 <span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    z.vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    s.vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span>
-<span>                    effect.type <span class="op">=</span> <span class="st">"step"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"s.lines"</span>,</span>
+<span>                    effect.type <span class="op">=</span> <span class="st">"discrete"</span>, shock.history <span class="op">=</span> <span class="st">"step"</span>, plot.type <span class="op">=</span> <span class="st">"lines"</span>, line.options <span class="op">=</span> <span class="st">"s.lines"</span>,</span>
 <span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="700"></p>
 <p>If we wanted to see the period-specific effects of
@@ -1185,8 +1204,11 @@ reasonable defaults.</p>
 <span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                    effect.type <span class="op">=</span> <span class="st">"pulse"</span>, plot.type <span class="op">=</span> <span class="st">"heatmap"</span>, heatmap.options <span class="op">=</span> <span class="st">"all"</span>,</span>
-<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span>                    effect.type <span class="op">=</span> <span class="st">"discrete"</span>, plot.type <span class="op">=</span> <span class="st">"heatmap"</span>, heatmap.options <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="700"></p>
 <p>If we want to ignore statistically insignificant effects, we can
 change the <code>heatmap.options</code> to be
@@ -1196,8 +1218,11 @@ change the <code>heatmap.options</code> to be
 <span>                    y.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l_1_y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                    z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                    x.z.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"z_l_1_x"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"x_l_1_z"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"l_1_x_l_1_z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                    effect.type <span class="op">=</span> <span class="st">"pulse"</span>, plot.type <span class="op">=</span> <span class="st">"heatmap"</span>, heatmap.options <span class="op">=</span> <span class="st">"significant"</span>,</span>
-<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span>                    effect.type <span class="op">=</span> <span class="st">"discrete"</span>, plot.type <span class="op">=</span> <span class="st">"heatmap"</span>, heatmap.options <span class="op">=</span> <span class="st">"significant"</span>,</span>
+<span>                    s.limit <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span></code></pre></div>
 <p><img src="tseffects-vignette_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="700"></p>
 <p>Exploring the full suite of options here is impossible: that’s the
 fun of dynamic conditional models. We encourage users to explore their
@@ -1364,7 +1389,7 @@ results, we show how to estimate the same model using
 <span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://zoo.R-Forge.R-project.org/" class="external-link">zoo</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://zeileis.codeberg.page/zoo/" class="external-link">zoo</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'zoo'</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1431,6 +1456,9 @@ the step response function, they cannot be compared to those produced by
 <span>               y.d.vrbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LRM_d1_l1"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"LRM_d1_l2"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, shock.history <span class="op">=</span> <span class="st">"pulse"</span>,</span>
 <span>               x.d.vrbl.d.x <span class="op">=</span> <span class="fl">1</span>, y.d.vrbl.d.y <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>               s.limit <span class="op">=</span> <span class="fl">12</span>, return.data <span class="op">=</span> <span class="cn">TRUE</span>, return.plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :</span></span>
+<span><span class="co">#&gt; return.LRM = TRUE but the effects decay to 0 as s -&gt; infinity. No LRM is</span></span>
+<span><span class="co">#&gt; returned</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">mult_inter12_IBO</span><span class="op">$</span><span class="va">GDRF</span>, <span class="va">mult_inter12</span><span class="op">$</span><span class="va">IBO</span><span class="op">$</span><span class="va">Delay</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; [1] TRUE</span></span>

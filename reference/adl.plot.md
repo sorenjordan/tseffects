@@ -1,10 +1,12 @@
-# Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, assuming the underlying model is in levels (`d.x` = `d.y` = 0) and the user wants a marginal effect (the untransformed GDRF). (This is just a wrapper for `GDRF.adl.plot` with simplifying assumptions)
+# Evaluate and/or plot the General Dynamic Response Function (GDRF) for an ADL assumed in levels
 
 Evaluate (and possibly plot) the General Dynamic Response Function
-(GDRF) for an autoregressive distributed lag (ADL) model, assuming the
-underlying model is in levels (`d.x` = `d.y` = 0) and the user wants a
-marginal effect (the untransformed GDRF). (This is just a wrapper for
-`GDRF.adl.plot` with simplifying assumptions)
+(GDRF) for an autoregressive distributed lag (ADL) model, making use of
+the GDRF framework (described below and in Vande Kamp, Jordan, and
+Rajan), assuming the underlying model is in levels (`d.x` = `d.y` = 0)
+and the user wants a discrete effect (the untransformed GDRF) with a
+shock size of 1. (This is just a wrapper for `GDRF.adl.plot` with
+simplifying assumptions)
 
 ## Usage
 
@@ -45,17 +47,21 @@ adl.plot(
 
 - shock.history:
 
-  the desired shock history. `shock.history` determines the shock
-  history (h) (which can be expressed as an integer) that will be
-  applied to the independent variable. -1 represents a pulse (Impulse
-  Response Function). 0 represents a step (Step Response Function).
-  These can also be specified via `pulse` and `step`. For others, see
-  Vande Kamp, Jordan, and Rajan. The default is `pulse`
+  either a character string, integer, or numeric vector for the desired
+  shock history. `shock.history` determines the shock history (h) that
+  will be applied to the independent variable. Vande Kamp, Jordan, and
+  Rajan express this as the parameter h (an integer). -1 represents the
+  Impulse Response Function; the equivalent string is `pulse` or
+  `impulse`. 0 represents the Step Response Function; the equivalent
+  string is `step`. For others, see Vande Kamp, Jordan, and Rajan.
+  However, since any shock history can be decomposed into a series of
+  dated Impulse Response Functions, users can also supply any numeric
+  vector of the same length as s.limit + 1. The default is `pulse`
 
 - dM.level:
 
-  a numeric significance level of the GDRF, calculated by the delta
-  method. The default is 0.95
+  a numeric value for the significance level of the GDRF, calculated by
+  the delta method. The default is 0.95
 
 - s.limit:
 
@@ -64,9 +70,9 @@ adl.plot(
 
 - se.type:
 
-  a string for the type of standard error to extract from the model. The
-  default is `const`, but any argument to `vcovHC` from the `sandwich`
-  package is accepted
+  a character string for the type of standard error to extract from the
+  model. The default is `const`, but any argument to `vcovHC` from the
+  `sandwich` package is accepted
 
 - return.data:
 
@@ -81,12 +87,21 @@ adl.plot(
 - return.formulae:
 
   logical to return the formulae for the GDRFs as a list element under
-  `formulae` (for the GDRFs) and `binomials` (for the shock history).
-  The default is `FALSE`
+  `formulae` (for the GDRFs) and `shocks` (for the shock history). The
+  default is `FALSE`
 
 - ...:
 
   other arguments to be passed to the call to plot
+
+## Value
+
+if just one of `return.data`, `return.plot`, and `return.formulae` is
+`TRUE`, `adl.plot` will return just the requested output. If more than
+one is selected (or just `return.data` is selected), it will return a
+list with elements `plot` (for the plot), `estimates` (for the data),
+and `formulae` and `shocks` for the GDRF formula for each period as well
+as the applied shock history in integer form
 
 ## Author
 
@@ -107,5 +122,6 @@ adl.plot(model = model.toydata,
   y.vrbl = c("l_1_y" = 1),
   shock.history = "pulse",
   s.limit = 20)
+#> Warning: return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
 
 ```

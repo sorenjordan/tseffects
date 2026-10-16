@@ -1,7 +1,9 @@
-# Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a Generalized Error Correction Model (GECM)
+# Evaluate and/or plot the General Dynamic Response Function (GDRF) for a GECM
 
 Evaluate (and possibly plot) the General Dynamic Response Function
-(GDRF) for a Generalized Error Correction Model (GECM)
+(GDRF) for a Generalized Error Correction Model (GECM), making use of
+the GDRF framework (described below and in Vande Kamp, Jordan, and
+Rajan)
 
 ## Usage
 
@@ -19,7 +21,8 @@ GDRF.gecm.plot(
   shock.history = "pulse",
   inferences.y = "levels",
   inferences.x = "levels",
-  effect.type = "marginal",
+  effect.type = "discrete",
+  cumulative = FALSE,
   prediction.values = NULL,
   baseline.y = NULL,
   baseline.y.se = 0,
@@ -27,6 +30,7 @@ GDRF.gecm.plot(
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
+  return.LRM = TRUE,
   return.data = FALSE,
   return.plot = TRUE,
   return.formulae = FALSE,
@@ -42,111 +46,136 @@ GDRF.gecm.plot(
 
 - x.vrbl:
 
-  a named numeric vector of the x variables (of the lower level of
-  differencing, usually in levels d = 0) and corresponding lag orders in
-  the GECM model
+  a named numeric vector in which the names correspond to an independent
+  variable and its lags (of the lower order of differencing, usually in
+  levels d = 0) and the numbers correspond to the specific lag order of
+  each variable
 
 - y.vrbl:
 
-  a named numeric vector of the (lagged) y variables (of the lower level
-  of differencing, usually in levels d = 0) and corresponding lag orders
-  in the GECM model
+  a named numeric vector in which the names correspond to lags of the
+  dependent variable (of the lower order of differencing, usually in
+  levels d = 0) and the numbers correspond to the specific lag order of
+  each variable
 
 - x.vrbl.d.x:
 
-  the order of differencing of the x variable (of the lower level of
-  differencing, usually in levels d = 0) in the GECM model
+  an integer describing how many times the independent variable (of the
+  lower order of differencing, usually in levels d = 0) was differenced
+  before model estimation
 
 - y.vrbl.d.y:
 
-  the order of differencing of the y variable (of the lower level of
-  differencing, usually in levels d = 0) in the GECM model
+  an integer describing how many times the dependent variable (of the
+  lower order of differencing, usually in levels d = 0) was differenced
+  before model estimation
 
 - x.d.vrbl:
 
-  a named numeric vector of the x variables (of the higher level of
-  differencing, usually first differences d = 1) and corresponding lag
-  orders in the GECM model
+  a named numeric vector in which the names correspond to an independent
+  variable and its lags (of the higher order of differencing, usually in
+  first differences d = 1) and the numbers correspond to the specific
+  lag order of each variable
 
 - y.d.vrbl:
 
-  a named numeric vector of the y variables (of the higher level of
-  differencing, usually first differences d = 1) and corresponding lag
-  orders in the GECM model. Can be `NULL` if the model has no lags of
-  the differenced dependent variables
+  a named numeric vector in which the names correspond to lags of the
+  dependent variable (of the higher order of differencing, usually in
+  first differences d = 1) and the numbers correspond to the specific
+  lag order of each variable
 
 - x.d.vrbl.d.x:
 
-  the order of differencing of the x variable (of the higher level of
-  differencing, usually first differences d = 1) in the GECM model
+  an integer describing how many times the independent variable (of the
+  higher order of differencing, usually in first differences d = 1) was
+  differenced before model estimation
 
 - y.d.vrbl.d.y:
 
-  the order of differencing of the y variable (of the higher level of
-  differencing, usually first differences d = 1) in the GECM model
+  an integer describing how many times the dependent variable (of the
+  higher order of differencing, usually in first differences d = 1) was
+  differenced before model estimation
 
 - shock.history:
 
-  the desired shock history. `shock.history` determines the shock
-  history (h) that will be applied to the independent variable. -1
-  represents a pulse. 0 represents a step. These can also be specified
-  via `pulse` and `step`. For others, see Vande Kamp, Jordan, and Rajan.
-  The default is `pulse`
+  either a character string, integer, or numeric vector for the desired
+  shock history. `shock.history` determines the shock history (h) that
+  will be applied to the independent variable. Vande Kamp, Jordan, and
+  Rajan express this as the parameter h (an integer). -1 represents the
+  Impulse Response Function; the equivalent string is `pulse` or
+  `impulse`. 0 represents the Step Response Function; the equivalent
+  string is `step`. For others, see Vande Kamp, Jordan, and Rajan.
+  However, since any shock history can be decomposed into a series of
+  dated Impulse Response Functions, users can also supply any numeric
+  vector of the same length as s.limit + 1. The default is `pulse`
 
 - inferences.y:
 
-  does the user want resulting inferences about the dependent variable
-  in `levels` or in `differences`? The default is `levels`
+  a character string specifying whether the shock to the independent
+  variable is interpreted in levels or differences (of the dependent
+  variable). Valid arguments include `levels` or `differences`. (For y
+  variables where `d.y` is 0, this is automatically `levels`.) The
+  default is `levels`
 
 - inferences.x:
 
-  does the user want to apply the shock history to the independent
-  variable in `levels` or in `differences`? The default is `levels`
+  a character string specifying whether the shock to the independent
+  variable is applied in levels or differences. Valid arguments include
+  `levels` or `differences`. (For independent variables where `d.x` is
+  0, this is automatically `levels`.) The default is `levels`
 
 - effect.type:
 
-  whether to return marginal effects or fitted values. `marginal`
-  returns the GDRF as a marginal effect. `fitted` returns the GDRF as a
-  fitted value, relative to a baseline value of y. The default is
-  `marginal`
+  a character string indicating whether to return discrete effects or
+  fitted values. `discrete` returns the GDRF as a discrete effect
+  estimate. `fitted` returns the GDRF as a fitted value, relative to a
+  baseline value of the dependent variable. The default is `discrete`
+
+- cumulative:
+
+  logical to return the cumulative effects or the period-specific
+  effects of the given `shock.history`. For instance, to obtain the
+  Cumulative Impulse Response Function, set `shock.history` to -1 and
+  `cumulative = TRUE`. The default is `FALSE`
 
 - prediction.values:
 
   a named list of values for non-y variables in the model, used to
-  calculate a steady-state baseline when `effect.type = "fitted"` and
-  `d.y = 0` and `baseline.y` is not supplied. This allows for the
-  calculation of model-based uncertainty. If any differenced variables
-  are included in the model, they should be set to 0. Ignored when
-  `d.y > 0`
+  calculate a steady-state baseline of the dependent variable when
+  `effect.type = "fitted"` and `y.vrbl.d.y = 0` and `baseline.y` is not
+  supplied. Model-based uncertainty will be calculated around the
+  formula for this value. If any differenced variables are included in
+  the model, they should be set to 0. If multiple lags of the same
+  variable are included, they should be set to the same value. Ignored
+  when `y.vrbl.d.y > 0`
 
 - baseline.y:
 
-  a user-supplied baseline value of y in levels. For `d.y = 0`, this
-  overrides the steady-state calculation from `prediction.values` if
-  provided. For `d.y > 0` with `inferences.y = "levels"`, this is
-  required (otherwise it is just marginal effects). Only used when
-  `effect.type = "fitted"`
+  a numeric value for the user-supplied baseline value of y in levels
+  (i.e. the baseline value for effects to accumulate from). Only used
+  when `effect.type = "fitted"`. For `y.vrbl.d.y = 0`, this overrides
+  the steady-state calculation from `prediction.values` if provided
 
 - baseline.y.se:
 
-  a user-supplied standard error for the baseline value of y (to suggest
-  uncertainty around predictions). If supplied, this is added in
-  quadrature to the standard errors of the GDRF estimates. Only used
-  when `effect.type = "fitted"` and `inferences.y = "levels"`. The
-  default is 0: in recognition that this is user-constructed
-  uncertainty. Possible values would be the square root of the standard
-  deviation of y (in levels)
+  a numeric value for the user-supplied standard error for the baseline
+  value of y (to suggest uncertainty around predictions). Only used when
+  `effect.type = "fitted"` and `inferences.y = "levels"`. If supplied,
+  this is added in quadrature to the standard errors of the GDRF
+  estimates. The default is 0: in recognition that this is
+  user-constructed uncertainty. Possible values would be the square root
+  of the standard deviation of y (in levels)
 
 - shock.size:
 
-  the size of the shock to x in the units of x. Only used when
-  `effect.type = "fitted"`; marginal effects are not scaled. Defaults to
-  1 (a marginal effect)
+  a numeric value for the size of the shock to x in the units of x.
+  Defaults to 1 (a discrete effect similar to traditional marginal
+  effects)
 
 - dM.level:
 
-  a numeric significance level of the GDRF, calculated by the delta
-  method. The default is 0.95
+  a numeric value for the significance level of the GDRF, calculated by
+  the delta method. The default is 0.95
 
 - s.limit:
 
@@ -155,9 +184,15 @@ GDRF.gecm.plot(
 
 - se.type:
 
-  a string for the type of standard error to extract from the model. The
-  default is `const`, but any argument to `vcovHC` from the `sandwich`
-  package is accepted
+  a character string for the type of standard error to extract from the
+  model. The default is `const`, but any argument to `vcovHC` from the
+  `sandwich` package is accepted
+
+- return.LRM:
+
+  logical to return the LRM in the estimates and plots, should the LRM
+  exist for that combination of `shock.history` and `cumulative`. The
+  default is `TRUE`
 
 - return.data:
 
@@ -172,8 +207,8 @@ GDRF.gecm.plot(
 - return.formulae:
 
   logical to return the formulae for the GDRFs as a list element under
-  `formulae` (for the GDRFs) and `binomials` (for the shock history).
-  The default is `FALSE`
+  `formulae` (for the GDRFs) and `shocks` (for the shock history). The
+  default is `FALSE`
 
 - ...:
 
@@ -181,17 +216,24 @@ GDRF.gecm.plot(
 
 ## Value
 
-depending on `return.data`, `return.plot`, and `return.formulae`, a list
-of elements relating to the GDRF
+if just one of `return.data`, `return.plot`, and `return.formulae` is
+`TRUE`, `GDRF.gecm.plot` will return just the requested output. If more
+than one is selected (or just `return.data` is selected), it will return
+a list with elements `plot` (for the plot), `estimates` (for the data),
+and `formulae` and `shocks` for the GDRF formula for each period as well
+as the applied shock history in integer form
 
 ## Details
 
-We assume that the GECM model estimated is well specified, free of
-residual autocorrelation, balanced, and meets other standard time-series
-qualities. Given that, to obtain inferences for the specified shock
-history, the user only needs a named vector of the x and y variables, as
-well as the order of the differencing. Internally, the GECM to ADL
-equivalences are used to calculate the GDRFs from the GECM
+Internally, GDRF.gecm.plot uses the subfunction `gecm.to.adl` to convert
+the GECM coefficients to ADL coefficients before calculating the GDRF.
+From there, it uses the separate subfunctions `pulse.calculator`,
+`convolution.calculator`/`general.calculator`, and (possibly)
+`yhat.calculator` to generate the effect estimates representing the
+GDRF. The shock history is determined by `shock.history`. For more
+information, see Vande Kamp, Jordan, and Rajan. We assume that the GECM
+estimated is well specified, free of residual autocorrelation, balanced,
+and meets other standard time-series qualities
 
 ## Author
 
@@ -219,6 +261,7 @@ test.pulse <- GDRF.gecm.plot(model = model,
                                   s.limit = 10, 
                                   return.plot = TRUE, 
                                   return.formulae = TRUE)
+#> Warning: return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
 names(test.pulse)
-#> [1] "plot"      "formulae"  "binomials"
+#> [1] "plot"     "formulae" "shocks"  
 ```

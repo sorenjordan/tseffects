@@ -15,6 +15,10 @@ mpoly.subber(env = environment())
   the environment with names to substitute. Defaults to the parent
   environment
 
+## Value
+
+the environment with the substituted names
+
 ## Author
 
 Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
