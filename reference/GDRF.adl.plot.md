@@ -26,6 +26,8 @@ GDRF.adl.plot(
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
+  coef. = NULL,
+  vcov. = NULL,
   return.LRM = TRUE,
   return.data = FALSE,
   return.plot = TRUE,
@@ -38,7 +40,9 @@ GDRF.adl.plot(
 
 - model:
 
-  the `lm` model containing the ADL estimates
+  a linear regression model object. Any model estimated by a package
+  supported by the `insight` package can be used; explicitly tested
+  models can be found in package documentation
 
 - x.vrbl:
 
@@ -152,8 +156,28 @@ GDRF.adl.plot(
 - se.type:
 
   a character string for the type of standard error to extract from the
-  model. The default is `const`, but any argument to `vcovHC` from the
-  `sandwich` package is accepted
+  model; must be accepted by
+  [`insight::get_varcov()`](https://easystats.github.io/insight/reference/get_varcov.html).
+  This includes arguments to `vcovHC` from the `sandwich` package (for
+  instance: `HC0` is White's heteroskedasticity-consistent robust
+  standard errors). Default is classic standard errors
+
+- coef.:
+
+  an optional named numeric vector of coefficients to use directly, if
+  evaluating effects from a model not supported by
+  [`insight::get_parameters()`](https://easystats.github.io/insight/reference/get_parameters.html).
+  If `NULL` (the default), the coefficient vector is extracted
+  automatically using
+  [`insight::get_parameters()`](https://easystats.github.io/insight/reference/get_parameters.html)
+
+- vcov.:
+
+  an optional pre-computed variance-covariance matrix to use directly,
+  if evaluating effects from a model not supported by
+  `insight::get_vcov()`. If `NULL` (the default), the
+  variance-covariance matrix is extracted automatically using
+  `insight::get_vcov()` with standard errors of type `se.type`
 
 - return.LRM:
 
@@ -229,7 +253,7 @@ GDRF.adl.plot(model = model.toydata,
   inferences.y = "levels",
   inferences.x = "levels",
   s.limit = 20)
-#> Warning: return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
+#> Warning: `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
 
 
 # Step effect of x. You can store the data to draw your own plot,
@@ -242,12 +266,13 @@ test.step <- GDRF.adl.plot(model = model.toydata,
   shock.history = "step",
   inferences.y = "levels",
   inferences.x = "levels",
-  s.limit = 20)
+  s.limit = 20, return.data = TRUE)
 test.step$plot
-#> NULL
+
 
 # Cumulative Impulse Response effect of x. For the dynamic linear model,
 #  this is equivalent to the step effect
+# If only return.plot = TRUE is selected, the object is the plot
 test.cumulative <- GDRF.adl.plot(model = model.toydata,
   x.vrbl = c("x" = 0, "l_1_x" = 1),
   y.vrbl = c("l_1_y" = 1),
@@ -258,8 +283,8 @@ test.cumulative <- GDRF.adl.plot(model = model.toydata,
   inferences.y = "levels",
   inferences.x = "levels",
   s.limit = 20)
-test.cumulative$plot
-#> NULL
+test.cumulative
+
 
 # Fitted values: steady state baseline from prediction.values
 GDRF.adl.plot(model = model.toydata,
@@ -273,6 +298,6 @@ GDRF.adl.plot(model = model.toydata,
   effect.type = "fitted",
   prediction.values = list("x" = 0, "l_1_x" = 0),
   s.limit = 20)
-#> Warning: If any differenced variables are included in the model, ensure they are set to 0 in prediction.values for a meaningful steady-state prediction. Multiple lags of the same variable should also be set to the same value
+#> Warning: If any differenced variables are included in the model, ensure they are set to 0 in `prediction.values` for a meaningful steady-state prediction. Multiple lags of the same variable should also be set to the same value
 
 ```

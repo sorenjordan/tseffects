@@ -33,6 +33,9 @@ interact.adl.plot(
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
+  data. = NULL,
+  coef. = NULL,
+  vcov. = NULL,
   return.LRM = TRUE,
   return.data = FALSE,
   return.plot = TRUE,
@@ -45,7 +48,9 @@ interact.adl.plot(
 
 - model:
 
-  the `lm` model containing the ADL estimates
+  a linear regression model object. Any model estimated by a package
+  supported by the `insight` package can be used; explicitly tested
+  models can be found in package documentation
 
 - x.vrbl:
 
@@ -230,8 +235,38 @@ interact.adl.plot(
 - se.type:
 
   a character string for the type of standard error to extract from the
-  model. The default is `const`, but any argument to `vcovHC` from the
-  `sandwich` package is accepted
+  model; must be accepted by
+  [`insight::get_varcov()`](https://easystats.github.io/insight/reference/get_varcov.html).
+  This includes arguments to `vcovHC` from the `sandwich` package (for
+  instance: `HC0` is White's heteroskedasticity-consistent robust
+  standard errors). Default is classic standard errors
+
+- data.:
+
+  an optional data frame to use directly, if evaluating effects from a
+  model not supported by
+  [`insight::get_modelmatrix()`](https://easystats.github.io/insight/reference/get_modelmatrix.html).
+  If `NULL` (the default), the data frame is extracted automatically
+  using
+  [`insight::get_modelmatrix()`](https://easystats.github.io/insight/reference/get_modelmatrix.html).
+  This is to obtain values of z for plotting
+
+- coef.:
+
+  an optional named numeric vector of coefficients to use directly, if
+  evaluating effects from a model not supported by
+  [`insight::get_parameters()`](https://easystats.github.io/insight/reference/get_parameters.html).
+  If `NULL` (the default), the coefficient vector is extracted
+  automatically using
+  [`insight::get_parameters()`](https://easystats.github.io/insight/reference/get_parameters.html)
+
+- vcov.:
+
+  an optional pre-computed variance-covariance matrix to use directly,
+  if evaluating effects from a model not supported by
+  `insight::get_vcov()`. If `NULL` (the default), the
+  variance-covariance matrix is extracted automatically using
+  `insight::get_vcov()` with standard errors of type `se.type`
 
 - return.LRM:
 
@@ -310,7 +345,7 @@ interact.adl.plot(model = cavari.model,
 #> Warning: Variable names containing . replaced with _
 #> Warning: Variable names containing ( replaced with _
 #> Warning: Variable names containing ) replaced with _
-#> Warning: return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
+#> Warning: `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
 
 
 # Use well-behaved simulated data (included) for even more examples, 

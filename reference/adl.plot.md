@@ -30,7 +30,9 @@ adl.plot(
 
 - model:
 
-  the `lm` model containing the ADL estimates
+  a linear regression model object. Any model estimated by a package
+  supported by the `insight` package can be used; explicitly tested
+  models can be found in package documentation
 
 - x.vrbl:
 
@@ -71,8 +73,11 @@ adl.plot(
 - se.type:
 
   a character string for the type of standard error to extract from the
-  model. The default is `const`, but any argument to `vcovHC` from the
-  `sandwich` package is accepted
+  model; must be accepted by
+  [`insight::get_varcov()`](https://easystats.github.io/insight/reference/get_varcov.html).
+  This includes arguments to `vcovHC` from the `sandwich` package (for
+  instance: `HC0` is White's heteroskedasticity-consistent robust
+  standard errors). Default is classic standard errors
 
 - return.data:
 
@@ -103,6 +108,14 @@ list with elements `plot` (for the plot), `estimates` (for the data),
 and `formulae` and `shocks` for the GDRF formula for each period as well
 as the applied shock history in integer form
 
+## Details
+
+This is a wrapper for `GDRF.adl.plot` with simplified defaults
+(`d.x = d.y = 0`, `effect.type = "discrete"`,
+`inferences.y = inferences.x = "levels"`, and `shock.size = 1`). See
+[`GDRF.adl.plot`](https://sorenjordan.github.io/tseffects/reference/GDRF.adl.plot.md)
+for full details and assumptions
+
 ## Author
 
 Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
@@ -122,6 +135,6 @@ adl.plot(model = model.toydata,
   y.vrbl = c("l_1_y" = 1),
   shock.history = "pulse",
   s.limit = 20)
-#> Warning: return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
+#> Warning: `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
 
 ```

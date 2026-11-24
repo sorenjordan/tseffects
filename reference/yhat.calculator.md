@@ -39,7 +39,9 @@ yhat.calculator(
 
 - model:
 
-  the `lm` model containing the model estimates
+  a linear regression model object. Any model estimated by a package
+  supported by the `insight` package can be used; explicitly tested
+  models can be found in package documentation
 
 - the.coef:
 
@@ -309,8 +311,8 @@ general.diffs <- general.calculator(d.x = 0, d.y = 1, h = -1,
   limit = 5, pulses = pulses.diffs)
 
 if (FALSE) { # \dontrun{
-# inferences in differences, baseline.y != 0. warn that this makes no sense (implies the
-#  model is always changing) and change baseline.y to 0
+# inferences in differences, baseline.y != 0. warn (when used in the GDRF functions) that 
+#  this makes no sense (implies the model is always changing) and change baseline.y to 0
 yhat.calculator(formulae = general.diffs$formulae, d.y = 1,
   model = model.diffs, the.coef = coef(model.diffs),
   y.vrbl = c("l_1_y" = 1), inferences.y = "differences",

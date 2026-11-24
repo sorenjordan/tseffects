@@ -17,12 +17,12 @@ Source:
 
 Jordan S, Garrett N. Vande Kamp, Reshi Rajan (2026). *tseffects: Dynamic
 Effects from Single-Equation Time Series Models (with Interactions)*. R
-package version 0.4.1, <https://sorenjordan.github.io/tseffects/>.
+package version 0.5.1, <https://sorenjordan.github.io/tseffects/>.
 
     @Manual{,
       title = {tseffects: Dynamic Effects from Single-Equation Time Series Models (with Interactions)},
       author = {Soren Jordan and {Garrett N. Vande Kamp} and {Reshi Rajan}},
       year = {2026},
-      note = {R package version 0.4.1},
+      note = {R package version 0.5.1},
       url = {https://sorenjordan.github.io/tseffects/},
     }

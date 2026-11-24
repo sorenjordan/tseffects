@@ -17,7 +17,6 @@ gecm.dummy.checks(
   inferences.x,
   inferences.y,
   the.coef,
-  se.type,
   type = NULL
 )
 ```
@@ -95,17 +94,10 @@ gecm.dummy.checks(
 
   the coefficient vector from the estimated GECM model
 
-- se.type:
-
-  a character string for the type of standard error to extract from the
-  model. The default is `const`, but any argument to `vcovHC` from the
-  `sandwich` package is accepted
-
 - type:
 
   a string whether the effects are estimated from a GDRF model or the
-  interaction model. For now, just `GDRF`. But we will eventually
-  develop `interact.gecm.plot`
+  interaction model. Accepts `GDRF` or `interact`
 
 ## Value
 

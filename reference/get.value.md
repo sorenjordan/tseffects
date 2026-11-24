@@ -28,8 +28,9 @@ get.value(var, prediction.values, model)
 
 - model:
 
-  the model containing the dataframe for mean estimation if values are
-  not user-supplied (and warn the user if we're taking the mean)
+  a fitted model object containing the dataframe for mean estimation if
+  values are not user-supplied (and warn the user if we're taking the
+  mean)
 
 ## Value
 

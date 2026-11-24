@@ -15,7 +15,6 @@ adl.dummy.checks(
   inferences.x,
   inferences.y,
   the.coef,
-  se.type,
   type = NULL
 )
 ```
@@ -63,12 +62,6 @@ adl.dummy.checks(
 - the.coef:
 
   the coefficient vector from the estimated ADL model
-
-- se.type:
-
-  a character string for the type of standard error to extract from the
-  model. The default is `const`, but any argument to `vcovHC` from the
-  `sandwich` package is accepted
 
 - type:
 

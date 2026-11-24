@@ -505,7 +505,7 @@ test.pulse <- GDRF.adl.plot(model = model.adl,
                                    return.plot = TRUE, 
                                    return.formulae = TRUE)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -561,7 +561,7 @@ GDRF.adl.plot(model = model.adl.diffs,
                                    s.limit = 20, 
                                    return.plot = TRUE)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -584,7 +584,7 @@ GDRF.adl.plot(model = model.adl.diffs,
                                    s.limit = 20, 
                                    return.plot = TRUE)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -652,7 +652,7 @@ test.pulse <- GDRF.adl.plot(model = model.adl,
                                    return.formulae = TRUE)
 #> Warning in GDRF.dummy.checks(effect.type = effect.type, prediction.values =
 #> prediction.values, : If any differenced variables are included in the model,
-#> ensure they are set to 0 in prediction.values for a meaningful steady-state
+#> ensure they are set to 0 in `prediction.values` for a meaningful steady-state
 #> prediction. Multiple lags of the same variable should also be set to the same
 #> value
 ```
@@ -820,7 +820,7 @@ gecm.pulse <- GDRF.gecm.plot(model = model.gecm,
                                    return.plot = TRUE, 
                                    return.formulae = TRUE)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -970,7 +970,7 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     effect.type = "discrete", plot.type = "lines", line.options = "z.lines",
                     s.limit = 20)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -989,7 +989,7 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     effect.type = "discrete", plot.type = "lines", line.options = "s.lines",
                     s.limit = 20)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -1028,7 +1028,7 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     effect.type = "discrete", plot.type = "heatmap", heatmap.options = "all",
                     s.limit = 20)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -1046,7 +1046,7 @@ interact.adl.plot(model = interact.model, x.vrbl = c("x" = 0, "l_1_x" = 1),
                     effect.type = "discrete", plot.type = "heatmap", heatmap.options = "significant",
                     s.limit = 20)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 ```
 
@@ -1213,7 +1213,7 @@ library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 #> ✔ dplyr     1.2.1     ✔ readr     2.2.0
 #> ✔ forcats   1.0.1     ✔ stringr   1.6.0
-#> ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+#> ✔ ggplot2   4.0.4     ✔ tibble    3.3.1
 #> ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
 #> ✔ purrr     1.2.2     
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -1297,7 +1297,7 @@ mult_inter12_IBO <- GDRF.gecm.plot(model = uecm_3132_replication,
                x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
                s.limit = 12, return.data = TRUE, return.plot = FALSE)
 #> Warning in lrm.existr(shock.history = shock.history, h.order = h.order.plot, :
-#> return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is
+#> `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is
 #> returned
 
 all.equal(mult_inter12_IBO$GDRF, mult_inter12$IBO$Delay) 

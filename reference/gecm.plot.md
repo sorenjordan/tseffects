@@ -33,7 +33,9 @@ gecm.plot(
 
 - model:
 
-  the `lm` model containing the GECM estimates
+  a linear regression model object. Any model estimated by a package
+  supported by the `insight` package can be used; explicitly tested
+  models can be found in package documentation
 
 - x.vrbl:
 
@@ -89,8 +91,11 @@ gecm.plot(
 - se.type:
 
   a character string for the type of standard error to extract from the
-  model. The default is `const`, but any argument to `vcovHC` from the
-  `sandwich` package is accepted
+  model; must be accepted by
+  [`insight::get_varcov()`](https://easystats.github.io/insight/reference/get_varcov.html).
+  This includes arguments to `vcovHC` from the `sandwich` package (for
+  instance: `HC0` is White's heteroskedasticity-consistent robust
+  standard errors). Default is classic standard errors
 
 - return.data:
 
@@ -128,7 +133,9 @@ residual autocorrelation, balanced, and meets other standard time-series
 qualities. Given that, to obtain inferences for the specified shock
 history, the user only needs a named vector of the x and y variables, as
 well as the order of the differencing. Internally, the GECM to ADL
-equivalences are used to calculate the GDRFs from the GECM
+equivalences are used to calculate the GDRFs from the GECM. See
+[`GDRF.gecm.plot`](https://sorenjordan.github.io/tseffects/reference/GDRF.gecm.plot.md)
+for full details and assumptions
 
 ## Author
 
@@ -150,7 +157,7 @@ test.pulse <- gecm.plot(model = model,
                                   s.limit = 10, 
                                   return.plot = TRUE, 
                                   return.formulae = TRUE)
-#> Warning: return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
+#> Warning: `return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned
 names(test.pulse)
 #> [1] "plot"     "formulae" "shocks"  
 ```
