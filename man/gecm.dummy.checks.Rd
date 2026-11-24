@@ -16,7 +16,6 @@ gecm.dummy.checks(
   inferences.x,
   inferences.y,
   the.coef,
-  se.type,
   type = NULL
 )
 }
@@ -43,9 +42,7 @@ gecm.dummy.checks(
 
 \item{the.coef}{the coefficient vector from the estimated GECM model}
 
-\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
-
-\item{type}{a string whether the effects are estimated from a GDRF model or the interaction model. For now, just \code{GDRF}. But we will eventually develop \code{interact.gecm.plot}}
+\item{type}{a string whether the effects are estimated from a GDRF model or the interaction model. Accepts \code{GDRF} or \code{interact}}
 }
 \value{
 nothing is returned

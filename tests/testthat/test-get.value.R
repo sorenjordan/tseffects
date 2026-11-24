@@ -22,7 +22,7 @@ test_that("get.value returns correct values", {
     get.value(var = "x", prediction.values = list(), model = model),
 
     # Expected output
-    "x not in prediction.values; mean of series used"
+    "x not in `prediction.values`; mean of series used"
   )
 
   expect_equal( # variable not in prediction.values: correct mean returned
@@ -38,7 +38,7 @@ test_that("get.value returns correct values", {
     get.value(var = "x", prediction.values = list("x" = NA), model = model),
 
     # Expected output
-    "x not in prediction.values; mean of series used"
+    "x not in `prediction.values`; mean of series used"
   )
 
   expect_equal( # NA in prediction.values: correct mean returned

@@ -6,7 +6,7 @@ test_that("shockr.and.cumr returns correct shock history translations", {
     shockr.and.cumr(shock.history = NULL, s.limit = 5, cumulative = FALSE),
 
     # Expected output
-    "shock.history must be specified"
+    "`shock.history` must be specified"
   )
 
   # invalid string shock.history: stops with an error
@@ -15,7 +15,7 @@ test_that("shockr.and.cumr returns correct shock history translations", {
     shockr.and.cumr(shock.history = "ramp", s.limit = 5, cumulative = FALSE),
 
     # Expected output
-    "Invalid shock.history. shock.history must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF"
+    "Invalid `shock.history`. `shock.history` must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF"
   )
 
   # non-integer numeric shock.history: stops with an error
@@ -24,7 +24,7 @@ test_that("shockr.and.cumr returns correct shock history translations", {
     shockr.and.cumr(shock.history = 1.5, s.limit = 5, cumulative = FALSE),
 
     # Expected output
-    "Invalid shock.history. shock.history must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF"
+    "Invalid `shock.history`. `shock.history` must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF"
   )
 
   # custom shock history of wrong length: stops with an error
@@ -33,7 +33,7 @@ test_that("shockr.and.cumr returns correct shock history translations", {
     shockr.and.cumr(shock.history = c(1, 0, 0), s.limit = 5, cumulative = FALSE),
 
     # Expected output
-    "Invalid shock.history. A custom shock history must be of length s.limit \\+ 1 \\(6\\). The supplied shock history has length 3"
+    "Invalid `shock.history`. A custom shock history must be of length `s.limit` \\+ 1 \\(6\\). The supplied shock history has length 3"
   )
 
   # "pulse" maps to h.order = -1

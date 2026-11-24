@@ -122,7 +122,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in GDRF must be specified through y.d.vrbl.d.y"
+    "Order of differencing of variables in lagged differences in GDRF must be specified through `y.d.vrbl.d.y`"
   )
 
   expect_error( # x.vrbl.d.x must be integer
@@ -139,7 +139,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Order of differencing of variables in GDRF term \\(x.vrbl.d.x and y.vrbl.d.y\\)"  
+    "Order of differencing of variables in GDRF term \\(`x.vrbl.d.x` and `y.vrbl.d.y`\\)"  
   )
   
   expect_error( # y.vrbl.d.y must be integer
@@ -156,7 +156,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Order of differencing of variables in GDRF term \\(x.vrbl.d.x and y.vrbl.d.y\\)"  
+    "Order of differencing of variables in GDRF term \\(`x.vrbl.d.x` and `y.vrbl.d.y`\\)"  
   )
     
   expect_error( # x.d.vrbl.d.x must be integer
@@ -173,7 +173,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in GDRF term \\(x.d.vrbl.d.x"  
+    "Order of differencing of variables in lagged differences in GDRF term \\(`x.d.vrbl.d.x`"  
   )
   
   expect_error( # y.d.vrbl.d.y must be integer
@@ -190,7 +190,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in GDRF term \\(y.d.vrbl.d.y"  
+    "Order of differencing of variables in lagged differences in GDRF term \\(`y.d.vrbl.d.y`"  
   )
 
   expect_error( # x vrbl not named vector
@@ -207,7 +207,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "x.vrbl should be a named vector"
+    "`x.vrbl` should be a named vector"
   )
   
   expect_error( # x vrbl vector has no values
@@ -224,7 +224,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected error
-    "x.vrbl should be a named vector"
+    "`x.vrbl` should be a named vector"
   )
   
   expect_error( # y vrbl not named vector
@@ -241,7 +241,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
  
     # Expected error
-    "y.vrbl should be a named vector"
+    "`y.vrbl` should be a named vector"
   )
   
   expect_error( # y vrbl vector has no values
@@ -258,7 +258,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected error
-    "y.vrbl should be a named vector"
+    "`y.vrbl` should be a named vector"
   )
   
   expect_error( # x.d.vrbl not named vector
@@ -275,7 +275,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected error
-    "x.d.vrbl should be a named vector with elements"
+    "`x.d.vrbl` should be a named vector with elements"
   )
   
   expect_error( # x.d.vrbl vrbl vector has no values
@@ -292,7 +292,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected error
-    "x.d.vrbl should be a named vector with elements"
+    "`x.d.vrbl` should be a named vector with elements"
   )
   
   expect_error( # y.d.vrbl not named vector
@@ -309,7 +309,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected error
-    "y.d.vrbl should be a named vector with elements"
+    "`y.d.vrbl` should be a named vector with elements"
   )
   
   expect_error( # y.d.vrbl vrbl vector has no values
@@ -326,7 +326,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected error
-    "y.d.vrbl should be a named vector with elements"
+    "`y.d.vrbl` should be a named vector with elements"
   )
   
   expect_error( # x.d.vrbl.d.order-x.vrbl.d.order: difference of ordering exceeds 1
@@ -465,7 +465,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
     "In a GECM, inferences regarding the GDRF of x"
   )
 
-  expect_error( # invalid se.type
+  expect_error( # invalid se.type reaches GDRF.adl.plot. Since this is a insight error, we just expect
     # Function output
     GDRF.gecm.plot(model = model.gecm,
                    x.vrbl = c("l_1_x" = 1),
@@ -477,10 +477,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    shock.history = "pulse",
                    inferences.y = "levels", inferences.x = "levels",
                    se.type = "Cyberman",
-                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
-
-      # Expected error
-      "Invalid se.type. se.type must be an accepted" 
+                   s.limit = 3, return.plot = FALSE, return.data = TRUE)
   )
   
   expect_error( # x.vrbl not in model
@@ -497,7 +494,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
     
     # Expected error
-    "x.vrbl not present in estimated model"
+    "`x.vrbl` not present in estimated model"
   )
   
   expect_error( # x.d.vrbl not in model
@@ -514,7 +511,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
     
     # Expected error
-    "x.d.vrbl not present in estimated model" 
+    "`x.d.vrbl` not present in estimated model" 
   )
   
   expect_error( # y.vrbl not in model
@@ -531,7 +528,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
     
     # Expected error
-    "y.vrbl not present in estimated model"
+    "`y.vrbl` not present in estimated model"
   )
   
   expect_error( # y.d.vrbl not in model
@@ -548,7 +545,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
     
     # Expected error
-    "y.d.vrbl not present in estimated model" 
+    "`y.d.vrbl` not present in estimated model" 
   )
   
   expect_error( # shock.history is invalid word
@@ -565,7 +562,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
       
     # Expected error
-    "Invalid shock.history. shock.history must be one of 'pulse' or 'step'"
+    "Invalid `shock.history`. `shock.history` must be one of 'pulse' or 'step'"
   )
 
   expect_error( # shock.history = NULL
@@ -582,7 +579,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected error
-    "shock.history must be specified"
+    "`shock.history` must be specified"
   )
 
   expect_error( # shock.history is not integer
@@ -600,7 +597,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
 
       
     # Expected error
-    "Invalid shock.history. shock.history must be one of 'pulse' or 'step'"
+    "Invalid `shock.history`. `shock.history` must be one of 'pulse' or 'step'"
   )
 
   expect_error( # prediction.values not supported for GECM
@@ -618,7 +615,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
     
 	# Expected output
-    "prediction.values not suppported for GECM"
+    "`prediction.values` not supported for GECM"
   )
 
   expect_error( # invalid effect.type
@@ -636,7 +633,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
    
     # Expected output
-    "Invalid effect.type. effect.type must be one of 'discrete' or 'fitted'"
+    "Invalid `effect.type`. `effect.type` must be one of 'discrete' or 'fitted'"
   )
 
   expect_error( # discrete + baseline.y supplied
@@ -654,7 +651,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
     
 	# Expected output
-    "Do not supply baseline.y when effect.type = 'discrete'"
+    "Do not supply `baseline.y` when `effect.type` = 'discrete'"
   )
 
   expect_error( # discrete + baseline.y.se supplied
@@ -673,7 +670,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
     
 	# Expected output
-    "Do not supply baseline.y.se when effect.type = 'discrete'"
+    "Do not supply `baseline.y.se` when `effect.type` = 'discrete'"
   )
 
   expect_error( # fitted + baseline.y not numeric
@@ -692,7 +689,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
   
     # Expected output
-    "If providing a baseline.y, it must be numeric"
+    "If providing a `baseline.y`, it must be numeric"
   )
 
   expect_error( # fitted + baseline.y length > 1
@@ -711,7 +708,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
    
     # Expected output
-    "Only provide a single baseline.y value"
+    "Only provide a single `baseline.y` value"
   )
 
   expect_error( # fitted + baseline.y.se not numeric
@@ -731,7 +728,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
    
     # Expected output
-    "If providing a baseline.y.se, it must be numeric"
+    "If providing a `baseline.y.se`, it must be numeric"
   )
 
   expect_error( # fitted + baseline.y.se length > 1
@@ -751,7 +748,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
   
     # Expected output
-    "Only provide a single baseline.y.se value"
+    "Only provide a single `baseline.y.se` value"
   )
 
   expect_error( # fitted + shock.size not numeric
@@ -771,7 +768,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
    
     # Expected output
-    "shock.size must be numeric"
+    "`shock.size` must be numeric"
   )
 
   expect_error( # fitted + y.d.vrbl.d.y = 1 + inferences.y = levels + no baseline.y
@@ -795,7 +792,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    return.formulae = TRUE),
    
     # Expected output
-    "You must provide either a baseline.y"
+    "You must provide either a `baseline.y`"
   )
 
   expect_error( # fitted + shock.size length > 1
@@ -815,7 +812,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "shock.size should be a single value"
+    "`shock.size` should be a single value"
   )
 
   expect_error( # fitted + y.vrbl.d.y = 0 + no baseline.y and no prediction.values
@@ -834,7 +831,7 @@ test_that("GDRF.gecm.plot errors and warnings are issued correctly", {
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "You must provide either a baseline.y value"
+    "You must provide either a `baseline.y` value"
   )
 
   expect_error( # return nothing
@@ -878,7 +875,7 @@ test_that("GDRF.gecm.plot warnings are issued correctly", {
                    cumulative = FALSE,
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
-    "return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
+    "`return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
   )
 
   expect_warning( # LRM diverge warning: step + cumulative = TRUE
@@ -895,7 +892,7 @@ test_that("GDRF.gecm.plot warnings are issued correctly", {
                    cumulative = TRUE,
                    s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
-    "return.LRM = TRUE but the effects diverge to \\+/-infinity as s -> infinity. No LRM is returned"
+    "`return.LRM` = TRUE but the effects diverge to \\+/-infinity as s -> infinity. No LRM is returned"
   )
 
   expect_warning( # mpoly . replacement warning

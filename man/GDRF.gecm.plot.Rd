@@ -26,6 +26,8 @@ GDRF.gecm.plot(
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
+  coef. = NULL,
+  vcov. = NULL,
   return.LRM = TRUE,
   return.data = FALSE,
   return.plot = TRUE,
@@ -34,7 +36,7 @@ GDRF.gecm.plot(
 )
 }
 \arguments{
-\item{model}{the \code{lm} model containing the GECM estimates}
+\item{model}{a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation}
 
 \item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags (of the lower order of differencing, usually in levels d = 0) and the numbers correspond to the specific lag order of each variable}
 
@@ -74,7 +76,11 @@ GDRF.gecm.plot(
 
 \item{s.limit}{an integer for the number of periods to determine the GDRF (beginning at s = 0)}
 
-\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{se.type}{a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors}
+
+\item{coef.}{an optional named numeric vector of coefficients to use directly, if evaluating effects from a model not supported by \code{insight::get_parameters()}. If \code{NULL} (the default), the coefficient vector is extracted automatically using \code{insight::get_parameters()}}
+
+\item{vcov.}{an optional pre-computed variance-covariance matrix to use directly, if evaluating effects from a model not supported by \code{insight::get_vcov()}. If \code{NULL} (the default), the variance-covariance matrix is extracted automatically using \code{insight::get_vcov()} with standard errors of type \code{se.type}}
 
 \item{return.LRM}{logical to return the LRM in the estimates and plots, should the LRM exist for that combination of \code{shock.history} and \code{cumulative}. The default is \code{TRUE}}
 

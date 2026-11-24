@@ -21,7 +21,7 @@ gecm.plot(
 )
 }
 \arguments{
-\item{model}{the \code{lm} model containing the GECM estimates}
+\item{model}{a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation}
 
 \item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags (of the lower order of differencing, in levels d = 0) and the numbers correspond to the specific lag order of each variable}
 
@@ -37,7 +37,7 @@ gecm.plot(
 
 \item{s.limit}{an integer for the number of periods to determine the GDRF (beginning at s = 0)}
 
-\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{se.type}{a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors}
 
 \item{return.data}{logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}}
 
@@ -54,7 +54,7 @@ if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae
 Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1), making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan), assuming the underlying model is in first differences (\code{x.vrbl.d.x} = \code{y.vrbl.d.y} = 0 and \code{x.d.vrbl.d.x} = \code{y.d.vrbl.d.y} = 1), the user wants a discrete effect (the untransformed GDRF) and inferences about y in levels to a shock applied to x in levels, with a shock size of 1. (This is just a wrapper for \code{GDRF.gecm.plot} with simplifying assumptions)
 }
 \details{
-We assume that the GECM model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities. Given that, to obtain inferences for the specified shock history, the user only needs a named vector of the x and y variables, as well as the order of the differencing. Internally, the GECM to ADL equivalences are used to calculate the GDRFs from the GECM
+We assume that the GECM model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities. Given that, to obtain inferences for the specified shock history, the user only needs a named vector of the x and y variables, as well as the order of the differencing. Internally, the GECM to ADL equivalences are used to calculate the GDRFs from the GECM. See \code{\link{GDRF.gecm.plot}} for full details and assumptions
 }
 \examples{
 # GECM(1,1). So we can use gecm.plot to quickly check dynamics

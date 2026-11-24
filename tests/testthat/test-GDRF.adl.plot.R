@@ -19,7 +19,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
                    
     # Expected output
-    "Variables in GDRF terms \\(x and possibly y\\) must be specified through x.vrbl and"
+    "Variables in GDRF terms \\(x and possibly y\\) must be specified through `x.vrbl` and"
   ) 
   
   expect_warning( # no y.vrbl
@@ -33,7 +33,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
                    
     # Expected output
-    "No y.vrbl in GDRF terms implies a static or finite dynamics model: are you sure you want this?"
+    "No `y.vrbl` in GDRF terms implies a static or finite dynamics model: are you sure you want this?"
   )
   
   expect_error( # no d.x
@@ -75,7 +75,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Order of differencing of variables in GDRF terms \\(d.x"
+    "Order of differencing of variables in GDRF terms \\(`d.x`"
   )
   
   expect_error( # d.y must be integer
@@ -89,7 +89,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Order of differencing of variables in GDRF terms \\(d.x"
+    "Order of differencing of variables in GDRF terms \\(`d.x`"
   )
     
   expect_error( # invalid inference type specified - y
@@ -103,7 +103,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Invalid inferences.y. The response function for y" 
+    "Invalid `inferences.y`. The response function for y" 
   )
 
   expect_error( # invalid inference type specified - x
@@ -117,7 +117,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Invalid inferences.x. The shock.history" 
+    "Invalid `inferences.x`. The `shock.history`" 
   )
   
   expect_error( # inference type mismatch: d.y/inferences differences
@@ -145,7 +145,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "The shock.history for x cannot be in a higher" 
+    "The `shock.history` for x cannot be in a higher" 
   )
   
   expect_error( # x vrbl not named vector
@@ -163,7 +163,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                    return.formulae = TRUE),
 
     # Expected output
-    "x.vrbl should be a named vector"
+    "`x.vrbl` should be a named vector"
   )
   
   expect_error( # x vrbl vector has no values
@@ -177,7 +177,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "x.vrbl should be a named vector"
+    "`x.vrbl` should be a named vector"
   )
 
   expect_error( # x.vrbl not a named numeric vector (names but no values)
@@ -191,7 +191,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "x.vrbl should be a named vector"
+    "`x.vrbl` should be a named vector"
   )
  
   expect_error( # y vrbl not named vector
@@ -205,7 +205,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "y.vrbl should be a named vector"
+    "`y.vrbl` should be a named vector"
   )
   
   expect_error( # y vrbl values not given
@@ -219,10 +219,10 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "y.vrbl should be a named vector"
+    "`y.vrbl` should be a named vector"
   )
 
-  expect_error( # invalid se.type
+  expect_error( # invalid se.type reaches GDRF.adl.plot. Since this is a insight error, we just expect
     # Function output
     GDRF.adl.plot(model = model.adl,
                   x.vrbl = c("x" = 0, "l_1_x" = 1),
@@ -231,10 +231,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   shock.history = "pulse",
                   inferences.y = "levels", inferences.x = "levels",
                   se.type = "woof",
-                  s.limit = 5, return.plot = FALSE, return.data = TRUE),
-
-    # Expected output
-    "Invalid se.type."
+                  s.limit = 5, return.plot = FALSE, return.data = TRUE)
   )
 
   expect_error( # x vrbl not in the model
@@ -248,7 +245,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "x.vrbl not present in estimated model"
+    "`x.vrbl` not present in estimated model"
   )
   
   expect_error( # y.vrbl not in the model
@@ -262,7 +259,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "y.vrbl not present in estimated model" 
+    "`y.vrbl` not present in estimated model" 
   )
 
   expect_error( # no shock.history
@@ -276,7 +273,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "shock.history must be specified" 
+    "`shock.history` must be specified" 
   )
   
   expect_error( # shock.history is not accepted input
@@ -290,7 +287,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Invalid shock.history. shock.history must be one of" 
+    "Invalid `shock.history`. `shock.history` must be one of" 
   )
   
   expect_error( # shock.history is non-integer numeric
@@ -304,7 +301,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Invalid shock.history"
+    "Invalid `shock.history`"
   )
 
   expect_error( # invalid effect.type
@@ -319,7 +316,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Invalid effect.type. effect.type must be one of"
+    "Invalid `effect.type`. `effect.type` must be one of"
   )
 
   # The below are all with the fitted option
@@ -337,7 +334,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Do not supply prediction.values when effect.type = 'discrete'"
+    "Do not supply `prediction.values` when `effect.type` = 'discrete'"
   )
 
   expect_error( # discrete + baseline.y
@@ -354,7 +351,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   return.plot = FALSE, return.data = TRUE),
                   
     # Expected output
-    "Do not supply baseline.y when effect.type = 'discrete'"
+    "Do not supply `baseline.y` when `effect.type` = 'discrete'"
   )
 
   expect_error( # discrete + baseline.y.se
@@ -370,7 +367,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Do not supply baseline.y.se when effect.type = 'discrete'"
+    "Do not supply `baseline.y.se` when `effect.type` = 'discrete'"
   )
   
   expect_error( # fitted + prediction.values not a list
@@ -386,7 +383,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "If using prediction.values, it must be a list"
+    "If using `prediction.values`, it must be a list"
   )
 
   expect_error( # fitted + baseline.y not numeric
@@ -402,7 +399,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "If providing a baseline.y, it must be numeric"
+    "If providing a `baseline.y`, it must be numeric"
   )
 
   expect_error( # fitted + baseline.y length > 1
@@ -418,7 +415,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Only provide a single baseline.y value"
+    "Only provide a single `baseline.y` value"
   )
 
   expect_error( # fitted + baseline.y.se not numeric
@@ -435,7 +432,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "If providing a baseline.y.se, it must be numeric"
+    "If providing a `baseline.y.se`, it must be numeric"
   )
 
   expect_error( # fitted + baseline.y.se length > 1
@@ -452,7 +449,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Only provide a single baseline.y.se value"
+    "Only provide a single `baseline.y.se` value"
   )
 
   expect_error( # fitted + shock.size not numeric
@@ -469,7 +466,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "shock.size must be numeric"
+    "`shock.size` must be numeric"
   )
 
   expect_error( # fitted + shock.size length > 1
@@ -486,7 +483,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "shock.size should be a single value"
+    "`shock.size` should be a single value"
   )
 
   expect_error( # fitted + d.y = 1 + inferences.y = levels + no baseline.y
@@ -502,7 +499,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "You must provide either a baseline.y value"
+    "You must provide either a `baseline.y` value"
   )
 
   expect_error( # fitted + d.y = 0 + no baseline.y and no prediction.values
@@ -519,7 +516,7 @@ test_that("GDRF.adl.plot errors and warnings are issued correctly", {
                   s.limit = 5, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "You must provide either a baseline.y value or prediction.values"
+    "You must provide either a `baseline.y` value or `prediction.values`"
   )
 
   expect_error( # return nothing
@@ -558,7 +555,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Both baseline.y and prediction.values supplied; baseline.y takes precedence and prediction.values will be ignored"
+    "Both `baseline.y` and `prediction.values` supplied; `baseline.y` takes precedence and `prediction.values` will be ignored"
   )
 
   expect_warning( # fitted + d.y = 0 + prediction.values only (differenced variable reminder)
@@ -575,7 +572,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "If any differenced variables are included in the model, ensure they are set to 0 in prediction.values"
+    "If any differenced variables are included in the model, ensure they are set to 0 in `prediction.values`"
   )
 
   expect_warning( # fitted + d.y = 1 + prediction.values (ignored)
@@ -592,7 +589,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "prediction.values is ignored when d.y > 0"
+    "`prediction.values` is ignored when `d.y` > 0"
   )
 
   expect_warning( # fitted + d.y = 1 + inferences.y = differences + non-zero baseline.y
@@ -608,7 +605,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Assuming anything other than baseline.y = 0 when inferences.y = 'differences' suggests the model is unstable"
+    "Assuming anything other than `baseline.y` = 0 when `inferences.y` = 'differences' suggests the model is unstable"
   )
 
   expect_warning( # fitted + d.y = 1 + inferences.y = differences + shock.size = 1 (redundant)
@@ -625,7 +622,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "effect.type = 'fitted' with inferences.y = 'differences' and shock.size = 1 is identical to effect.type = 'discrete'"
+    "`effect.type` = 'fitted' with `inferences.y` = 'differences' and `shock.size` = 1 is identical to `effect.type` = 'discrete'"
   )
 
   expect_error( # fitted + d.y = 1 + inferences.y = levels + no baseline.y
@@ -645,7 +642,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   return.formulae = TRUE),
 
     # Expected output
-    "You must provide either a baseline.y value"
+    "You must provide either a `baseline.y` value"
   )
 
   expect_warning( # LRM decay warning: pulse, cumulative = FALSE, d.x = 1, d.y = 0
@@ -661,7 +658,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
+    "`return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
   )
 
   expect_warning( # LRM diverge warning: step, cumulative = TRUE, d.x = 0, d.y = 1
@@ -677,7 +674,7 @@ test_that("GDRF.adl.plot effect.type combination warnings are issued correctly",
                   s.limit = 3, return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "return.LRM = TRUE but the effects diverge to \\+/-infinity as s -> infinity. No LRM is returned"
+    "`return.LRM` = TRUE but the effects diverge to \\+/-infinity as s -> infinity. No LRM is returned"
   )
 
   expect_warning( # mpoly . replacement warning

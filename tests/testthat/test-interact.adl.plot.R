@@ -16,7 +16,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "Variables in dynamic conditional effect terms \\(x and possibly y\\) must be specified through x.vrbl and possibly y.vrbl"
+    "Variables in dynamic conditional effect terms \\(x and possibly y\\) must be specified through `x.vrbl` and possibly `y.vrbl`"
   )
 
   expect_warning( # no y.vrbl
@@ -28,7 +28,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "No y.vrbl in"
+    "No `y.vrbl` in"
   )
 
   expect_error( # no z.vrbl
@@ -40,7 +40,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "Variables in interaction term \\(x, z, and x.z\\) must be specified through x.vrbl, z.vrbl, and x.z.vrbl"
+    "Variables in interaction term \\(x, z, and x.z\\) must be specified through `x.vrbl`, `z.vrbl`, and `x.z.vrbl`"
   )
 
   expect_error( # no x.z.vrbl
@@ -52,7 +52,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    # x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "Variables in interaction term \\(x, z, and x.z\\) must be specified through x.vrbl, z.vrbl, and x.z.vrbl"
+    "Variables in interaction term \\(x, z, and x.z\\) must be specified through `x.vrbl`, `z.vrbl`, and `x.z.vrbl`"
   )  
 
   expect_error( # x.vrbl not numeric
@@ -64,7 +64,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "x.vrbl should be a named vector with elements"
+    "`x.vrbl` should be a named vector with elements"
   )  
 
   expect_error( # x.vrbl not named
@@ -76,7 +76,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "x.vrbl should be a named vector with elements"
+    "`x.vrbl` should be a named vector with elements"
   )  
 
   expect_error( # y.vrbl not numeric
@@ -88,7 +88,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "y.vrbl should be a named vector with elements"
+    "`y.vrbl` should be a named vector with elements"
   )  
 
   expect_error( # y.vrbl not named
@@ -100,7 +100,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "y.vrbl should be a named vector with elements"
+    "`y.vrbl` should be a named vector with elements"
   )  
 
   expect_error( # z.vrbl not numeric
@@ -112,7 +112,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "z.vrbl should be a named vector with elements"
+    "`z.vrbl` should be a named vector with elements"
   )  
 
   expect_error( # z.vrbl not named
@@ -124,7 +124,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "z.vrbl should be a named vector with elements"
+    "`z.vrbl` should be a named vector with elements"
   )  
 
   expect_error( # x.z.vrbl not numeric
@@ -136,7 +136,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z", "z_l_1_x", "x_l_1_z", "l_1_x_l_1_z")),
                        
     # Expected error
-    "z.vrbl should be a named vector with elements"
+    "`x.z.vrbl` should be a named vector with elements"
   )  
 
   expect_error( # x.z.vrbl not named
@@ -148,20 +148,17 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c(0, 1, 0, 1)),
                        
     # Expected error
-    "z.vrbl should be a named vector with elements"
+    "`x.z.vrbl` should be a named vector with elements"
   )  
 
-  expect_error( # se.type bad
+  expect_error( # invalid se.type reaches GDRF.adl.plot. Since this is a insight error, we just expect
     # Function
     interact.adl.plot(model = model.alllags, 
                    x.vrbl = c("x" = 0, "l_1_x" = 1), 
                    y.vrbl = c("l_1_y" = 1), 
                    z.vrbl = c("z" = 0, "l_1_z" = 1),
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1),
-                   se.type = "no"),
-                       
-    # Expected error
-    "Invalid se.type"
+                   se.type = "no")
   ) 
 
   expect_error( # x.vrbl not in model
@@ -173,7 +170,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "x.vrbl not present in"
+    "`x.vrbl` not present in"
   )  
 
   expect_error( # y.vrbl not in model
@@ -185,7 +182,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "y.vrbl not present in"
+    "`y.vrbl` not present in"
   )
 
   expect_error( # z.vrbl not in model
@@ -197,7 +194,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("x_z" = 0, "z_l_1_x" = 1, "x_l_1_z" = 0, "l_1_x_l_1_z" = 1)),
                        
     # Expected error
-    "z.vrbl not present in"
+    "`z.vrbl` not present in"
   )
 
   expect_error( # x.z.vrbl not in model
@@ -209,7 +206,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    x.z.vrbl = c("no" = 1)),
                        
     # Expected error
-    "x.z.vrbl not present in"
+    "`x.z.vrbl` not present in"
   )
 
   expect_error( # no shock.history
@@ -222,7 +219,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    shock.history = NULL),
                    
     # Expected error
-    "shock.history must be specified"
+    "`shock.history` must be specified"
   )
 
   expect_error( # no shock.history
@@ -235,7 +232,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    shock.history = "no"),
                    
     # Expected error
-    "shock.history must be one of 'pulse' or 'step'"
+    "`shock.history` must be one of 'pulse' or 'step'"
   )
 
   expect_error( # plot.type missing
@@ -249,7 +246,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    return.plot = TRUE),
                    
     # Expected error
-    "plot.type must be specified"
+    "`plot.type` must be specified"
   )
 
   expect_error( # plot.type bad
@@ -263,7 +260,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    return.plot = TRUE),
                    
     # Expected error
-    "plot.type must be one of 'lines' or 'heatmap'"
+    "`plot.type` must be one of 'lines' or 'heatmap'"
   )
 
   expect_error( # invalid lines
@@ -278,7 +275,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    return.plot = TRUE),
                    
     # Expected error
-    "line.options must be one of 's.lines' or 'z.lines'"
+    "`line.options` must be one of 's.lines' or 'z.lines'"
   )
 
   expect_error( # invalid heatmap
@@ -293,7 +290,7 @@ test_that("interact.adl.plot errors and warnings are issued correctly", {
                    return.plot = TRUE),
                    
     # Expected error
-    "heatmap.options must be one of 'all' or 'significant'"
+    "`heatmap.options` must be one of 'all' or 'significant'"
   )
 })
 
@@ -363,7 +360,7 @@ test_that("too many z.vals", {
                    return.plot = TRUE)),
                    
     # Expected error
-    "heatmap requires two z.vals"
+    "'heatmap' requires two `z.vals`"
   )
 })
 
@@ -415,7 +412,7 @@ test_that("z.vals with s.vals", {
                    return.plot = TRUE)),
                    
     # Expected warnings
-    "s.lines requires two z.vals: a lower and upper"
+    "'s.lines' requires two `z.vals`: a lower and upper"
   )
 })
 
@@ -434,7 +431,7 @@ test_that("interact.adl.plot stops when effect.type is invalid", {
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Invalid effect.type"
+    "Invalid `effect.type`"
   )
 
 })
@@ -454,7 +451,7 @@ test_that("interact.adl.plot stops when shock.size is not numeric", {
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "shock.size must be numeric"
+    "`shock.size` must be numeric"
   )
 
 })
@@ -476,7 +473,7 @@ test_that("interact.adl.plot stops when prediction.values supplied with effect.t
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Do not supply prediction.values when effect.type = 'discrete'"
+    "Do not supply `prediction.values` when `effect.type` = 'discrete'"
   )
 
 })
@@ -497,7 +494,7 @@ test_that("interact.adl.plot stops for fitted values interpretations", {
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Do not supply baseline.y when effect.type = 'discrete'"
+    "Do not supply `baseline.y` when `effect.type` = 'discrete'"
   )
 
   expect_error( # missing both baseline.y and prediction.values for fitted triggers stop
@@ -513,7 +510,7 @@ test_that("interact.adl.plot stops for fitted values interpretations", {
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "You must provide either a baseline.y value or prediction.values"
+    "You must provide either a `baseline.y` value or `prediction.values`"
   )
   
   expect_error( # non-list prediction.values triggers stop
@@ -528,7 +525,7 @@ test_that("interact.adl.plot stops for fitted values interpretations", {
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "If using prediction.values, it must be a list"
+    "If using `prediction.values`, it must be a list"
   )
 
   expect_error( # non-numeric baseline.y triggers stop
@@ -543,7 +540,7 @@ test_that("interact.adl.plot stops for fitted values interpretations", {
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "If providing a baseline.y, it must be numeric"
+    "If providing a `baseline.y`, it must be numeric"
   )
 
   expect_error( # vector baseline.y triggers stop
@@ -558,7 +555,7 @@ test_that("interact.adl.plot stops for fitted values interpretations", {
       return.plot = FALSE, return.data = TRUE),
 
     # Expected output
-    "Only provide a single baseline.y value"
+    "Only provide a single `baseline.y` value"
   )
 
 })
@@ -739,7 +736,7 @@ test_that("bad colors", {
                    return.plot = TRUE)),
                    
     # Expected warnings
-    "Number of supplied line.colors"
+    "Number of supplied `line.colors`"
   )
 
   expect_error( # wrong number of colors: s.lines
@@ -757,7 +754,7 @@ test_that("bad colors", {
                    return.plot = TRUE)),
                    
     # Expected warnings
-    "Number of supplied line.colors"
+    "Number of supplied `line.colors`"
   )
 
   expect_error( # wrong heatmap colors
@@ -774,7 +771,7 @@ test_that("bad colors", {
                    return.plot = TRUE)),
                    
     # Expected warnings
-    "heatmap.colors must be one"
+    "`heatmap.colors` must be one"
   )
 })
 
@@ -974,7 +971,7 @@ test_that("interact.adl.plot with invalid shock.history string stops", {
       return.plot = FALSE, return.data = TRUE, return.formulae = FALSE),
 
     # Expected output
-    "Invalid shock.history"
+    "Invalid `shock.history`"
   )
 
 })
@@ -995,7 +992,7 @@ test_that("interact.adl.plot with custom shock.history of wrong length stops", {
       return.plot = FALSE, return.data = TRUE, return.formulae = FALSE),
 
     # Expected output
-    "must be of length s.limit"
+    "must be of length `s.limit`"
   )
 
 })
@@ -1536,7 +1533,7 @@ test_that("interact.adl.plot full model discrete effect at s=0 z=1 matches hand 
   # = coef[x] + coef[x_z]*1 + coef[x_l_1_z]*1
 
   the.coef.f <- coef(model.full)
-  the.vcov.f <- vcovHC(model.full, type = "const")
+  the.vcov.f <- vcov(model.full)
 
   hand.full.s0.z1 <- unname(the.coef.f["x"] + the.coef.f["x_z"] + the.coef.f["x_l_1_z"])
 
@@ -1586,7 +1583,7 @@ test_that("interact.adl.plot full model discrete effect at s=1 z=1 matches hand 
   #   + coef[l_1_x] + coef[z_l_1_x] + coef[l_1_x_l_1_z]
 
   the.coef.f <- coef(model.full)
-  the.vcov.f <- vcovHC(model.full, type = "const")
+  the.vcov.f <- vcov(model.full)
 
   hand.full.s1.z1 <- unname(
     the.coef.f["l_1_y"] * (the.coef.f["x"] + the.coef.f["x_z"] + the.coef.f["x_l_1_z"]) +
@@ -1954,7 +1951,7 @@ test_that("interact.adl.plot fitted prediction.values baseline at z=1 matches st
 	  # = ((Intercept) + coef[z]) / (1 - coef[l_1_y])
 
 	  the.coef.s <- coef(model.simple)
-	  the.vcov.s <- vcovHC(model.simple, type = "const")
+	  the.vcov.s <- vcov(model.simple)
 
 	  hand.ss.z1 <- unname(
 	    (the.coef.s["(Intercept)"] + the.coef.s["z"]) /
@@ -2078,7 +2075,7 @@ test_that("interact.adl.plot fitted warns when both baseline.y and prediction.va
 	      return.plot = FALSE, return.data = TRUE, return.formulae = FALSE),
 
 	    # Expected output
-	    "baseline.y takes precedence"
+	    "`baseline.y` takes precedence"
 	  )
 
 })
@@ -2206,7 +2203,7 @@ test_that("interact.adl.plot fitted with prediction.values stops if z variable s
 	      return.plot = FALSE, return.data = TRUE, return.formulae = FALSE)),
 
 	    # Expected output
-	    "Do not supply value for any z.vrbl in prediction.values"
+	    "Do not supply value for any `z.vrbl` in `prediction.values`"
 	  )
 
 })

@@ -210,7 +210,7 @@ test_that("adl.plot inherits errors from GDRF.adl.plot for bad inputs", {
 		s.limit = 5),
 
     # Expected output
-    "Variables in .* must be specified through x.vrbl"
+    "Variables in .* must be specified through `x.vrbl`"
   )
 
   expect_error( # x.vrbl not in model reaches GDRF.adl.plot
@@ -221,7 +221,7 @@ test_that("adl.plot inherits errors from GDRF.adl.plot for bad inputs", {
 		s.limit = 5),
 
     # Expected output
-    "x.vrbl not present in estimated model"
+    "`x.vrbl` not present in estimated model"
   )
 
   expect_error( # y.vrbl not in model reaches GDRF.adl.plot
@@ -232,19 +232,16 @@ test_that("adl.plot inherits errors from GDRF.adl.plot for bad inputs", {
 		s.limit = 5),
 
     # Expected output
-    "y.vrbl not present in estimated model"
+    "`y.vrbl` not present in estimated model"
   )
 
-  expect_error( # invalid se.type reaches GDRF.adl.plot
+  expect_error( # invalid se.type reaches GDRF.adl.plot. Since this is a insight error, we just expect
     # Function output
     adl.plot(model   = model,
 		x.vrbl  = c("x" = 0, "l_1_x" = 1),
 		y.vrbl  = c("l_1_y" = 1),
 		se.type = "woof",
-		s.limit = 5),
-
-    # Expected output
-    "Invalid se.type."
+		s.limit = 5)
   )
 
 })

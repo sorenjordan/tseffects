@@ -24,7 +24,7 @@ test_that("lrm.existr returns correct existence flags", {
                calc.d.x = 0, calc.d.y = 0, effect.type = "discrete", return.LRM = TRUE),
 
     # Expected output
-    "return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
+    "`return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
   )
 
   expect_false(
@@ -75,7 +75,7 @@ test_that("lrm.existr returns correct existence flags", {
                calc.d.x = 1, calc.d.y = 0, effect.type = "discrete", return.LRM = TRUE),
 
     # Expected output
-    "return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
+    "`return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"
   )
 
   expect_false(
@@ -94,7 +94,7 @@ test_that("lrm.existr returns correct existence flags", {
                calc.d.x = 0, calc.d.y = 1, effect.type = "discrete", return.LRM = TRUE),
 
     # Expected output
-    "return.LRM = TRUE but the effects diverge to \\+/-infinity as s -> infinity. No LRM is returned"
+    "`return.LRM` = TRUE but the effects diverge to \\+/-infinity as s -> infinity. No LRM is returned"
   )
 
   expect_false(

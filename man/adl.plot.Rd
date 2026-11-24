@@ -19,7 +19,7 @@ adl.plot(
 )
 }
 \arguments{
-\item{model}{the \code{lm} model containing the ADL estimates}
+\item{model}{a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation}
 
 \item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags and the numbers correspond to the specific lag order of each variable}
 
@@ -31,7 +31,7 @@ adl.plot(
 
 \item{s.limit}{an integer for the number of periods to determine the GDRF (beginning at s = 0)}
 
-\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{se.type}{a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors}
 
 \item{return.data}{logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}}
 
@@ -46,6 +46,9 @@ if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae
 }
 \description{
 Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan), assuming the underlying model is in levels (\code{d.x} = \code{d.y} = 0) and the user wants a discrete effect (the untransformed GDRF) with a shock size of 1. (This is just a wrapper for \code{GDRF.adl.plot} with simplifying assumptions)
+}
+\details{
+This is a wrapper for \code{GDRF.adl.plot} with simplified defaults (\code{d.x = d.y = 0}, \code{effect.type = "discrete"}, \code{inferences.y = inferences.x = "levels"}, and \code{shock.size = 1}). See \code{\link{GDRF.adl.plot}} for full details and assumptions
 }
 \examples{
 

@@ -290,7 +290,7 @@ test_that("gecm.plot inherits errors from GDRF.gecm.plot for bad inputs", {
               s.limit = 5),
 
     # Expected output
-    "x.vrbl not present in estimated model"
+    "`x.vrbl` not present in estimated model"
   )
 
   expect_error( # y.vrbl not in model reaches GDRF.gecm.plot
@@ -303,7 +303,7 @@ test_that("gecm.plot inherits errors from GDRF.gecm.plot for bad inputs", {
               s.limit = 5),
 
     # Expected output
-    "y.vrbl not present in estimated model"
+    "`y.vrbl` not present in estimated model"
   )
 
   expect_error( # x.d.vrbl not in model reaches GDRF.gecm.plot
@@ -316,7 +316,7 @@ test_that("gecm.plot inherits errors from GDRF.gecm.plot for bad inputs", {
               s.limit = 5),
 
     # Expected output
-    "x.d.vrbl not present in estimated model"
+    "`x.d.vrbl` not present in estimated model"
   )
 
   expect_error( # y.d.vrbl not in model reaches GDRF.gecm.plot
@@ -329,10 +329,10 @@ test_that("gecm.plot inherits errors from GDRF.gecm.plot for bad inputs", {
               s.limit = 5),
 
     # Expected output
-    "y.d.vrbl not present in estimated model"
+    "`y.d.vrbl` not present in estimated model"
   )
 
-  expect_error( # invalid se.type reaches GDRF.gecm.plot
+  expect_error( # invalid se.type reaches GDRF.adl.plot. Since this is a insight error, we just expect
     # Function output
     gecm.plot(model = model,
               x.vrbl = c("l_1_x" = 1),
@@ -340,10 +340,7 @@ test_that("gecm.plot inherits errors from GDRF.gecm.plot for bad inputs", {
               x.d.vrbl = c("d_x" = 0, "l_1_d_x" = 1),
               y.d.vrbl = c("l_1_d_y" = 1),
               se.type = "Cyberman",
-              s.limit = 5),
-
-    # Expected output
-    "Invalid se.type. se.type must be an accepted"
+              s.limit = 5)
   )
 
 })

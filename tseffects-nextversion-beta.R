@@ -1,91 +1,138 @@
-# version 0.4.2.9001
-# 10/2/2026
+# version 0.5.1.9001
+# 11/24/2026
 # Authors: Soren Jordan, Garrett N. Vande Kamp, Reshi Rajan
 
 
 # CHANGES (since last CRAN):
-#   Switched to insight/modular framework
-#   This squashed the as.factor ``bug''
-
-
-
+#  - Switched to insight/modular framework
+#
 # TO DO (next version):
-#   If/when we ship the insight:: methods:
 #
-#   - Update the 3x @param models to new argument to align
-#   -- GVK proposed @param: model a linear regression model. Any model supported by the \code{insight} package can be used
-#   - Update the 3x @param se.type to describe the new arguments/interaction with insight::
-#   -- GVK proposed @param se.type a string for the type of standard error to extract from the model. The default is to simply return classical standard errors, while invoking this argument results in some form of robust standard errors. For example, "HC0" calculates White's heteroskedasticity-consistent robust standard errors. se.type accepts any argument accepted by get_varcov in the \code{insight} package; see that package for more details.
-#   -- Do you specify robust standard errors at the model estimation phase or the GDRF phase?
-#   - Make sure all functions work after updating get_data to get_modelmatrix
-#   - Make a modular testing file for all ``tested'' packages, determine under what circumstances to add to list
-#   - Warning messages for ...
-#   -- non-identity link functions
-#   -- random effects (how defined?)
-#   -- non-tested packages
-#   - Normal function warnings() and stops() from the tseffects-proposed-warnings-unittest-newmodels.R file
-#   - How to do effect.type with multiple intercepts (or warn/stop)
-#   -- More generally, all of the places (Intercept) is called or excluded (like in mpoly.subber) and how to make that robust
-#   - Test each package we allegedly accept (unit test specifically), add to list
+# ONCE THE SOFTWARE PAPER IS PUBLISHED:
+#  - More robust README.md
+#  - More robust vignette with citations
+#  - Citations to the paper in the vignette and the README.md
+#  - Citation methods to the package
+#  - Add to references
+# ONCE THE GDRF PAPER IS PUBLISHED:
+#  - More robust README.md
+#  - More robust vignette with citations
+#  - Citations to the paper in the vignette and the README.md
+#  - Citation methods to the package
+#  - Add to references
+# ONCE THE INTERACTION VISUALIZATION PAPER IS PUBLISHED:
+#  - More robust README.md
+#  - More robust vignette with citations
+#  - Citations to the paper in the vignette and the README.md
+#  - Citation methods to the package
+#  - Add to references
+#  - Make more specific warnings about choosing consistent values of lags for prediction.values AND in interactions
+# ONCE THE GGDRF PAPER IS PUBLISHED:
+#  - More robust README.md
+#  - More robust vignette with citations - unhide the parts of the vignette with the convolution.calculator and custom shock history examples
+#  - Citations to the paper in the vignette and the README.md
+#  - Citation methods to the package
+#  - Citation in the documentation of shock.history for each function
+#  - Ensure the LRM stuff consistent across functions: when is it defined, especially for custom shock histories?
+#  - Make more specific warnings about LRM values with finite shock histories
+#  - This should be for any shock history of the same level of stationarity, OR just make it user-defined and issue a warning
+#  - Make it to where lrm.exists is for all
+#  - Add to references
+# ONCE THE CIRFS UP PAPER IS PUBLISHED:
+#  - More robust README.md
+#  - More robust vignette with citations
+#  - Citations to the paper in the vignette and the README.md
+#  - Citation methods to the package
+#  - Citation in the documentation of shock.history and cumulative = TRUE for each function
+#  - Add to references
 #
-#  
+# BIG PROJECT: models with fixed and random components
+#  - Some kind of differentiation between fixed and random components
+#  - Figure out effect estimation; handle in model.check.class()
 #
+# BIG PROJECT: models with non-identity links
+#  - Apply link functions
+#  - Make sure identity/non-identity link functions handled correctly in check.model.class()
 #
-#   ONCE THE SOFTWARE PAPER IS PUBLISHED:
-#    - More robust README.md
-#    - More robust vignette with citations
-#    - Citations to the paper in the vignette and the README.md
-#    - Citation methods to the package
-#    - Add to references
-#   ONCE THE GDRF PAPER IS PUBLISHED:
-#    - More robust README.md
-#    - More robust vignette with citations
-#    - Citations to the paper in the vignette and the README.md
-#    - Citation methods to the package
-#    - Add to references
-#   ONCE THE INTERACTION VISUALIZATION PAPER IS PUBLISHED:
-#    - More robust README.md
-#    - More robust vignette with citations
-#    - Citations to the paper in the vignette and the README.md
-#    - Citation methods to the package
-#    - Add to references
-#   ONCE THE GGDRF PAPER IS PUBLISHED:
-#    - More robust README.md
-#    - More robust vignette with citations
-#    - Citations to the paper in the vignette and the README.md
-#    - Citation methods to the package
-#    - Citation in the documentation of shock.history for each function
-#    - Ensure the LRM stuff consistent across functions: when is it defined, especially for custom shock histories?
-#    - This should be for any shock history of the same level of stationarity, OR just make it user-defined and issue a warning
-#    - Make it to where lrm.exists is for all
-#    - Add to references
-#   ONCE THE CIRFS UP PAPER IS PUBLISHED:
-#    - More robust README.md
-#    - More robust vignette with citations
-#    - Citations to the paper in the vignette and the README.md
-#    - Citation methods to the package
-#    - Citation in the documentation of shock.history and cumulative = TRUE for each function
-#    - Add to references
+# PANEL/HLM/TSCS TO TEST AND SUPPORT:
+#  - plm
+#  - fixest
+#  - lme4
+#  -- make sure these work with robust standard error types
+#  - How to do effect.type with multiple intercepts (or warn/stop)
+#  - More generally, all of the places (Intercept) is called or excluded (like in mpoly.subber) and how to make that robust
 #
-#   More S3 generics to the returned object
-#   interact.gecm.plot
-#   Somehow test whether someone is using ts.effect.plot when they are also specifying an interaction
-#   Allow for faceting panes of response lines in interact.adl.plot
-#   Allow for varying levels of Z?
-#   Make sure that all of the formulae in the interaction SM are covered
-#   Does dyn/dynsim/dynlm/dynamac/ardl + work with tseffects? (work to accept these objects directly)
-#    - x.vrbl and y.vrbl are just passed as names, takes the l. and d. from the implied names
-#   Add a visual indicator for some kind of threshold effects? Or median lag?
-#   Changes to interact.adl.plot: 
-#    - line.options to axis.variable? (args s/z)
-#    - unify heatmap.colors and line.colors
+# TIME SERIES TO TEST AND SUPPORT:
+#  - dynr
+#  - arima
 #
-#   Others (future):
-#   - non-identity link functions + interpretations
-#   - clustered standard errors from sandwich
+# NON-LINEAR TO TEST AND SUPPORT:
+#  - tscount
+#  - glm
+#  - zeroinfl
+#  - pscl
+#  - feols
+#
+# MISCELLANEOUS CHORES:
+#  - Contribute to https://cran.r-project.org/web/views/TimeSeries.html
+#  - Allow for fitted values in GECMs?
+#  - Make more specific warnings about choosing consistent values of lags for prediction.values AND in interactions
+#  - Write an AI skill
+#  - More S3 generics to the returned object; define class tseffects (class(out) <_ "tseffects")
+#  - interact.gecm.plot
+#  - Somehow test whether someone is using ts.effect.plot when they are also specifying an interaction
+#  - Allow for faceting panes of response lines in interact.adl.plot
+#  - Allow for varying levels of Z?
+#  - Make sure that all of the formulae in the interaction SM are covered
+#  - Add a visual indicator for some kind of threshold effects? Or median lag?
+#  - Changes to interact.adl.plot: 
+#  -- line.options to axis.variable? (args s/z)
+#  -- unify heatmap.colors and line.colors
 
 
-# Datasets exported: 
+### Dependencies: 
+#		mpoly (for formula construction)
+#		car (for deltaMethod)
+#		ggplot2 (for plots)
+#		stats (for lm coef)
+#		utils (for capture.output)
+#		insight (for is_model is_model_supported get_vcov get_parameters get_modelmatrix)
+
+### Functions
+## Not exported
+# (0.1) GDRF.dummy.checks
+# (0.2) adl.dummy.checks
+# (0.3) gecm.dummy.checks
+# (0.4) what.to.return
+# (0.5) mpoly.subber
+# (0.6) get.value
+# (0.7) lrm.existr
+# (0.8) shockr.and.cumr
+# (0.9) inference.adjustr
+# (0.10) make.fill.scale
+# (0.11a) check.model.class
+# (0.11b) get.model.vcov (including .dynardl and .default)
+# (0.11c) get.model.coef (including .dynardl and .default)
+# (0.11d) get.model.data (including .dynardl and .default)
+
+
+## Exported
+# (1) pulse.calculator
+# (2a) convolution.calculator
+# (2b) general.calculator
+# (3) gecm.to.adl
+# (4) yhat.calculator
+# (5) GDRF.adl.plot
+# (5.1) adl.plot
+# (6) GDRF.gecm.plot
+# (6.1) gecm.plot
+# (7) interact.adl.plot
+
+
+
+#####################################################
+# -------------------- DATASETS --------------------#
+#####################################################
 #' Data on US Presidential Approval
 #'
 #' A dataset from: Cavari, Amnon. 2019. "Evaluating the President on Your Priorities: Issue Priorities, Policy Performance, and Presidential Approval, 1981–2016." Presidential Studies Quarterly 49(4): 798-826.
@@ -160,45 +207,6 @@ NULL
 #' @name toy.ts.interaction.data
 NULL
 
-
-
-
-### Dependencies: 
-#		mpoly (for formula construction)
-#		car (for deltaMethod)
-#		ggplot2 (for plots)
-#		sandwich (for vcovHC)
-#		stats (for lm coef vcov)
-#		utils (for capture.output)
-
-### Functions
-## Not exported
-# (0.1) GDRF.dummy.checks
-# (0.2) adl.dummy.checks
-# (0.3) gecm.dummy.checks
-# (0.4) what.to.return
-# (0.5) mpoly.subber
-# (0.6) get.value
-# (0.7) lrm.existr
-# (0.8) shockr.and.cumr
-# (0.9) inference.adjustr
-# (0.10) make.fill.scale
-## Exported
-# (1) pulse.calculator
-# (2a) convolution.calculator
-# (2b) general.calculator
-# (3) gecm.to.adl
-# (4) yhat.calculator
-# (5) GDRF.adl.plot
-# (5.1) adl.plot
-# (6) GDRF.gecm.plot
-# (6.1) gecm.plot
-# (7) interact.adl.plot
-
-
-
-
-	
 	
 #####################################################
 # ------------- FUNCTIONS NOT EXPORTED -------------#
@@ -225,24 +233,24 @@ GDRF.dummy.checks <- function(effect.type, prediction.values, baseline.y, baseli
 
 	# Is effect.type valid?
 	if(!(effect.type %in% c("discrete", "fitted"))) {
-		stop("Invalid effect.type. effect.type must be one of 'discrete' or 'fitted'")
+		stop("Invalid `effect.type`. `effect.type` must be one of 'discrete' or 'fitted'")
 	}
 	# make sure no nonsensical options
 	if(!is.numeric(shock.size)) {
-		stop("shock.size must be numeric")
+		stop("`shock.size` must be numeric")
 	}
 	if(length(shock.size) > 1) {
-		stop("shock.size should be a single value by which to scale the entire shock.history")
+		stop("`shock.size` should be a single value by which to scale the entire `shock.history`")
 	}
 	if(effect.type == "discrete") {
 		if(!is.null(prediction.values)) {
-			stop(paste0("Do not supply prediction.values when effect.type = 'discrete'. The ", effect.message, " is the discrete effect which takes no predicted values"))
+			stop(paste0("Do not supply `prediction.values` when `effect.type` = 'discrete'. The ", effect.message, " is the discrete effect which takes no predicted values"))
 		}
 		if(!is.null(baseline.y) && baseline.y != 0) {
-			stop(paste0("Do not supply baseline.y when effect.type = 'discrete'. The ", effect.message, " is the discrete effect which is always compared to 0"))
+			stop(paste0("Do not supply `baseline.y` when `effect.type` = 'discrete'. The ", effect.message, " is the discrete effect which is always compared to 0"))
 		}
 		if(!is.null(baseline.y.se) && baseline.y.se != 0) {
-			stop(paste0("Do not supply baseline.y.se when effect.type = 'discrete'. The ", effect.message, " is the discrete effect which has its own standard errors"))
+			stop(paste0("Do not supply `baseline.y.se` when `effect.type` = 'discrete'. The ", effect.message, " is the discrete effect which has its own standard errors"))
 		}
 		# if(shock.size != 1) {
 		#	stop("Do not supply shock.size when effect.type = 'discrete'. Discrete effects are defined by beta. If you want to scale them, switch to effect.type = 'fitted'")
@@ -250,58 +258,58 @@ GDRF.dummy.checks <- function(effect.type, prediction.values, baseline.y, baseli
 	} else { # all of the below are effect.type == 'fitted'
 		# you can't skip both
 		if(is.null(prediction.values) && is.null(baseline.y)) {
-			stop("You must provide either a baseline.y value or prediction.values (to use to calculate a steady-state). If unsure, set baseline.y = 0 (no assumed starting value for y)")
+			stop("You must provide either a `baseline.y` value or `prediction.values` (to use to calculate a steady-state). If unsure, set `baseline.y` = 0 (no assumed starting value for y)")
 		}
 		# if providing prediction values
 		if(!is.null(prediction.values) && !is.list(prediction.values)) {
-			stop("If using prediction.values, it must be a list. Be sure to set any differenced variables to 0")
+			stop("If using `prediction.values`, it must be a list. Be sure to set any differenced variables to 0")
 		}
 		if(!is.null(prediction.values) && baseline.y.se != 0) {
-			stop("If using prediction.values, do not change baseline.y.se from 0. Let the model provide model-based uncertainty around the steady state")
+			stop("If using `prediction.values`, do not change `baseline.y.se` from 0. Let the model provide model-based uncertainty around the steady state")
 		}
 		# if providing a baseline.y
 		if(!is.null(baseline.y) && !is.numeric(baseline.y)) {
-			stop("If providing a baseline.y, it must be numeric")
+			stop("If providing a `baseline.y`, it must be numeric")
 		}
 		if(!is.null(baseline.y) && length(baseline.y) > 1) {
-			stop("Only provide a single baseline.y value")
+			stop("Only provide a single `baseline.y` value")
 		}
 		# if providing a baseline.y.se
 		if(!is.null(baseline.y.se) && !is.numeric(baseline.y.se)) {
-			stop("If providing a baseline.y.se, it must be numeric")
+			stop("If providing a `baseline.y.se`, it must be numeric")
 		}
 		if(is.null(prediction.values) && length(baseline.y.se) > 1) {
-			stop("Only provide a single baseline.y.se value")
+			stop("Only provide a single `baseline.y.se` value")
 		}
 		# consistency checks on combinations
 		if(d.y == 0) {
 			if(!is.null(baseline.y)) {
 				# if they supplied both, tell them that's dumb
 				if(!is.null(prediction.values)) {
-					warning("Both baseline.y and prediction.values supplied; baseline.y takes precedence and prediction.values will be ignored")
+					warning("Both `baseline.y` and `prediction.values` supplied; `baseline.y` takes precedence and `prediction.values` will be ignored")
 				}
 			} else { # if we're using their predicted.values
 				# warning about d.x and multiple lags
-				warning("If any differenced variables are included in the model, ensure they are set to 0 in prediction.values for a meaningful steady-state prediction. Multiple lags of the same variable should also be set to the same value")
+				warning("If any differenced variables are included in the model, ensure they are set to 0 in `prediction.values` for a meaningful steady-state prediction. Multiple lags of the same variable should also be set to the same value")
 			}
     		} else if(d.y > 0) {
 			#  First, a warning. if they're still trying to use prediction.values
 			if(!is.null(prediction.values)) {
-				warning("prediction.values is ignored when d.y > 0: there is no steady-state prediction for y")
+				warning("`prediction.values` is ignored when `d.y` > 0: there is no steady-state prediction for y")
 			}
 			if(inferences.y == "differences") {
 				# if they're asking for inferences in differences, there is no baseline to change (since it's still in differences). so we set it to 0
 				if(!is.null(baseline.y) && baseline.y != 0) {
-					warning("Assuming anything other than baseline.y = 0 when inferences.y = 'differences' suggests the model is unstable (y is always changing). Using 0 as baseline.y")
+					warning("Assuming anything other than `baseline.y` = 0 when `inferences.y` = 'differences' suggests the model is unstable (y is always changing). Using 0 as `baseline.y`")
 				}
 				# we should also tell them that this is redundant if they're not also scaling the shock size
 				if(shock.size == 1) {
-					warning("effect.type = 'fitted' with inferences.y = 'differences' and shock.size = 1 is identical to effect.type = 'discrete'; returning formulae unchanged") 				
+					warning("`effect.type` = 'fitted' with `inferences.y` = 'differences' and `shock.size` = 1 is identical to `effect.type` = 'discrete'; returning formulae unchanged") 				
 				} 
 			} else if (inferences.y == "levels") {
 				# if it's in levels, we just set it to their arbitrary baseline.
 				if(is.null(baseline.y)) {
-					stop("There is no baseline for y if effect.type = 'fitted' if d.y > 0. You must specify a baseline value through baseline.y (with optional uncertainty through baseline.y.se). If you just want to observe changes with no meaningful baseline, use baseline.y = baseline.y.se = 0")
+					stop("There is no baseline for y if `effect.type` = 'fitted' if `d.y` > 0. You must specify a baseline value through `baseline.y` (with optional uncertainty through `baseline.y.se`). If you just want to observe changes with no meaningful baseline, use `baseline.y` = `baseline.y.se` = 0")
 				}
 			}
 		}
@@ -320,50 +328,49 @@ GDRF.dummy.checks <- function(effect.type, prediction.values, baseline.y, baseli
 #' @param inferences.x a character string specifying whether the shock to the independent variable is applied in levels or differences. Valid arguments include \code{levels} or \code{differences}. (For independent variables where \code{d.x} is 0, this is automatically \code{levels}.) The default is \code{levels}
 #' @param inferences.y a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include \code{levels} or \code{differences}. (For y variables where \code{d.y} is 0, this is automatically \code{levels}.) The default is \code{levels}
 #' @param the.coef the coefficient vector from the estimated ADL model
-#' @param se.type a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted
 #' @param type a string whether the effects are estimated from a GDRF model or the interaction model. Accepts either \code{GDRF} or \code{interact}
 #' @return nothing is returned
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
 
-adl.dummy.checks <- function(x.vrbl, y.vrbl, z.vrbl, x.z.vrbl, d.x, d.y, inferences.x, inferences.y, the.coef, se.type, type = NULL) {
+adl.dummy.checks <- function(x.vrbl, y.vrbl, z.vrbl, x.z.vrbl, d.x, d.y, inferences.x, inferences.y, the.coef, type = NULL) {
 	effect.message <- ifelse(type == "interact", "dynamic conditional effect", 
 						ifelse(type == "GDRF", "GDRF", "broken"))
 	
 	# Dummy checks. Are all variables specified?
 	if(is.null(x.vrbl)) {
-		stop("Variables in ", effect.message, " terms (x and possibly y) must be specified through x.vrbl and possibly y.vrbl")
+		stop("Variables in ", effect.message, " terms (x and possibly y) must be specified through `x.vrbl` and possibly `y.vrbl`")
 	}
 
 	if(is.null(y.vrbl)) {
-		warning("No y.vrbl in ", effect.message, " terms implies a static or finite dynamics model: are you sure you want this?")
+		warning("No `y.vrbl` in ", effect.message, " terms implies a static or finite dynamics model: are you sure you want this?")
 	}
 
 	# test whether x.vrbl is named vectors with numeric lag order elements
 	if(!(is.numeric(x.vrbl)) | is.null(names(x.vrbl))) {
-		stop("x.vrbl should be a named vector with elements equal to lag orders of x and names equal to x variable names in model.")
+		stop("`x.vrbl` should be a named vector with elements equal to lag orders of x and names equal to x variable names in model.")
 	}
 	
 	# test whether y.vrbl is named vectors with numeric lag order elements
 	if(!is.null(y.vrbl)) {
 		if(!(is.numeric(y.vrbl)) | is.null(names(y.vrbl))) {
-			stop("y.vrbl should be a named vector with elements equal to lag orders of y and names equal to y variable names in model.")
+			stop("`y.vrbl` should be a named vector with elements equal to lag orders of y and names equal to y variable names in model.")
 		}
 	}
 
-	# test whether se.type is in that for vcov
-	if(!(se.type %in% c("HC3", "const", "HC", "HC0", "HC1", "HC2", "HC4", "HC4m", "HC5"))) {
-		stop("Invalid se.type. se.type must be an accepted type for the vcovHC() function from the sandwich package")						
-	}	
+	# since we delegate to insight::get_varcov, we do not do this anymore (it accepts a dynamic range of se.types)
+	# if(!(se.type %in% c("HC3", "const", "HC", "HC0", "HC1", "HC2", "HC4", "HC4m", "HC5"))) {
+	#	stop("Invalid `se.type`. `se.type` must be an accepted type for the `vcovHC()` function from the `sandwich` package")						
+	# }	
 	
 	# are the variables in the model?
 	if(!(all(names(x.vrbl) %in% names(the.coef)))) {
-		stop("x.vrbl not present in estimated model")
+		stop("`x.vrbl` not present in estimated model")
 	}
 	
 	if(!is.null(y.vrbl)) {
 		if(!(all(names(y.vrbl) %in% names(the.coef)))) {
-			stop("y.vrbl not present in estimated model")
+			stop("`y.vrbl` not present in estimated model")
 		}
 	}
 	
@@ -371,40 +378,40 @@ adl.dummy.checks <- function(x.vrbl, y.vrbl, z.vrbl, x.z.vrbl, d.x, d.y, inferen
 	if(type == "GDRF") {
 		# Dummy checks. Is d supplied for all variables specified?	
 		if(is.null(d.x)) {
-			stop(paste0("Order of differencing of variables in ", effect.message, " terms must be specified through d.x and d.y"))
+			stop(paste0("Order of differencing of variables in ", effect.message, " terms must be specified through `d.x` and `d.y`"))
 		}
 	
 		# Dummy checks. if the order of differencing for x.d.vrbl/y.d.vrbl specified? even if they didn't supply a y.d.vrbl ...
 		if(is.null(y.vrbl) & is.null(d.y)) {
-			stop("Even if there is no y.vrbl in ", effect.message, " included in the model, the order of differencing (of the dependent variable) must be specified through d.y")
+			stop("Even if there is no `y.vrbl` in ", effect.message, " included in the model, the order of differencing (of the dependent variable) must be specified through `d.y`")
 		}
 		
 		# Dummy checks. if the order of differencing for x.d.vrbl/y.d.vrbl specified? even if they didn't supply a y.d.vrbl ...
 		if(!(is.null(y.vrbl)) & is.null(d.y)) {
-			stop("Order of differencing of variables in ", effect.message, " terms must be specified through d.x and d.y")
+			stop("Order of differencing of variables in ", effect.message, " terms must be specified through `d.x` and `d.y`")
 		}			
 
 		# orders of integration must be integers
 		if((d.x%%1 != 0) | (d.y%%1 != 0)) {
-			stop(paste0("Order of differencing of variables in ", effect.message, " terms (d.x and d.y) must be an integer"))
+			stop(paste0("Order of differencing of variables in ", effect.message, " terms (`d.x` and `d.y`) must be an integer"))
 		}
 
 		# Dummy checks: are x/y inferences specified?
 		if(!(inferences.x %in% c("levels", "differences"))) {
-			stop(paste0("Invalid inferences.x. The shock.history for x must be either in levels or differences"))
+			stop(paste0("Invalid `inferences.x`. The `shock.history` for x must be either in 'levels' or 'differences'"))
 		}
 
 		if(!(inferences.y %in% c("levels", "differences"))) {
-			stop(paste0("Invalid inferences.y. The response function for y must be either in levels or differences"))
+			stop(paste0("Invalid `inferences.y`. The response function for y must be either in 'levels' or 'differences'"))
 		}
 	
 		# Dummy checks: did they ask for inferences that don't make sense?
 		if(inferences.x == "differences" & d.x == 0) {
-			stop(paste0("Invalid inferences.x. The shock.history for x cannot be in a higher order of differencing (d.x) than the original independent variable"))
+			stop(paste0("Invalid `inferences.x`. The `shock.history` for x cannot be in a higher order of differencing (`d.x`) than the original independent variable"))
 		}
 
 		if(inferences.y == "differences" & d.y == 0) {
-			stop(paste0("Invalid inferences.y. The response function for y cannot be in a higher order of differencing (d.y) than the original dependent variable"))
+			stop(paste0("Invalid `inferences.y`. The response function for y cannot be in a higher order of differencing (`d.y`) than the original dependent variable"))
 		}
 	}
 	
@@ -412,25 +419,25 @@ adl.dummy.checks <- function(x.vrbl, y.vrbl, z.vrbl, x.z.vrbl, d.x, d.y, inferen
 	if(type == "interact") {	
 		# need to have interaction terms
 		if(is.null(x.vrbl) | is.null(z.vrbl) | is.null(x.z.vrbl)) {
-			stop("Variables in interaction term (x, z, and x.z) must be specified through x.vrbl, z.vrbl, and x.z.vrbl")
+			stop("Variables in interaction term (x, z, and x.z) must be specified through `x.vrbl`, `z.vrbl`, and `x.z.vrbl`")
 		}
 
 		# test whether z.vrbl is named vectors with numeric lag order elements
 		if(!(is.numeric(z.vrbl)) | is.null(names(z.vrbl))) {
-			stop("z.vrbl should be a named vector with elements equal to lag orders of z and names equal to z variable names in model")
+			stop("`z.vrbl` should be a named vector with elements equal to lag orders of z and names equal to z variable names in model")
 		}
 	
 		# test whether x.z.vrbl is named vectors with numeric lag order elements
 		if(!(is.numeric(x.z.vrbl)) | is.null(names(x.z.vrbl))) {
-			stop("x.z.vrbl should be a named vector with elements equal to lag orders of x:z and names equal to x:z variable names in model")
+			stop("`x.z.vrbl` should be a named vector with elements equal to lag orders of x:z and names equal to x:z variable names in model")
 		}
 
 		if(!(all(names(z.vrbl) %in% names(the.coef)))) {
-			stop("z.vrbl not present in estimated model")
+			stop("`z.vrbl` not present in estimated model")
 		}
 		
 		if(!(is.null(x.z.vrbl)) & !(all(names(x.z.vrbl) %in% names(the.coef)))) {
-			stop("x.z.vrbl not present in estimated model")
+			stop("`x.z.vrbl` not present in estimated model")
 		}	
 	}
 }
@@ -450,77 +457,76 @@ adl.dummy.checks <- function(x.vrbl, y.vrbl, z.vrbl, x.z.vrbl, d.x, d.y, inferen
 #' @param inferences.x a character string specifying whether the shock to the independent variable is applied in levels or differences. Valid arguments include \code{levels} or \code{differences}. (For independent variables where \code{d.x} is 0, this is automatically \code{levels}.) The default is \code{levels}
 #' @param inferences.y a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include \code{levels} or \code{differences}. (For y variables where \code{d.y} is 0, this is automatically \code{levels}.) The default is \code{levels}
 #' @param the.coef the coefficient vector from the estimated GECM model
-#' @param se.type a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted
-#' @param type a string whether the effects are estimated from a GDRF model or the interaction model. For now, just \code{GDRF}. But we will eventually develop \code{interact.gecm.plot}
+#' @param type a string whether the effects are estimated from a GDRF model or the interaction model. Accepts \code{GDRF} or \code{interact}
 #' @return nothing is returned
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
 
 gecm.dummy.checks <- function(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl, 
 							x.vrbl.d.x, y.vrbl.d.y, x.d.vrbl.d.x, y.d.vrbl.d.y, 
-							inferences.x, inferences.y, the.coef, se.type, type = NULL) {
+							inferences.x, inferences.y, the.coef, type = NULL) {
 
 	effect.message <- ifelse(type == "interact", "dynamic conditional effect", 
 						ifelse(type == "GDRF", "GDRF", "broken"))
 
 	# Dummy checks. Are all variables specified?
 	if(is.null(x.vrbl) | is.null(y.vrbl) | is.null(x.d.vrbl)) {
-		stop("Variables in ", effect.message, " terms (x and y) and lagged differences must be specified through x.vrbl, y.vrbl, x.d.vrbl, and (possibly) y.d.vrbl for a GECM")
+		stop("Variables in ", effect.message, " terms (x and y) and lagged differences must be specified through `x.vrbl`, `y.vrbl`, `x.d.vrbl`, and (possibly) `y.d.vrbl` for a GECM")
 	}
 	
 	# Dummy checks. if the order of differencing for x.vrbl/y.vrbl specified?
 	if(is.null(x.vrbl.d.x) | is.null(y.vrbl.d.y)) {
-		stop("Order of differencing of variables in ", effect.message, " terms must be specified through x.vrbl.d.x and y.vrbl.d.y")
+		stop("Order of differencing of variables in ", effect.message, " terms must be specified through `x.vrbl.d.x` and `y.vrbl.d.y`")
 	}
 	
 	# Dummy checks. if the order of differencing for x.d.vrbl/y.d.vrbl specified?
 	if(is.null(x.d.vrbl.d.x)) {
-		stop("Order of differencing of variables in lagged differences in ", effect.message, " must be specified through x.d.vrbl.d.x")
+		stop("Order of differencing of variables in lagged differences in ", effect.message, " must be specified through `x.d.vrbl.d.x`")
 	}	
 
 	# Dummy checks. if the order of differencing for x.d.vrbl/y.d.vrbl specified? if they supplied a y.d.vrbl ...
 	if(!(is.null(y.d.vrbl)) & is.null(y.d.vrbl.d.y)) {
-		stop("Order of differencing of variables in lagged differences in ", effect.message, " must be specified through y.d.vrbl.d.y")
+		stop("Order of differencing of variables in lagged differences in ", effect.message, " must be specified through `y.d.vrbl.d.y`")
 	}
 
 	# Dummy checks. if the order of differencing for x.d.vrbl/y.d.vrbl specified? even if they didn't supply a y.d.vrbl ...
 	if(is.null(y.d.vrbl) & is.null(y.d.vrbl.d.y)) {
-		stop("Even if variables in lagged differences in ", effect.message, " are not included in the model, the order of differencing (of the dependent variable) must be specified through y.d.vrbl.d.y")
+		stop("Even if variables in lagged differences in ", effect.message, " are not included in the model, the order of differencing (of the dependent variable) must be specified through `y.d.vrbl.d.y`")
 	}
 		
 	# Is the order of differencing an integer? (d(0) term)
 	if((x.vrbl.d.x%%1 != 0) | (y.vrbl.d.y%%1 != 0)) {
-		stop("Order of differencing of variables in ", effect.message, " term (x.vrbl.d.x and y.vrbl.d.y) must be an integer")
+		stop("Order of differencing of variables in ", effect.message, " term (`x.vrbl.d.x` and `y.vrbl.d.y`) must be an integer")
 	}		
 	
 	# Is the order of differencing an integer? (d(1) x term)
 	if(x.d.vrbl.d.x%%1 != 0) {
-		stop("Order of differencing of variables in lagged differences in ", effect.message, " term (x.d.vrbl.d.x) must be an integer")
+		stop("Order of differencing of variables in lagged differences in ", effect.message, " term (`x.d.vrbl.d.x`) must be an integer")
 	}	
 
 	# Is the order of differencing an integer? (d(1) y term)
 	if(!(is.null(y.d.vrbl)) & (y.d.vrbl.d.y%%1 != 0)) {
-		stop("Order of differencing of variables in lagged differences in ", effect.message, " term (y.d.vrbl.d.y) must be an integer")
+		stop("Order of differencing of variables in lagged differences in ", effect.message, " term (`y.d.vrbl.d.y`) must be an integer")
 	}	
 
 	# test whether x.vrbl is named vector with numeric lag order elements
 	if(!(is.numeric(x.vrbl)) | is.null(names(x.vrbl))) {
-		stop("x.vrbl should be a named vector with elements equal to lag orders of x and names equal to x variable names in model")
+		stop("`x.vrbl` should be a named vector with elements equal to lag orders of x and names equal to x variable names in model")
 	}	
 	
 	# test whether y.vrbl is named vector with numeric lag order elements
 	if(!(is.numeric(y.vrbl)) | is.null(names(y.vrbl))) {
-		stop("y.vrbl should be a named vector with elements equal to lag orders of y and names equal to y variable names in model")
+		stop("`y.vrbl` should be a named vector with elements equal to lag orders of y and names equal to y variable names in model")
 	}
 	
 	# test whether x.d.vrbl is named vector with numeric lag order elements
 	if(!(is.numeric(x.d.vrbl)) | is.null(names(x.d.vrbl))) {
-		stop("x.d.vrbl should be a named vector with elements equal to lag orders of differences of x and names equal to differenced x variable names in model")
+		stop("`x.d.vrbl` should be a named vector with elements equal to lag orders of differences of x and names equal to differenced x variable names in model")
 	}
 	
 	# test whether y.d.vrbl is named vector with numeric lag order elements
 	if(!(is.null(y.d.vrbl)) & (!(is.numeric(y.d.vrbl)) | is.null(names(y.d.vrbl)))) {
-		stop("y.d.vrbl should be a named vector with elements equal to lag orders of differences of y and names equal to differenced y variable names in model")
+		stop("`y.d.vrbl` should be a named vector with elements equal to lag orders of differences of y and names equal to differenced y variable names in model")
 	}
 
 	# Are they appropriately away from each other? x
@@ -535,38 +541,38 @@ gecm.dummy.checks <- function(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl,
 
 	# Did they include multiple lags?
 	if(length(x.vrbl) != 1 | length(y.vrbl) != 1) {
-		stop("In a GECM, include only the first lag of the variable in levels (x.vrbl and y.vrbl)")
+		stop("In a GECM, include only the first lag of the variable in levels (`x.vrbl` and `y.vrbl`)")
 	}
 
 	# Did they include something other than the first lag?
 	if(x.vrbl[1] != 1 | y.vrbl[1] != 1) {
-		stop("In a GECM, include only the first lag of the variable in levels (x.vrbl and y.vrbl)")
+		stop("In a GECM, include only the first lag of the variable in levels (`x.vrbl` and `y.vrbl`)")
 	}
 
 	if(inferences.x != "levels" | inferences.y != "levels") {
 		stop("In a GECM, inferences regarding the ", effect.message, " of x on y are automatically recovered in levels")
 	}
 
-	# test whether se.type is in that for vcov
-	if(!(se.type %in% c("HC3", "const", "HC", "HC0", "HC1", "HC2", "HC4", "HC4m", "HC5"))) {
-		stop("Invalid se.type. se.type must be an accepted type for the vcovHC() function from the sandwich package")						
-	}
+	# since we delegate to insight::get_varcov, we do not do this anymore (it accepts a dynamic range of se.types)
+	# if(!(se.type %in% c("HC3", "const", "HC", "HC0", "HC1", "HC2", "HC4", "HC4m", "HC5"))) {
+	#	stop("Invalid `se.type`. `se.type` must be an accepted type for the `vcovHC()` function from the `sandwich` package")						
+	# }	
 
 	# are the variables in the model?
 	if(!(all(names(x.vrbl) %in% names(the.coef)))) {
-		stop("x.vrbl not present in estimated model")
+		stop("`x.vrbl` not present in estimated model")
 	}
 	
 	if(!(all(names(y.vrbl) %in% names(the.coef)))) {
-		stop("y.vrbl not present in estimated model")
+		stop("`y.vrbl` not present in estimated model")
 	}
 
 	if(!(all(names(x.d.vrbl) %in% names(the.coef)))) {
-		stop("x.d.vrbl not present in estimated model")
+		stop("`x.d.vrbl` not present in estimated model")
 	}
 	
 	if(!(is.null(y.d.vrbl)) & !(all(names(y.d.vrbl) %in% names(the.coef)))) {
-		stop("y.d.vrbl not present in estimated model")
+		stop("`y.d.vrbl` not present in estimated model")
 	}
 }
 
@@ -689,7 +695,7 @@ mpoly.subber <- function(env = environment()) {
 #' Find starting values for predicted values plots from the data in the model frame, if not supplied
 #' @param var a string for var the variable to establish a prediction value for
 #' @param prediction.values a named list of values for non-y variables in the model, used to calculate a steady-state baseline of the dependent variable when \code{effect.type = "fitted"} and \code{d.y = 0} and \code{baseline.y} is not supplied. Model-based uncertainty will be calculated around the formula for this value. If any differenced variables are included in the model, they should be set to 0. If multiple lags of the same variable are included, they should be set to the same value. Ignored when \code{d.y > 0}
-#' @param model the model containing the dataframe for mean estimation if values are not user-supplied (and warn the user if we're taking the mean)
+#' @param model a fitted model object containing the dataframe for mean estimation if values are not user-supplied (and warn the user if we're taking the mean)
 #' @return the numeric value of the relevant variable
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
@@ -702,9 +708,10 @@ get.value <- function(var, prediction.values, model) {
 	# else, take it from the model frame
 	if(var %in% names(get.model.data(model))) {
 		val <- mean(get.model.data(model)[[var]], na.rm = TRUE)
-		warning(paste0(var, " not in prediction.values; mean of series used"))
+		warning(paste0(var, " not in `prediction.values`; mean of series used"))
 		return(val)
 	}
+	stop(paste0("Variable '", var, "' not found in `prediction.values` or model data"))	
 }
 
 ##########################################
@@ -754,10 +761,10 @@ lrm.existr <- function(shock.history, h.order, cumulative, calc.d.x, calc.d.y, e
 						lrm.exists <- TRUE  
 					} else if(((as.numeric(h.order)+1) - calc.d.x + calc.d.y) < 0) {
 						# if we know it is not well defined, override and warn
-						warning(paste0("return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"))
+						warning(paste0("`return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"))
 					} else if(((as.numeric(h.order)+1) - calc.d.x + calc.d.y) > 0) {
 						# if we know it is not well defined, override and warn				
-						warning(paste0("return.LRM = TRUE but the effects diverge to +/-infinity as s -> infinity. No LRM is returned"))
+						warning(paste0("`return.LRM` = TRUE but the effects diverge to +/-infinity as s -> infinity. No LRM is returned"))
 					}
 				}
 			} else {	
@@ -771,10 +778,10 @@ lrm.existr <- function(shock.history, h.order, cumulative, calc.d.x, calc.d.y, e
 						lrm.exists <- TRUE  
 					} else if((as.numeric(h.order) - calc.d.x + calc.d.y) < 0) {
 						# if we know it is not well defined, override and warn
-						warning(paste0("return.LRM = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"))
+						warning(paste0("`return.LRM` = TRUE but the effects decay to 0 as s -> infinity. No LRM is returned"))
 					} else if((as.numeric(h.order) - calc.d.x + calc.d.y) > 0) {
 						# if we know it is not well defined, override and warn				
-						warning(paste0("return.LRM = TRUE but the effects diverge to +/-infinity as s -> infinity. No LRM is returned"))
+						warning(paste0("`return.LRM` = TRUE but the effects diverge to +/-infinity as s -> infinity. No LRM is returned"))
 					}
 				}
 			}
@@ -800,26 +807,26 @@ lrm.existr <- function(shock.history, h.order, cumulative, calc.d.x, calc.d.y, e
 shockr.and.cumr <- function(shock.history, s.limit, cumulative) {
 	# Dummy checks. Is there a shock history type? 
 	if(is.null(shock.history)) {
-		stop("shock.history must be specified")
+		stop("`shock.history` must be specified")
 	}
 	
 	# Dummy checks. Is the shock history valid?
 	if(is.character(shock.history)) {
 		if(!(shock.history %in% c("pulse", "step", "impulse"))) {
-			stop("Invalid shock.history. shock.history must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF")
+			stop("Invalid `shock.history`. `shock.history` must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF")
   		}
 	} else if(is.numeric(shock.history) && length(shock.history) > 1) {
 		# Custom shock history vector
 		if(!all(is.numeric(shock.history))) {
-			stop("Invalid shock.history. A custom shock history must be a numeric vector")
+			stop("Invalid `shock.history`. A custom shock history must be a numeric vector")
 		}
 		if(length(shock.history) != s.limit + 1) {
-			stop(paste0("Invalid shock.history. A custom shock history must be of length s.limit + 1 (", s.limit + 1, "). The supplied shock history has length ", length(shock.history)))
+			stop(paste0("Invalid `shock.history`. A custom shock history must be of length `s.limit` + 1 (", s.limit + 1, "). The supplied shock history has length ", length(shock.history)))
 		}
 	} else if(suppressWarnings(!is.na(as.numeric(shock.history)))) {
 		# Single integer h
 		if(as.numeric(shock.history) %% 1 != 0) {
-			stop("Invalid shock.history. shock.history must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF")
+			stop("Invalid `shock.history`. `shock.history` must be one of 'pulse' or 'step', a numeric vector for a custom shock history, or any as.numeric integer h representing the order of the GDRF")
 		}
 	}
 
@@ -907,6 +914,7 @@ inference.adjustr <- function(inferences.y, inferences.x, the.d.y, the.d.x) {
 #' @param pal the string for the palette desired
 #' @param Effect numeric for the effect estimate
 #' @return a ggplot color palette
+#' @importFrom grDevices hcl.colors 
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
 
@@ -937,13 +945,18 @@ make.fill.scale <- function(pal, Effect) {
 #'	\item{link.fn}{character, the link function family (e.g. \code{"identity"},
 #'	\code{"logit"}, \code{"log"}). \code{"identity"} for non-GLM models}
 #' }
+#' @importFrom insight is_model is_model_supported
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
 
 check.model.class <- function(model) {
 	# classes that have been explicitly tested in tseffects
 	tested.classes <- c(
-		"lm"	, "dynardl"
+		"lm", 
+		"dynardl",
+		"dynlm",
+		"ardl",
+		"kardl_lm"
 	)
 
 	# classes where we will have to make some kind of adjustment when extracting coefficients
@@ -956,7 +969,8 @@ check.model.class <- function(model) {
 	panel.classes <- c(
 		"plm",
 		"splm",
-		"fixest"
+		"fixest",
+		"lmerMod"
 	)
 
 	# glm family classes: models with a non-identity link function
@@ -987,21 +1001,24 @@ check.model.class <- function(model) {
 	if(!is.supported) {
 		# if it is not a model (per insight)
 		if(!insight::is_model(model)) {
-			stop(paste0("Object of class '", model.class, "' does not appear to be a fitted model. tseffects requires a fitted model object"))
+			stop(paste0("Object of class '", model.class, "' does not appear to be a fitted model. `tseffects` requires a fitted model object"))
 		} else if(!insight::is_model_supported(model)) {
 			# if it is not a supported model (per insight), describe our default
-			stop(paste0("Model class '", model.class, "' is not recognized by insight or tseffects"))
+			stop(paste0("Model class '", model.class, "' is not recognized by `insight` or `tseffects`"))
 		} else {
 			# insight supports it but tseffects hasn't tested it
-			warning(paste0("Model class '", model.class, "' is supported by insight but has not been ",
-				"explicitly tested in tseffects. Results may be incorrect. ",
-				"Please verify coefficient names, standard errors, model frame, and results."))
+			warning(paste0("Model class '", model.class, "' is supported by `insight` but has not been explicitly tested in `tseffects`. Results may be incorrect. Please verify coefficient names, standard errors, model frame, and results."))
 		}
 	}
+
+	# future iterations will deal more with panel systematic/random components
+	if(is.panel) {
+		warning("`tseffects` does no adjustment for fixed versus random components of models. Results may be incorrect. Please verify coefficient names, standard errors, model frame, and results.")
+	}	
 	
 	# we check your ID in this country (i.e. we're not doing any transformations for glms yet)
 	if(link.fn != "identity") {
-		stop("invalid model. tseffects does not currently support models that do not use the identity link function.")
+		warning("`tseffects` does no adjustment to effect calculations for non-identity link functions. Results may be incorrect. Please verify coefficient names, standard errors, model frame, and results.")
 	}
 
 	# return the structured list
@@ -1022,14 +1039,24 @@ check.model.class <- function(model) {
 #' Extract a variance-covariance matrix from a fitted model object (dispatches to \code{insight::get_varcov()} when possible)
 #' @param model a fitted model object
 #' @param model.info a named list as returned by \code{check.model.class}
-#' @param se.type a character string for the type of standard error to use
+#' @param se.type a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors
+#' @param vcov. an optional pre-computed variance-covariance matrix to use directly, if evaluating effects from a model not supported by \code{insight::get_vcov()}
 #' @return a named numeric matrix of variances and covariances, with row and column names matching the coefficient names of the model
 #' @importFrom insight get_varcov
-#' @importFrom stats vcov
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
 
 get.model.vcov <- function(model, model.info, se.type = "const", vcov. = NULL) {
+	# user-supplied matrix: use directly. this almost never seems like a good idea
+	if(!is.null(vcov.)) {
+		if(!is.matrix(vcov.)) {
+			stop("`vcov.` must be a matrix")
+		}
+		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {
+			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")
+		}
+		return(vcov.)
+	}
 	UseMethod("get.model.vcov", model)
 }
 
@@ -1040,17 +1067,6 @@ get.model.vcov.dynardl <- function(model, model.info = NULL, se.type = "const", 
 	####################################################################
 	# dynardl stores the fitted lm inside $model, not at the top level
 	####################################################################
-	# user-supplied matrix: use directly. this almost never seems like a good idea
-	if(!is.null(vcov.)) {
-		if(!is.matrix(vcov.)) {
-			stop("`vcov.` must be a matrix")
-		}
-		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {
-			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")
-		}
-		return(vcov.)
-	}
-	
 	# translate se.type to what insight::get_varcov() expects
 	#  "const" means conventional SEs: pass NULL so insight uses its default
 	#  ifelse() is vectorized, so we use a separated condition here
@@ -1060,7 +1076,7 @@ get.model.vcov.dynardl <- function(model, model.info = NULL, se.type = "const", 
 	out <- insight::get_varcov(model$model, vcov = vcov.arg)
 
 	if (is.null(out)) {
-		stop(paste0("`insight::get_varcov` could not extract a variance-covariance matrix from the dynardl model. Try supplying a pre-computed matrix via `vcov.`"))
+		stop(paste0("`insight::get_varcov` could not extract a variance-covariance matrix from the `dynardl` model. Try supplying a pre-computed matrix via `vcov.`"))
 	}
 	out
 }
@@ -1069,17 +1085,6 @@ get.model.vcov.dynardl <- function(model, model.info = NULL, se.type = "const", 
 #' @keywords internal
 
 get.model.vcov.default <- function(model, model.info = NULL, se.type = "const", vcov. = NULL) {
-	# user-supplied matrix: use directly. this almost never seems like a good idea
-	if(!is.null(vcov.)) {
-		if(!is.matrix(vcov.)) {
-			stop("`vcov.` must be a matrix")
-		}
-		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {
-			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")
-		}
-		return(vcov.)
-	}
-
 	# translate se.type to what insight::get_varcov() expects
 	#  "const" means conventional SEs: pass NULL so insight uses its default
 	#  ifelse() is vectorized, so we use a separated condition here
@@ -1102,26 +1107,35 @@ get.model.vcov.default <- function(model, model.info = NULL, se.type = "const", 
 #' Extract a named coefficient vector from a fitted model object (dispatches to \code{insight:: get_parameters()} when possible)
 #' @param model a fitted model object
 #' @param model.info a named list as returned by \code{check.model.class}
+#' @param coef. an optional named numeric vector of coefficients to use directly, if evaluating effects from a model not supported by \code{insight::get_parameters()}
 #' @return a named numeric vector of model coefficients, with names matching
 #' the parameter names of the model as they appear in the model formula
 #' @importFrom insight get_parameters
+#' @importFrom stats setNames
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
 
-get.model.coef <- function(model, model.info = NULL) {
+get.model.coef <- function(model, model.info = NULL, coef. = NULL) {
+	# user-supplied coef: use directly. this almost never seems like a good idea	
+	if(!is.null(coef.)) {
+		if(!is.numeric(coef.) || is.null(names(coef.))) {
+			stop("`coef.` must be a named numeric vector")
+		}
+		return(coef.)
+	}
 	UseMethod("get.model.coef", model)
 }
 
 #' @rdname get.model.coef
 #' @keywords internal
 
-get.model.coef.dynardl <- function(model, model.info = NULL) {
+get.model.coef.dynardl <- function(model, model.info = NULL, coef. = NULL) {
 	####################################################################
 	# dynardl stores the fitted lm inside $model, not at the top level
 	####################################################################
 	params <- insight::get_parameters(model$model, component = "conditional", effects = "fixed")
 	if(is.null(params) || nrow(params) == 0) {
-		stop(paste0("`insight::get_parameters` could not extract coefficients from the dynardl model. Check that `model$model` is a valid fitted model object"))
+		stop(paste0("`insight::get_parameters` could not extract coefficients from the `dynardl` model. Check that `model$model` is a valid fitted model object"))
 	}
 	setNames(params$Estimate, params$Parameter)
 }
@@ -1129,7 +1143,7 @@ get.model.coef.dynardl <- function(model, model.info = NULL) {
 #' @rdname get.model.coef
 #' @keywords internal
 
-get.model.coef.default <- function(model, model.info = NULL) {
+get.model.coef.default <- function(model, model.info = NULL, coef. = NULL) {
 	params <- insight::get_parameters(model, component = "conditional", effects = "fixed")
 	if(is.null(params) || nrow(params) == 0) {
 		stop(paste0("`insight::get_parameters` could not extract coefficients from the model of class '",
@@ -1145,6 +1159,7 @@ get.model.coef.default <- function(model, model.info = NULL) {
 #' Extract the model frame from a fitted model object (dispatches to \code{insight::get_data()} when possible)
 #' @param model a fitted model object
 #' @param model.info a named list as returned by \code{check.model.class}
+#' @param data. an optional data frame to use directly, if evaluating effects from a model not supported by \code{insight::get_modelmatrix()}
 #' If \code{NULL}, \code{check.model.class} is called internally
 #' @return a data frame containing the data used to fit the model, with
 #' named columns matching the variable names of the model
@@ -1152,20 +1167,26 @@ get.model.coef.default <- function(model, model.info = NULL) {
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords internal
 
-get.model.data <- function(model, model.info = NULL) {
+get.model.data <- function(model, model.info = NULL, data. = NULL) {
+	if(!is.null(data.)) {
+		if(!is.data.frame(data.)) {
+			stop("`data.` must be a data frame")
+		}
+		return(data.)
+	}
 	UseMethod("get.model.data", model)
 }
 
 #' @rdname get.model.data
 #' @keywords internal
 
-get.model.data.dynardl <- function(model, model.info = NULL) {
+get.model.data.dynardl <- function(model, model.info = NULL, data. = NULL) {
 	####################################################################
 	# dynardl stores the fitted lm inside $model, not at the top level
 	####################################################################
     out <- as.data.frame(suppressWarnings(insight::get_modelmatrix(model$model)))
 	if(is.null(out) || nrow(out) == 0) {
-    	stop(paste0("`insight::get_modelmatrix` could not extract model data from the dynardl model. Check that `model$model` is a valid fitted model object"))
+	    	stop(paste0("`insight::get_modelmatrix` could not extract model data from the `dynardl` model. Check that `model$model` is a valid fitted model object"))
 	}
 	out
 }
@@ -1173,7 +1194,7 @@ get.model.data.dynardl <- function(model, model.info = NULL) {
 #' @rdname get.model.data
 #' @keywords internal
 
-get.model.data.default <- function(model, model.info = NULL) {
+get.model.data.default <- function(model, model.info = NULL, data. = NULL) {
 	out <- as.data.frame(insight::get_modelmatrix(model))
 	if(is.null(out) || nrow(out) == 0) {
 		stop(paste0("`insight::get_modelmatrix` could not extract model data from model of class '",
@@ -1432,7 +1453,7 @@ general.calculator <- function(d.x, d.y, h, limit, pulses) {
 #' By default, the GDRF assumes the user is interested in effect estimates (the effect of an independent variable on a dependent variable, calculated in levels or differences, as appropriate). yhat.calculator ``adds'' these effects to a baseline value of the dependent variable to observe how its trajectory changes
 #' @param formulae the list of formulae from \code{general.calculator} or \code{convolution.calculator}
 #' @param d.y an integer for the order of differencing of the y variable in the ADL model
-#' @param model the \code{lm} model containing the model estimates
+#' @param model a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation
 #' @param the.coef the coefficient vector from the estimated model
 #' @param y.vrbl a named vector of the (lagged) y variables and corresponding lag orders in the ADL model
 #' @param inferences.y a character string that determines whether the inferences for the dependent variable are in levels or differences. Must be one of \code{levels} or \code{differences}
@@ -1539,10 +1560,10 @@ yhat.calculator <- function(formulae, d.y, model, the.coef, y.vrbl = NULL, infer
 			baseline <- baseline.formula <- baseline.y
 		} else {
 			if(is.null(prediction.values)) {
-				stop("No baseline or predicted values for y in levels for yhat.calculator")
+				stop("No baseline or predicted values for y in levels for `yhat.calculator`")
 			}
-			if(any(names(z.vrbl) %in% names(prediction.values))) {
-				stop("Do not supply value for any z.vrbl in prediction.values. These come from z.val")
+			if(!is.null(z.vrbl) && any(names(z.vrbl) %in% names(prediction.values))) {
+				stop("Do not supply value for any `z.vrbl` in `prediction.values`. These come from the values of z")
 			}
 			# calculate the baseline from the predicted values
 			# for everything that isn't y (or z, if an interaction), check in prediction.values
@@ -1591,7 +1612,7 @@ yhat.calculator <- function(formulae, d.y, model, the.coef, y.vrbl = NULL, infer
 		} else if (inferences.y == "levels") {
 			# if it's in levels, we just set it to their arbitrary baseline.
 			if(is.null(prediction.values) && is.null(baseline.y)) {
-				stop("No baseline or predicted values for y in levels for yhat.calculator")
+				stop("No baseline or predicted values for y in levels for `yhat.calculator`")
 			}			
 			baseline <- baseline.formula <- baseline.y
 		}
@@ -1756,7 +1777,7 @@ gecm.to.adl <- function(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl) {
 #' Evaluate and/or plot the General Dynamic Response Function (GDRF) for an ADL
 #'
 #' Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan)
-#' @param model the \code{lm} model containing the ADL estimates
+#' @param model a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation
 #' @param x.vrbl a named numeric vector in which the names correspond to an independent variable and its lags and the numbers correspond to the specific lag order of each variable
 #' @param y.vrbl a named numeric vector in which the names correspond to lags of the dependent variable and the numbers correspond to the specific lag order of each variable. Can be \code{NULL} if the model has no lagged dependent variables
 #' @param d.x an integer describing how many times the independent variable was differenced before model estimation
@@ -1772,7 +1793,8 @@ gecm.to.adl <- function(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl) {
 #' @param shock.size a numeric value for the size of the shock to x in the units of x. Defaults to 1 (a discrete effect similar to traditional marginal effects)
 #' @param dM.level a numeric value for the significance level of the GDRF, calculated by the delta method. The default is 0.95
 #' @param s.limit an integer for the number of periods to determine the GDRF (beginning at s = 0)
-#' @param se.type a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted
+#' @param se.type a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors
+#' @param coef. an optional named numeric vector of coefficients to use directly, if evaluating effects from a model not supported by \code{insight::get_parameters()}. If \code{NULL} (the default), the coefficient vector is extracted automatically using \code{insight::get_parameters()}
 #' @param vcov. an optional pre-computed variance-covariance matrix to use directly, if evaluating effects from a model not supported by \code{insight::get_vcov()}. If \code{NULL} (the default), the variance-covariance matrix is extracted automatically using \code{insight::get_vcov()} with standard errors of type \code{se.type}
 #' @param return.LRM logical to return the LRM in the estimates and plots, should the LRM exist for that combination of \code{shock.history} and \code{cumulative}. The default is \code{TRUE}
 #' @param return.data logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}
@@ -1780,11 +1802,8 @@ gecm.to.adl <- function(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl) {
 #' @param return.formulae logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}
 #' @param ... other arguments to be passed to the call to plot
 #' @return if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{GDRF.adl.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the GDRF formula for each period as well as the applied shock history in integer form
-#' @importFrom stats lm coef vcov qnorm
-#' @importFrom mpoly mp
+#' @importFrom stats qnorm
 #' @importFrom car deltaMethod
-#' @importFrom sandwich vcovHC
-#' @importFrom utils capture.output
 #' @import ggplot2
 #' @details
 #' Internally, GDRF.adl.plot uses the separate subfunctions \code{pulse.calculator}, \code{convolution.calculator}/\code{general.calculator}, and (possibly) \code{yhat.calculator} to generate the effect estimates representing the GDRF. These estimates represent the effect of the independent variable (in levels or differences, depending on \code{d.x}) on the dependent variable (in levels or differences, depending on \code{d.y}), given a shock applied to the independent variable (in levels or differences, depending on \code{inferences.x}). The effect on the dependent variable can be calculated in its differenced form or levels form, depending on \code{inferences.y}. The shock history is determined by \code{shock.history}. For more information, see Vande Kamp, Jordan, and Rajan. We assume that the ADL model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities
@@ -1854,14 +1873,14 @@ GDRF.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NULL
 	shock.history = "pulse", inferences.y = "levels", inferences.x = "levels",
 	effect.type = "discrete", cumulative = FALSE, 
 	prediction.values = NULL, baseline.y = NULL, baseline.y.se = 0, shock.size = 1,  # these are new for the yhats
-	dM.level = 0.95, s.limit = 20, se.type = "const", vcov. = NULL,
+	dM.level = 0.95, s.limit = 20, se.type = "const", coef. = NULL, vcov. = NULL,
 	return.LRM = TRUE, return.data = FALSE, return.plot = TRUE, return.formulae = FALSE,	
 	...) {
 	
 	model.info <- check.model.class(model)
 	
 	# Assign coefficients
-	the.coef <- get.model.coef(model)
+	the.coef <- get.model.coef(model, model.info = model.info, coef. = coef.)
 
 	########################################################################
 	# subfunctions for shared GDRF dummy check
@@ -1874,7 +1893,7 @@ GDRF.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NULL
 	########################################################################
 	adl.dummy.checks(x.vrbl = x.vrbl, y.vrbl = y.vrbl, z.vrbl = NULL, x.z.vrbl = NULL, 
 						d.x = d.x, d.y = d.y, inferences.x = inferences.x, inferences.y = inferences.y, 
-						the.coef = the.coef, se.type = se.type, type = "GDRF")
+						the.coef = the.coef, type = "GDRF")
 
 	########################################################################
 	# subfunctions for shock history translation
@@ -2122,24 +2141,20 @@ GDRF.adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, d.x = NULL
 #' Evaluate and/or plot the General Dynamic Response Function (GDRF) for an ADL assumed in levels
 #'
 #' Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for an autoregressive distributed lag (ADL) model, making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan), assuming the underlying model is in levels (\code{d.x} = \code{d.y} = 0) and the user wants a discrete effect (the untransformed GDRF) with a shock size of 1. (This is just a wrapper for \code{GDRF.adl.plot} with simplifying assumptions)
-#' @param model the \code{lm} model containing the ADL estimates
+#' @param model a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation
 #' @param x.vrbl a named numeric vector in which the names correspond to an independent variable and its lags and the numbers correspond to the specific lag order of each variable
 #' @param y.vrbl a named numeric vector in which the names correspond to lags of the dependent variable and the numbers correspond to the specific lag order of each variable. Can be \code{NULL} if the model has no lagged dependent variables
 #' @param shock.history either a character string, integer, or numeric vector for the desired shock history. \code{shock.history} determines the shock history (h) that will be applied to the independent variable. Vande Kamp, Jordan, and Rajan express this as the parameter h (an integer). -1 represents the Impulse Response Function; the equivalent string is \code{pulse} or \code{impulse}. 0 represents the Step Response Function; the equivalent string is \code{step}. For others, see Vande Kamp, Jordan, and Rajan. However, since any shock history can be decomposed into a series of dated Impulse Response Functions, users can also supply any numeric vector of the same length as s.limit + 1. The default is \code{pulse}
 #' @param dM.level a numeric value for the significance level of the GDRF, calculated by the delta method. The default is 0.95
 #' @param s.limit an integer for the number of periods to determine the GDRF (beginning at s = 0)
-#' @param se.type a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted
+#' @param se.type a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors
 #' @param return.data logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}
 #' @param return.plot logical to return the visualized GDRFs as a list element under \code{plot}. The default is \code{TRUE}
 #' @param return.formulae logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}
 #' @param ... other arguments to be passed to the call to plot
 #' @return if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{adl.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the GDRF formula for each period as well as the applied shock history in integer form
-#' @importFrom stats lm coef vcov
-#' @importFrom mpoly mp
-#' @importFrom car deltaMethod
-#' @importFrom sandwich vcovHC
-#' @importFrom utils capture.output
-#' @import ggplot2
+#' @details
+#' This is a wrapper for \code{GDRF.adl.plot} with simplified defaults (\code{d.x = d.y = 0}, \code{effect.type = "discrete"}, \code{inferences.y = inferences.x = "levels"}, and \code{shock.size = 1}). See \code{\link{GDRF.adl.plot}} for full details and assumptions
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords ADL GDRF
 #' @examples
@@ -2181,7 +2196,7 @@ adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL,
 #' Evaluate and/or plot the General Dynamic Response Function (GDRF) for a GECM
 #'
 #' Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a Generalized Error Correction Model (GECM), making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan)
-#' @param model the \code{lm} model containing the GECM estimates
+#' @param model a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation
 #' @param x.vrbl a named numeric vector in which the names correspond to an independent variable and its lags (of the lower order of differencing, usually in levels d = 0) and the numbers correspond to the specific lag order of each variable
 #' @param y.vrbl a named numeric vector in which the names correspond to lags of the dependent variable (of the lower order of differencing, usually in levels d = 0) and the numbers correspond to the specific lag order of each variable
 #' @param x.vrbl.d.x an integer describing how many times the independent variable (of the lower order of differencing, usually in levels d = 0) was differenced before model estimation
@@ -2201,7 +2216,8 @@ adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL,
 #' @param shock.size a numeric value for the size of the shock to x in the units of x. Defaults to 1 (a discrete effect similar to traditional marginal effects)
 #' @param dM.level a numeric value for the significance level of the GDRF, calculated by the delta method. The default is 0.95
 #' @param s.limit an integer for the number of periods to determine the GDRF (beginning at s = 0)
-#' @param se.type a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted
+#' @param se.type a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors
+#' @param coef. an optional named numeric vector of coefficients to use directly, if evaluating effects from a model not supported by \code{insight::get_parameters()}. If \code{NULL} (the default), the coefficient vector is extracted automatically using \code{insight::get_parameters()}
 #' @param vcov. an optional pre-computed variance-covariance matrix to use directly, if evaluating effects from a model not supported by \code{insight::get_vcov()}. If \code{NULL} (the default), the variance-covariance matrix is extracted automatically using \code{insight::get_vcov()} with standard errors of type \code{se.type}
 #' @param return.LRM logical to return the LRM in the estimates and plots, should the LRM exist for that combination of \code{shock.history} and \code{cumulative}. The default is \code{TRUE}
 #' @param return.data logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}
@@ -2209,9 +2225,7 @@ adl.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL,
 #' @param return.formulae logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}
 #' @param ... other arguments to be passed to the call to plot
 #' @return if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{GDRF.gecm.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the GDRF formula for each period as well as the applied shock history in integer form
-#' @importFrom stats lm coef vcov qnorm
-#' @importFrom mpoly mp
-#' @importFrom sandwich vcovHC
+#' @importFrom stats qnorm
 #' @importFrom car deltaMethod
 #' @import ggplot2
 #' @details
@@ -2246,20 +2260,20 @@ GDRF.gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, x.vrbl.d.
 	shock.history = "pulse", inferences.y = "levels", inferences.x = "levels",
 	effect.type = "discrete", cumulative = FALSE, 
 	prediction.values = NULL, baseline.y = NULL, baseline.y.se = 0, shock.size = 1,  # these are new for the yhats	
-	dM.level = 0.95, s.limit = 20, se.type = "const", vcov. = NULL,
+	dM.level = 0.95, s.limit = 20, se.type = "const", coef. = NULL, vcov. = NULL,
 	return.LRM = TRUE, return.data = FALSE, return.plot = TRUE, return.formulae = FALSE,	
 	...) {
 
 	model.info <- check.model.class(model)
 	
 	# Assign coefficients
-	the.coef <- get.model.coef(model)
+	the.coef <- get.model.coef(model, model.info = model.info, coef. = coef.)
 
 	########################################################################
 	# subfunctions for shared GDRF dummy check
 	########################################################################
 	if(!is.null(prediction.values)) {
-		stop("prediction.values not suppported for GECM. Use baseline.y instead")
+		stop("`prediction.values` not supported for GECM. Use `baseline.y` instead")
 	}
 
 	GDRF.dummy.checks(effect.type = effect.type, prediction.values = prediction.values, baseline.y = baseline.y, baseline.y.se = baseline.y.se, 
@@ -2268,10 +2282,10 @@ GDRF.gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, x.vrbl.d.
 	########################################################################
 	# subfunctions for shared gecm dummy check
 	########################################################################
-	gecm.dummy.checks(x.vrbl, y.vrbl, x.d.vrbl, y.d.vrbl, 
-							x.vrbl.d.x, y.vrbl.d.y, x.d.vrbl.d.x, y.d.vrbl.d.y, 
-							inferences.x, inferences.y, the.coef, se.type, type = "GDRF")
-
+	gecm.dummy.checks(x.vrbl = x.vrbl, y.vrbl = y.vrbl, x.d.vrbl = x.d.vrbl, y.d.vrbl = y.d.vrbl, 
+							x.vrbl.d.x = x.vrbl.d.x, y.vrbl.d.y = y.vrbl.d.y, x.d.vrbl.d.x = x.d.vrbl.d.x, y.d.vrbl.d.y = y.d.vrbl.d.y, 
+							inferences.x = inferences.x, inferences.y = inferences.y, the.coef = the.coef, type = "GDRF")
+						
 	########################################################################
 	# subfunctions for shock history translation
 	########################################################################
@@ -2507,7 +2521,7 @@ GDRF.gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, x.vrbl.d.
 #' Evaluate and/or plot the General Dynamic Response Function (GDRF) for a GECM assumed in levels/first differences
 #' 
 #' Evaluate (and possibly plot) the General Dynamic Response Function (GDRF) for a GECM(1,1), making use of the GDRF framework (described below and in Vande Kamp, Jordan, and Rajan), assuming the underlying model is in first differences (\code{x.vrbl.d.x} = \code{y.vrbl.d.y} = 0 and \code{x.d.vrbl.d.x} = \code{y.d.vrbl.d.y} = 1), the user wants a discrete effect (the untransformed GDRF) and inferences about y in levels to a shock applied to x in levels, with a shock size of 1. (This is just a wrapper for \code{GDRF.gecm.plot} with simplifying assumptions)
-#' @param model the \code{lm} model containing the GECM estimates
+#' @param model a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation
 #' @param x.vrbl a named numeric vector in which the names correspond to an independent variable and its lags (of the lower order of differencing, in levels d = 0) and the numbers correspond to the specific lag order of each variable
 #' @param y.vrbl a named numeric vector in which the names correspond to lags of the dependent variable (of the lower order of differencing, in levels d = 0) and the numbers correspond to the specific lag order of each variable
 #' @param x.d.vrbl a named numeric vector in which the names correspond to an independent variable and its lags (of the higher order of differencing, in first differences d = 1) and the numbers correspond to the specific lag order of each variable
@@ -2515,19 +2529,14 @@ GDRF.gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL, x.vrbl.d.
 #' @param shock.history either a character string, integer, or numeric vector for the desired shock history. \code{shock.history} determines the shock history (h) that will be applied to the independent variable. Vande Kamp, Jordan, and Rajan express this as the parameter h (an integer). -1 represents the Impulse Response Function; the equivalent string is \code{pulse} or \code{impulse}. 0 represents the Step Response Function; the equivalent string is \code{step}. For others, see Vande Kamp, Jordan, and Rajan. However, since any shock history can be decomposed into a series of dated Impulse Response Functions, users can also supply any numeric vector of the same length as s.limit + 1. The default is \code{pulse}
 #' @param dM.level a numeric value for the significance level of the GDRF, calculated by the delta method. The default is 0.95
 #' @param s.limit an integer for the number of periods to determine the GDRF (beginning at s = 0)
-#' @param se.type a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted
+#' @param se.type a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors
 #' @param return.data logical to return the raw calculated GDRFs as a list element under \code{estimates}. The default is \code{FALSE}
 #' @param return.plot logical to return the visualized GDRFs as a list element under \code{plot}. The default is \code{TRUE}
 #' @param return.formulae logical to return the formulae for the GDRFs as a list element under \code{formulae} (for the GDRFs) and \code{shocks} (for the shock history). The default is \code{FALSE}
 #' @param ... other arguments to be passed to the call to plot
 #' @return if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{gecm.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the GDRF formula for each period as well as the applied shock history in integer form
 #' @details
-#' We assume that the GECM model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities. Given that, to obtain inferences for the specified shock history, the user only needs a named vector of the x and y variables, as well as the order of the differencing. Internally, the GECM to ADL equivalences are used to calculate the GDRFs from the GECM
-#' @importFrom stats lm coef vcov
-#' @importFrom mpoly mp
-#' @importFrom sandwich vcovHC
-#' @importFrom car deltaMethod
-#' @import ggplot2
+#' We assume that the GECM model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities. Given that, to obtain inferences for the specified shock history, the user only needs a named vector of the x and y variables, as well as the order of the differencing. Internally, the GECM to ADL equivalences are used to calculate the GDRFs from the GECM. See \code{\link{GDRF.gecm.plot}} for full details and assumptions
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
 #' @keywords GECM GDRF
 #' @examples
@@ -2573,7 +2582,7 @@ gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL,
 #' Evaluate and/or plot dynamic interactions from dynamic linear models
 #'
 #' Evaluate (and possibly plot) the dynamic conditional effect from an autoregressive distributed lag (ADL) model (following the framework of Warner, Vande Kamp and Jordan). The description here matches the prose of Warner, Vande Kamp, and Jordan
-#' @param model the \code{lm} model containing the ADL estimates
+#' @param model a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation
 #' @param x.vrbl a named numeric vector in which the names correspond to the ``main'' x variables and its lags and the numbers correspond to the specific lag order of each variable
 #' @param z.vrbl a named numeric vector in which the names correspond to the ``moderating'' z variables and its lags and the numbers correspond to the specific lag order of each variable
 #' @param x.z.vrbl a named numeric vector in which the names correspond to the ``interaction'' x:z variables and its lags and the numbers correspond to the specific lag order of each variable. IMPORTANT: enter the lag order that pertains to the ``main'' x variable. For instance, x_l_1_z (contemporaneous x times lagged z) would be 0 and l_1_x_z (lagged x times contemporaneous z) would be 1
@@ -2596,7 +2605,9 @@ gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL,
 #' @param z.vrbl.label an optional string to give as the name of the moderating z variable, used in plotting (to avoid ugly variable names in plot labels and legends)
 #' @param dM.level a numeric value for the significance level of the (cumulative) discrete effects, calculated by the delta method. The default is 0.95
 #' @param s.limit an integer for the number of periods to determine the (cumulative) discrete effects (beginning at s = 0)
-#' @param se.type a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted
+#' @param se.type a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors
+#' @param data. an optional data frame to use directly, if evaluating effects from a model not supported by \code{insight::get_modelmatrix()}. If \code{NULL} (the default), the data frame is extracted automatically using \code{insight::get_modelmatrix()}. This is to obtain values of z for plotting
+#' @param coef. an optional named numeric vector of coefficients to use directly, if evaluating effects from a model not supported by \code{insight::get_parameters()}. If \code{NULL} (the default), the coefficient vector is extracted automatically using \code{insight::get_parameters()}
 #' @param vcov. an optional pre-computed variance-covariance matrix to use directly, if evaluating effects from a model not supported by \code{insight::get_vcov()}. If \code{NULL} (the default), the variance-covariance matrix is extracted automatically using \code{insight::get_vcov()} with standard errors of type \code{se.type}
 #' @param return.LRM logical to return the LRM in the estimates and plots, should the LRM exist for that combination of \code{shock.history} and \code{cumulative}. The default is \code{TRUE}
 #' @param return.data logical to return the raw calculated (cumulative) discrete effects as a list element under \code{estimates}. The default is \code{FALSE}
@@ -2604,13 +2615,10 @@ gecm.plot <- function(model = NULL, x.vrbl = NULL, y.vrbl = NULL,
 #' @param return.formulae logical to return the formulae for the (cumulative) discrete effects as a list element under \code{formulae} (for the (cumulative) discrete effects) and \code{shocks} (for the shock history). For interactions, the placeholder of \code{z_val} is used to denote where a specific value of z is substituted. The default is \code{FALSE}
 #' @param ... other arguments to be passed to the call to plot
 #' @return if just one of \code{return.data}, \code{return.plot}, and \code{return.formulae} is \code{TRUE}, \code{interact.adl.plot} will return just the requested output. If more than one is selected (or just \code{return.data} is selected), it will return a list with elements \code{plot} (for the plot), \code{estimates} (for the data), and \code{formulae} and \code{shocks} for the (cumulative) conditional effects for each period as well as the applied shock history in integer form
-#' @importFrom stats lm coef vcov sd
-#' @importFrom ggplot2 ggplot
-#' @importFrom mpoly mp
+#' @importFrom stats qnorm sd
 #' @importFrom car deltaMethod
-#' @importFrom sandwich vcovHC
-#' @importFrom utils capture.output
 #' @importFrom grDevices hcl.colors hcl.pals palette.colors
+#' @import ggplot2
 #' @details
 #' We assume that the ADL model estimated is well specified, free of residual autocorrelation, balanced, and meets other standard time-series qualities. It is imperative that you double-check you have referenced all x, y, z, and interaction terms through \code{x.vrbl}, \code{y.vrbl}, \code{z.vrbl}, and \code{x.z.vrbl}. You must also have their orders correctly entered. \code{interact.adl.plot} has no way of determining, from the variable list, which correspond with which
 #' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan
@@ -2684,14 +2692,14 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 	heatmap.colors = "Blue-Red", 
 	z.vals = NULL, s.vals = c(0, "LRM"), 
 	z.label.rounding = 3, z.vrbl.label = names(z.vrbl)[1],
-	dM.level = 0.95, s.limit = 20, se.type = "const", vcov. = NULL,
+	dM.level = 0.95, s.limit = 20, se.type = "const", data. = NULL, coef. = NULL, vcov. = NULL,
 	return.LRM = TRUE, return.data = FALSE, return.plot = TRUE, return.formulae = FALSE,
 	...) {
 
 	model.info <- check.model.class(model)
 	
 	# Assign coefficients
-	the.coef <- get.model.coef(model)
+	the.coef <- get.model.coef(model, model.info = model.info, coef. = coef.)
 
 	########################################################################
 	# subfunctions for shared GDRF dummy check
@@ -2706,26 +2714,26 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 	########################################################################
 	adl.dummy.checks(x.vrbl = x.vrbl, y.vrbl = y.vrbl, z.vrbl = z.vrbl, x.z.vrbl = x.z.vrbl, 
 						d.x = NULL, d.y = NULL, inferences.x = NULL, inferences.y = NULL, 
-						the.coef = the.coef, se.type = se.type, type = "interact")
+						the.coef = the.coef, type = "interact")
 
 	########################################################################
 	# specific warnings to interaction plots, given the plot types
 	########################################################################
 	if(return.plot == TRUE) {
 		if(is.null(plot.type)) {
-			stop("plot.type must be specified")
+			stop("`plot.type` must be specified")
 		} 
 		if(!(plot.type %in% c("lines", "heatmap"))) {
-			stop("plot.type must be one of 'lines' or 'heatmap'")
+			stop("`plot.type` must be one of 'lines' or 'heatmap'")
 		}
 		if(plot.type == "lines") {
 			if(!(line.options %in% c("s.lines", "z.lines"))) {
-				stop("line.options must be one of 's.lines' or 'z.lines'")
+				stop("`line.options` must be one of 's.lines' or 'z.lines'")
 			}
 		}
 		if(plot.type == "heatmap") {
 			if(!(heatmap.options %in% c("all", "significant"))) {
-				stop("heatmap.options must be one of 'all' or 'significant'")
+				stop("`heatmap.options` must be one of 'all' or 'significant'")
 			}
 		}
 		if(effect.type == "fitted" & heatmap.options == "significant") {
@@ -2778,7 +2786,7 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 	}
 
 	# establish z.vals. identify the moderating variable
-	the.z <- get.model.data(model)[names(z.vrbl)[1]]
+	the.z <- get.model.data(model, model.info = model.info, data. = data.)[names(z.vrbl)[1]]
 	# useful later for defaults: z +/- 1sd (for discrete values) or 2 (for a range)	
 	potential.zline.limits <- c((mean(the.z[,1], na.rm = TRUE) - sd(the.z[,1], na.rm = TRUE)), (mean(the.z[,1], na.rm = TRUE) + sd(the.z[,1], na.rm = TRUE)))
 	potential.zrange.limits <- c((mean(the.z[,1], na.rm = TRUE) - 2*sd(the.z[,1], na.rm = TRUE)), (mean(the.z[,1], na.rm = TRUE) + 2*sd(the.z[,1], na.rm = TRUE)))
@@ -2800,7 +2808,7 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 			stop("Do not supply more than 5 discrete values of s to plot. The plot is too busy")				
 		} else if(!(is.null(z.vals))) { # if they specified z.vals
 			if(!(length(z.vals) == 2)) { # if there are more than two values provided
-				stop("s.lines requires two z.vals: a lower and upper limit of the range of z values on the x-axis")
+				stop("'s.lines' requires two `z.vals`: a lower and upper limit of the range of z values on the x-axis")
 			} else if(length(z.vals) == 2) { # if it is just two values, build the range
 				z.vals <- seq(z.vals[1], z.vals[2], length.out = 50)			
 			}			
@@ -2810,7 +2818,7 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 	} else if(plot.type == "heatmap") { #if it's a heatmap
 		if(!(is.null(z.vals))) { # if they specified z.vals
 			if(!(length(z.vals) == 2)) { # if there are more than two values provided
-				stop("heatmap requires two z.vals: a lower and upper limit of the range of z values on the x-axis")
+				stop("'heatmap' requires two `z.vals`: a lower and upper limit of the range of z values on the x-axis")
 			} else if(length(z.vals) == 2) { # if it is just two values, build the range
 				z.vals <- seq(z.vals[1], z.vals[2], length.out = 50)			
 			}
@@ -2832,7 +2840,7 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 			if(!(all(line.colors %in% c("bw", "okabe-ito")))) { # if it isn't one of ours: bw or okabe-ito
 				# we just need to see if they supplied the correct number of colors
 				if(length(line.colors) != length(z.vals)) {
-					stop(paste0("Number of supplied line.colors (", length(line.colors), ") is not equal to number of z.vals (", length(z.vals), ") to plot"))			
+					stop(paste0("Number of supplied `line.colors` (", length(line.colors), ") is not equal to number of `z.vals` (", length(z.vals), ") to plot"))			
 				}
 			} else if(all(line.colors %in% "okabe-ito")) { # if it is okabe-ito
 				line.colors <- unname(palette.colors())[2:(length(z.vals)+1)] # okabe.ito
@@ -2844,7 +2852,7 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 			if(!(all(line.colors %in% c("bw", "okabe-ito")))) { # if it isn't one of ours: bw or okabe-ito
 				# we just need to see if they supplied the correct number of colors
 				if(length(line.colors) != length(s.vals)) {
-					stop(paste0("Number of supplied line.colors (", length(line.colors), ") is not equal to number of s.vals (", length(s.vals), ") to plot"))			
+					stop(paste0("Number of supplied `line.colors` (", length(line.colors), ") is not equal to number of `s.vals` (", length(s.vals), ") to plot"))			
 				}
 			} else if(all(line.colors %in% "okabe-ito")) { # if it is okabe-ito
 				line.colors <- unname(palette.colors())[2:(length(s.vals)+1)] # okabe.ito
@@ -2858,7 +2866,7 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 	if(plot.type %in% c("heatmap")) {
 		# the default is "Blue-Red", but any hcl.pals() will work
 		if(!(heatmap.colors %in% hcl.pals())) {
-			stop("heatmap.colors must be one of hcl.pals(). For grayscale heatmap, use 'Grays'")
+			stop("`heatmap.colors` must be one of 'hcl.pals()'. For grayscale heatmap, use 'Grays'")
 		}	
 	}
 		
@@ -3116,7 +3124,8 @@ interact.adl.plot <- function(model = NULL, x.vrbl = NULL, z.vrbl = NULL, x.z.vr
 				# Need to define levels of s for plotting. Really it's only sensical to do 0 and LRM. But I'm not going to stop anyone
 				#  change "LRM" to the s.limit + 1 period in the prediction dataset
 				#  this just identifies it numerically for plotting
-				s.vals[s.vals == "LRM"] <- lrm.space <- s.limit + 1    
+				lrm.space <- s.limit + 1
+				s.vals[s.vals == "LRM"] <- lrm.space
 				s.vals <- as.numeric(s.vals)
 				s.plot.labels <- paste0("s = ", s.vals)
 				s.plot.labels[s.plot.labels == "s = 0"] <- "s = 0 (Short-run)"

@@ -9,7 +9,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = NULL, y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Variables in GDRF terms \\(x and y\\)"
@@ -21,7 +21,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = NULL, x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Variables in GDRF terms \\(x and y\\)"
@@ -33,7 +33,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = NULL, y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Variables in GDRF terms \\(x and y\\)"
@@ -45,7 +45,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = NULL, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Order of differencing of variables in GDRF terms"
@@ -57,7 +57,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = NULL, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Order of differencing of variables in GDRF terms"
@@ -69,7 +69,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = NULL, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Order of differencing of variables in lagged differences in GDRF must"
@@ -81,7 +81,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = NULL,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Order of differencing of variables in lagged differences in GDRF must"
@@ -93,7 +93,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = NULL,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "Even if variables in lagged differences in"
@@ -105,10 +105,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 1.5, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in GDRF term \\(x.vrbl.d.x and y.vrbl.d.y\\) must be an integer"
+    "Order of differencing of variables in GDRF term \\(`x.vrbl.d.x` and `y.vrbl.d.y`\\) must be an integer"
   )
 
   # y.vrbl.d.y not integer
@@ -117,10 +117,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 1.5, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in GDRF term \\(x.vrbl.d.x and y.vrbl.d.y\\) must be an integer"
+    "Order of differencing of variables in GDRF term \\(`x.vrbl.d.x` and `y.vrbl.d.y`\\) must be an integer"
   )
 
   # x.d.vrbl.d.x not integer
@@ -129,10 +129,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1.5, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in GDRF term \\(x.d.vrbl.d.x"
+    "Order of differencing of variables in lagged differences in GDRF term \\(`x.d.vrbl.d.x`"
   )
 
   # y.d.vrbl.d.y not integer
@@ -141,10 +141,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1.5,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "Order of differencing of variables in lagged differences in GDRF term \\(y.d.vrbl.d.y"
+    "Order of differencing of variables in lagged differences in GDRF term \\(`y.d.vrbl.d.y`"
   )
 
   # x.vrbl unnamed
@@ -153,10 +153,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c(1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "x.vrbl should be a named vector"
+    "`x.vrbl` should be a named vector"
   )
 
   # x.vrbl not numeric
@@ -165,10 +165,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x"), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "x.vrbl should be a named vector"
+    "`x.vrbl` should be a named vector"
   )
 
   # y.vrbl unnamed
@@ -177,10 +177,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c(1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "y.vrbl should be a named vector"
+    "`y.vrbl` should be a named vector"
   )
 
   # y.vrbl not numeric
@@ -189,10 +189,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y"), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "y.vrbl should be a named vector"
+    "`y.vrbl` should be a named vector"
   )
 
   # x.d.vrbl unnamed
@@ -201,10 +201,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c(0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "x.d.vrbl should be a named vector"
+    "`x.d.vrbl` should be a named vector"
   )
 
   # x.d.vrbl not numeric
@@ -213,10 +213,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x"), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "x.d.vrbl should be a named vector"
+    "`x.d.vrbl` should be a named vector"
   )
 
   # y.d.vrbl unnamed
@@ -225,10 +225,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c(1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "y.d.vrbl should be a named vector"
+    "`y.d.vrbl` should be a named vector"
   )
 
   # y.d.vrbl not numeric
@@ -237,10 +237,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y"),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "y.d.vrbl should be a named vector"
+    "`y.d.vrbl` should be a named vector"
   )
 
   # x differencing ordering off (distance > 1)
@@ -249,7 +249,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 2, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, the variable in differences should be one order of differencing"
@@ -261,7 +261,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 2,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, the variable in differences should be one order of differencing"
@@ -273,7 +273,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1, "l_2_x" = 2), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, include only the first lag of the variable"
@@ -285,7 +285,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1, "l_2_y" = 2), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, include only the first lag of the variable"
@@ -297,7 +297,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 2), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, include only the first lag of the variable"
@@ -309,7 +309,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 2), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, include only the first lag of the variable"
@@ -321,7 +321,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "differences", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, inferences regarding the GDRF of x"
@@ -333,22 +333,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "differences", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
     "In a GECM, inferences regarding the GDRF of x"
-  )
-
-  # se.type not valid
-  expect_error(
-    # Function output
-    gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
-      x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
-      inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "cough", type = "GDRF"),
-
-    # Expected output
-    "Invalid se.type"
   )
 
   # x.vrbl not in model
@@ -357,10 +345,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("cough" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "x.vrbl not present in estimated model"
+    "`x.vrbl` not present in estimated model"
   )
 
   # y.vrbl not in model
@@ -369,10 +357,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("cough" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "y.vrbl not present in estimated model"
+    "`y.vrbl` not present in estimated model"
   )
 
   # x.d.vrbl not in model
@@ -381,10 +369,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("cough" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "x.d.vrbl not present in estimated model"
+    "`x.d.vrbl` not present in estimated model"
   )
 
   # y.d.vrbl not in model
@@ -393,10 +381,10 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("cough" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF"),
+      type = "GDRF"),
 
     # Expected output
-    "y.d.vrbl not present in estimated model"
+    "`y.d.vrbl` not present in estimated model"
   )
 
   # valid inputs produce no error
@@ -405,7 +393,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = c("l_1_d_y" = 1),
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF")
+      type = "GDRF")
   )
 
   # valid inputs with no y.d.vrbl produce no error
@@ -414,7 +402,7 @@ test_that("gecm.dummy.checks produces the correct errors (GDRF type)", {
     gecm.dummy.checks(x.vrbl = c("l_1_x" = 1), y.vrbl = c("l_1_y" = 1), x.d.vrbl = c("d_x" = 0), y.d.vrbl = NULL,
       x.vrbl.d.x = 0, y.vrbl.d.y = 0, x.d.vrbl.d.x = 1, y.d.vrbl.d.y = 1,
       inferences.x = "levels", inferences.y = "levels", the.coef = coef(model),
-      se.type = "const", type = "GDRF")
+      type = "GDRF")
   )
 
 })

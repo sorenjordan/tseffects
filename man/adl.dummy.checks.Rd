@@ -14,7 +14,6 @@ adl.dummy.checks(
   inferences.x,
   inferences.y,
   the.coef,
-  se.type,
   type = NULL
 )
 }
@@ -32,8 +31,6 @@ adl.dummy.checks(
 \item{inferences.y}{a character string specifying whether the shock to the independent variable is interpreted in levels or differences (of the dependent variable). Valid arguments include \code{levels} or \code{differences}. (For y variables where \code{d.y} is 0, this is automatically \code{levels}.) The default is \code{levels}}
 
 \item{the.coef}{the coefficient vector from the estimated ADL model}
-
-\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
 
 \item{type}{a string whether the effects are estimated from a GDRF model or the interaction model. Accepts either \code{GDRF} or \code{interact}}
 }

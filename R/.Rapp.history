@@ -4,3 +4,854 @@ library(car)
 ?vcov
 install.packaes("tidyverse")
 install.packages("tidyverse")
+# required for package#
+library(mpoly)#
+library(car)#
+library(ggplot2)#
+library(see)#
+library(colorspace)#
+library(stats)#
+library(sandwich)#
+library(utils)#
+library(insight)#
+library(dynamac)#
+library(dynlm)#
+library(ARDL)#
+library(kardl)#
+#
+# required for tester#
+library(testthat)#
+library(vdiffr)
+source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/tseffects-nextversion-beta.R")
+source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects-nextversion-beta.R")
+test_that("get.model.coef rejects invalid model objects", { # this is an insight:: error, so we let it define#
+  expect_error( # extract information from a dataframe#
+    # Function output#
+    get.model.coef(data.frame(x = 1:5))#
+  ) #
+})
+test_that("get.model.coef returns correct values (generic)", {#
+  model.lm <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)#
+#
+  # get the coefficients#
+  lm.coef <- get.model.coef(model.lm)#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.numeric(lm.coef)) #
+  expect_true(is.vector(lm.coef))#
+  expect_true(all(names(lm.coef) == c("(Intercept)", "x", "l_1_x", "l_1_y"))) #
+})
+model.lm <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/data/approval.rda")
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/data/toy.ts.interaction.data.rda")
+model.lm <- lm(y ~ l_1_y + x + l_1_x, data = toy.ts.interaction.data)#
+#
+  # get the coefficients#
+  lm.coef <- get.model.coef(model.lm)#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.numeric(lm.coef)) #
+  expect_true(is.vector(lm.coef))#
+  expect_true(all(names(lm.coef) == c("(Intercept)", "x", "l_1_x", "l_1_y")))
+names(lm.coef)
+all(names(lm.coef) == c("(Intercept)", "x", "l_1_x", "l_1_y"))
+names(lm.coef)
+names(lm.coef) %in% c("(Intercept)", "x", "l_1_x", "l_1_y")
+all(names(lm.coef) %in% c("(Intercept)", "x", "l_1_x", "l_1_y"))
+# Fit a simple lm model #
+  model <- lm(y ~ x + l_1_x + l_1_y, data = toy.ts.interaction.data)  #
+#
+  # Function output #
+  result <- get.model.data(model, model.info = check.model.class(model))#
+#
+  # Expected output: contains all model variables #
+  expect_true("y" %in% names(result))#
+  expect_true("x" %in% names(result))#
+  expect_true("l_1_x" %in% names(result))#
+  expect_true("l_1_y" %in% names(result))
+result
+names(result)
+expect_true("x" %in% names(result))#
+  expect_true("l_1_x" %in% names(result))#
+  expect_true("l_1_y" %in% names(result))
+expect_equal(result$y, toy.ts.interaction.data$y)
+expect_equal(result$x, toy.ts.interaction.data$x)
+expect_equal(result$l_1_x, toy.ts.interaction.data$l_1_x)
+expect_equal(result$l_1_y, toy.ts.interaction.data$l_1_y)
+expect_equal(result$x, toy.ts.interaction.data$x)
+expect_equal(result$l_1_x, toy.ts.interaction.data$l_1_x)
+expect_equal(result$l_1_y, toy.ts.interaction.data$l_1_y)
+######################################################################
+# shared model setup in case not installed#
+######################################################################
+model.dynardl <- NULL#
+#
+test_that("dynardl model can be constructed", {#
+  skip_if_not_installed("dynamac")#
+  library(dynamac)#
+  model.dynardl <<- dynamac::dynardl(y ~ x + z,#
+   levels = c("x", "z"), lags = list("x" = c(1, 2), "z" = c(1, 2), "y" = c(1)), #
+   data = toy.ts.interaction.data, simulate = FALSE)#
+  expect_s3_class(model.dynardl, "dynardl")#
+})#
+#
+######################################################################
+# check.model.class#
+######################################################################
+#
+test_that("check.model.class returns correct values (dynamac)", {#
+  skip_if_not_installed("dynamac")#
+  skip_if(is.null(model.dynardl), "dynardl model could not be constructed")#
+#
+  # Store results for testing#
+  dynardl.class <- check.model.class(model.dynardl)#
+  expect_equal( # the class is correct#
+    # Function output#
+    dynardl.class$model.class,#
+    # Expected output#
+    "dynardl"#
+  )#
+  expect_equal( # the class is supported#
+    # Function output#
+    dynardl.class$supported,#
+    # Expected output#
+    TRUE#
+  )#
+#
+  expect_equal( # the class is not panel#
+    # Function output#
+    dynardl.class$is.panel,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the class is not glm#
+    # Function output#
+    dynardl.class$is.glm,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # dynardl IS a wrapper for this function#
+    # Function output#
+    dynardl.class$is.wrapper,#
+    # Expected output#
+    TRUE#
+  )#
+#
+  expect_equal( # the link function is identity#
+    # Function output#
+    dynardl.class$link.fn,#
+    # Expected output#
+    "identity"#
+  )#
+#
+})#
+#
+######################################################################
+# get.model.coef#
+######################################################################
+#
+test_that("get.model.coef returns correct values (dynamac)", {#
+  skip_if_not_installed("dynamac")#
+  skip_if(is.null(model.dynardl), "dynardl model could not be constructed")#
+#
+  # get the coefficients#
+  dynardl.coef <- get.model.coef(model.dynardl)#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.numeric(dynardl.coef)) #
+  expect_true(is.vector(dynardl.coef))#
+  expect_true(!is.null(names(dynardl.coef)))#
+#
+  expect_equal( # number of coefficients#
+    # Function output#
+    length(dynardl.coef),#
+    # Expected output#
+    8#
+  )#
+})  #
+#
+######################################################################
+# get.model.vcov#
+######################################################################
+#
+test_that("get.model.vcov returns correct values (dynamac)", {#
+  skip_if_not_installed("dynamac")#
+  skip_if(is.null(model.dynardl), "dynardl model could not be constructed")#
+#
+  # get the coefficients and vcov#
+  dynardl.coef <- get.model.coef(model.dynardl)  #
+  dynardl.vcov <- get.model.vcov(model.dynardl, check.model.class(model.dynardl), se.type = "const")#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.matrix(dynardl.vcov)) #
+  expect_true(isSymmetric(dynardl.vcov)) #
+  expect_true(!is.null(rownames(dynardl.vcov)))#
+  expect_true(!is.null(colnames(dynardl.vcov)))#
+  # do the names match?#
+  expect_equal(names(dynardl.coef), rownames(dynardl.vcov))#
+  expect_equal(names(dynardl.coef), colnames(dynardl.vcov))#
+#
+})  #
+#
+######################################################################
+# get.model.data#
+######################################################################
+#
+test_that("get.model.data returns correct values (dynamac)", {#
+  skip_if_not_installed("dynamac")#
+  skip_if(is.null(model.dynardl), "dynardl model could not be constructed")#
+#
+  # get the coefficients and data#
+  dynardl.coef <- get.model.coef(model.dynardl)    #
+  dynardl.data <- get.model.data(model.dynardl, model.info = check.model.class(model.dynardl))#
+#
+  # Is it a dataframe?#
+  expect_true(is.data.frame(dynardl.data))#
+#
+  # are the coefficients in it?#
+  dynardl.coef.vars <- setdiff(names(dynardl.coef), "(Intercept)")#
+  expect_true(all(dynardl.coef.vars %in% names(dynardl.data)))  #
+#
+  # Expected output: correct number of rows/columns #
+  expect_equal( # same number of rows#
+    # Function output#
+    nrow(dynardl.data), #
+    # Expected output: dynardl requires trimming off the rows for the lags#
+    nrow(toy.ts.interaction.data) - 2#
+  ) #
+  # Some columns lol#
+  expect_true(ncol(dynardl.data) > 0)#
+#
+})  #
+#
+######################################################################
+# calculation#
+######################################################################
+#
+test_that("adl.plot calculates values correctly for method (dynamac)", {#
+  skip_if_not_installed("dynamac")#
+  skip_if(is.null(model.dynardl), "dynardl model could not be constructed")#
+#
+  # the model#
+  lrm.formula <- "(x + l.1.x + l.2.x) / (1 - l.1.y)"#
+  # raw calculations#
+  lrm.est.from.raw <- (coef(model.dynardl$model)["x"] + coef(model.dynardl$model)["l.1.x"] + coef(model.dynardl$model)["l.2.x"])/(1 - coef(model.dynardl$model)["l.1.y"])#
+  lrm.se.from.raw <- deltaMethod(coef(model.dynardl$model), g = lrm.formula, vcov. = vcov(model.dynardl$model))$SE#
+#
+  # tseffects calculations#
+#
+  adl.out <- adl.plot(model = model.dynardl, #
+    y.vrbl = c("l.1.y" = 1), #
+    x.vrbl = c("x" = 0, "l.1.x" = 1, "l.2.x" = 2), #
+    shock.history = "step", #
+    return.data = TRUE, return.plot = FALSE, return.formulae = FALSE)#
+#
+  expect_equal( # for the lrm estimate#
+    # Function output#
+    adl.out$GDRF[adl.out$Period == "LRM"],#
+    # Expected output#
+    unname(lrm.est.from.raw),#
+    tolerance = 1e-3#
+  )#
+  expect_equal( # for the lrm se#
+    # Function output#
+    adl.out$SE[adl.out$Period == "LRM"],#
+    # Expected output#
+    lrm.se.from.raw,#
+    tolerance = 1e-3#
+  )#
+})
+######################################################################
+# shared model setup in case not installed#
+######################################################################
+model.ardl <- NULL#
+#
+test_that("ardl model can be constructed", {#
+  skip_if_not_installed("ARDL")#
+  library(ARDL)#
+  model.ardl <<- ARDL::ardl(y ~ x + z, data = toy.ts.interaction.data, order = c(1, 2, 2))#
+  expect_s3_class(model.ardl, "ardl")#
+})#
+#
+######################################################################
+# check.model.class#
+######################################################################
+#
+test_that("check.model.class returns correct values (ardl)", {#
+  skip_if_not_installed("ARDL")#
+  skip_if(is.null(model.ardl), "ardl model could not be constructed")#
+#
+  # Store results for testing#
+  ardl.class <- check.model.class(model.ardl)#
+  expect_equal( # the class is correct#
+    # Function output#
+    ardl.class$model.class,#
+    # Expected output#
+    "ardl"#
+  )#
+  expect_equal( # the class is supported#
+    # Function output#
+    ardl.class$supported,#
+    # Expected output#
+    TRUE#
+  )#
+#
+  expect_equal( # the class is not panel#
+    # Function output#
+    ardl.class$is.panel,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the class is not glm#
+    # Function output#
+    ardl.class$is.glm,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the class is not a wrapper#
+    # Function output#
+    ardl.class$is.wrapper,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the link function is identity#
+    # Function output#
+    ardl.class$link.fn,#
+    # Expected output#
+    "identity"#
+  )#
+#
+})#
+#
+######################################################################
+# get.model.coef#
+######################################################################
+#
+test_that("get.model.coef returns correct values (ardl)", {#
+  skip_if_not_installed("ARDL")#
+  skip_if(is.null(model.ardl), "ardl model could not be constructed")#
+  # get the coefficients#
+  ardl.coef <- get.model.coef(model.ardl)#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.numeric(ardl.coef)) #
+  expect_true(is.vector(ardl.coef))#
+  expect_true(!is.null(names(ardl.coef)))#
+#
+  expect_equal( # number of coefficients#
+    # Function output#
+    length(ardl.coef),#
+    # Expected output#
+    8#
+  )#
+})  #
+#
+######################################################################
+# get.model.vcov#
+######################################################################
+#
+test_that("get.model.vcov returns correct values (ardl)", {#
+  skip_if_not_installed("ARDL")#
+  skip_if(is.null(model.ardl), "ardl model could not be constructed")#
+  # get the coefficients and vcov#
+  ardl.coef <- get.model.coef(model.ardl)  #
+  ardl.vcov <- get.model.vcov(model.ardl, check.model.class(model.ardl), se.type = "const")#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.matrix(ardl.vcov)) #
+  expect_true(isSymmetric(ardl.vcov)) #
+  expect_true(!is.null(rownames(ardl.vcov)))#
+  expect_true(!is.null(colnames(ardl.vcov)))#
+  # do the names match?#
+  expect_equal(names(ardl.coef), rownames(ardl.vcov))#
+  expect_equal(names(ardl.coef), colnames(ardl.vcov))#
+#
+})  #
+#
+######################################################################
+# get.model.data#
+######################################################################
+#
+test_that("get.model.data returns correct values (ardl)", {#
+  skip_if_not_installed("ARDL")#
+  skip_if(is.null(model.ardl), "ardl model could not be constructed")#
+  # get the coefficients and data#
+  ardl.coef <- get.model.coef(model.ardl)    #
+  ardl.data <- get.model.data(model.ardl, model.info = check.model.class(model.ardl))#
+#
+  # Is it a dataframe?#
+  expect_true(is.data.frame(ardl.data))#
+#
+  # are the coefficients in it?#
+  ardl.coef.vars <- setdiff(names(ardl.coef), "(Intercept)")#
+  expect_true(all(ardl.coef.vars %in% names(ardl.data)))  #
+#
+  # Expected output: correct number of rows/columns #
+  expect_equal( # same number of rows#
+    # Function output#
+    nrow(ardl.data), #
+    # Expected output: ardl requires trimming off the rows for the lags#
+    nrow(toy.ts.interaction.data) - 2#
+  ) #
+  # Some columns lol#
+  expect_true(ncol(ardl.data) > 0)#
+#
+})  #
+#
+######################################################################
+# calculation#
+######################################################################
+#
+test_that("adl.plot calculates values correctly for method (ardl)", {#
+  skip_if_not_installed("ARDL")#
+  skip_if(is.null(model.ardl), "ardl model could not be constructed")#
+  # the model#
+  lrm.formula <- "(x + `L(x, 1)` + `L(x, 2)`) / (1 - `L(y, 1)`)"#
+  # raw calculations#
+  lrm.est.from.raw <- (coef(model.ardl)["x"] + coef(model.ardl)["L(x, 1)"] + coef(model.ardl)["L(x, 2)"])/(1 - coef(model.ardl)["L(y, 1)"])#
+  lrm.se.from.raw <- deltaMethod(coef(model.ardl), g = lrm.formula, vcov. = vcov(model.ardl))$SE#
+#
+  # tseffects calculations#
+#
+  adl.out <- adl.plot(model = model.ardl, #
+    y.vrbl = c("L(y, 1)" = 1),#
+    x.vrbl = c("x" = 0, "L(x, 1)" = 1, "L(x, 2)" = 2), #
+    shock.history = "step", #
+    return.data = TRUE, return.plot = FALSE, return.formulae = FALSE)#
+#
+  expect_equal( # for the lrm estimate#
+    # Function output#
+    adl.out$GDRF[adl.out$Period == "LRM"],#
+    # Expected output#
+    unname(lrm.est.from.raw),#
+    tolerance = 1e-3#
+  )#
+  expect_equal( # for the lrm se#
+    # Function output#
+    adl.out$SE[adl.out$Period == "LRM"],#
+    # Expected output#
+    lrm.se.from.raw,#
+    tolerance = 1e-3#
+  )#
+})
+######################################################################
+# shared model setup in case not installed#
+######################################################################
+model.dynlm <- NULL#
+#
+test_that("dynlm model can be constructed", {#
+  skip_if_not_installed("dynlm")#
+  library(dynlm)#
+#
+  toy.ts.interaction.data.ts <- ts(toy.ts.interaction.data, start = 1, end = 50, frequency = 1)#
+  model.dynlm <<- dynlm::dynlm(y ~ L(y, 1) + x + L(x, 1) + L(x, 2) + z + L(z, 1) + L(z, 2), data = toy.ts.interaction.data.ts)#
+  expect_s3_class(model.dynlm, "dynlm")#
+})#
+#
+######################################################################
+# check.model.class#
+######################################################################
+#
+test_that("check.model.class returns correct values (dynlm)", {#
+  skip_if_not_installed("dynlm")#
+  skip_if(is.null(model.dynlm), "dynlm model could not be constructed")#
+  # Store results for testing#
+  dynlm.class <- check.model.class(model.dynlm)#
+  expect_equal( # the class is correct#
+    # Function output#
+    dynlm.class$model.class,#
+    # Expected output#
+    "dynlm"#
+  )#
+  expect_equal( # the class is supported#
+    # Function output#
+    dynlm.class$supported,#
+    # Expected output#
+    TRUE#
+  )#
+#
+  expect_equal( # the class is not panel#
+    # Function output#
+    dynlm.class$is.panel,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the class is not glm#
+    # Function output#
+    dynlm.class$is.glm,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the class is not a wrapper#
+    # Function output#
+    dynlm.class$is.wrapper,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the link function is identity#
+    # Function output#
+    dynlm.class$link.fn,#
+    # Expected output#
+    "identity"#
+  )#
+#
+})#
+#
+######################################################################
+# get.model.coef#
+######################################################################
+#
+test_that("get.model.coef returns correct values (dynlm)", {#
+  skip_if_not_installed("dynlm")#
+  skip_if(is.null(model.dynlm), "dynlm model could not be constructed")#
+  # get the coefficients#
+  dynlm.coef <- get.model.coef(model.dynlm)#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.numeric(dynlm.coef)) #
+  expect_true(is.vector(dynlm.coef))#
+  expect_true(!is.null(names(dynlm.coef)))#
+#
+  expect_equal( # number of coefficients#
+    # Function output#
+    length(dynlm.coef),#
+    # Expected output#
+    8#
+  )#
+})  #
+#
+######################################################################
+# get.model.vcov#
+######################################################################
+#
+test_that("get.model.vcov returns correct values (dynlm)", {#
+  skip_if_not_installed("dynlm")#
+  skip_if(is.null(model.dynlm), "dynlm model could not be constructed")#
+  # get the coefficients and vcov#
+  dynlm.coef <- get.model.coef(model.dynlm)  #
+  dynlm.vcov <- get.model.vcov(model.dynlm, check.model.class(model.dynlm), se.type = "const")#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.matrix(dynlm.vcov)) #
+  expect_true(isSymmetric(dynlm.vcov)) #
+  expect_true(!is.null(rownames(dynlm.vcov)))#
+  expect_true(!is.null(colnames(dynlm.vcov)))#
+  # do the names match?#
+  expect_equal(names(dynlm.coef), rownames(dynlm.vcov))#
+  expect_equal(names(dynlm.coef), colnames(dynlm.vcov))#
+#
+})  #
+#
+######################################################################
+# get.model.data#
+######################################################################
+#
+test_that("get.model.data returns correct values (dynlm)", {#
+  skip_if_not_installed("dynlm")#
+  skip_if(is.null(model.dynlm), "dynlm model could not be constructed")#
+  # get the coefficients and data#
+  dynlm.coef <- get.model.coef(model.dynlm)    #
+  dynlm.data <- get.model.data(model.dynlm, model.info = check.model.class(model.dynlm))#
+#
+  # Is it a dataframe?#
+  expect_true(is.data.frame(dynlm.data))#
+#
+  # are the coefficients in it?#
+  dynlm.coef.vars <- setdiff(names(dynlm.coef), "(Intercept)")#
+  expect_true(all(dynlm.coef.vars %in% names(dynlm.data)))  #
+#
+  # Expected output: correct number of rows/columns #
+  expect_equal( # same number of rows#
+    # Functoin output#
+    nrow(dynlm.data), #
+    # Expected output: dynlm requires trimming off the rows for the lags#
+    nrow(toy.ts.interaction.data) - 2#
+  ) #
+  # Some columns lol#
+  expect_true(ncol(dynlm.data) > 0)#
+#
+})  #
+#
+######################################################################
+# calculation#
+######################################################################
+#
+test_that("adl.plot calculates values correctly for method (dynlm)", {#
+  skip_if_not_installed("dynlm")#
+  skip_if(is.null(model.dynlm), "dynlm model could not be constructed")#
+  # the model#
+  lrm.formula <- "(x + `L(x, 1)` + `L(x, 2)`) / (1 - `L(y, 1)`)"#
+  # raw calculations#
+  lrm.est.from.raw <- (coef(model.dynlm)["x"] + coef(model.dynlm)["L(x, 1)"] + coef(model.dynlm)["L(x, 2)"])/(1 - coef(model.dynlm)["L(y, 1)"])#
+  lrm.se.from.raw <- deltaMethod(coef(model.dynlm), g = lrm.formula, vcov. = vcov(model.dynlm))$SE#
+#
+  # tseffects calculations#
+#
+  adl.out <- adl.plot(model = model.dynlm, #
+    y.vrbl = c("L(y, 1)" = 1), #
+    x.vrbl = c("x" = 0, "L(x, 1)" = 1, "L(x, 2)" = 2), #
+    shock.history = "step", #
+    return.data = TRUE, return.plot = FALSE, return.formulae = FALSE)#
+#
+  expect_equal( # for the lrm estimate#
+    # Function output#
+    adl.out$GDRF[adl.out$Period == "LRM"],#
+    # Expected output#
+    unname(lrm.est.from.raw),#
+    tolerance = 1e-3#
+  )#
+  expect_equal( # for the lrm se#
+    # Function output#
+    adl.out$SE[adl.out$Period == "LRM"],#
+    # Expected output#
+    lrm.se.from.raw,#
+    tolerance = 1e-3#
+  )#
+})
+######################################################################
+# shared model setup in case not installed#
+######################################################################
+model.kardl <- NULL#
+#
+test_that("kardl_lm model can be constructed", {#
+  skip_if_not_installed("kardl")#
+  library(kardl)#
+  model.kardl_lm <<- kardl::kardl(y ~ x + z, data = toy.ts.interaction.data, mode = c(1, 2, 2))#
+  expect_s3_class(model.kardl_lm, "kardl_lm")#
+})#
+#
+######################################################################
+# check.model.class#
+######################################################################
+#
+test_that("check.model.class returns correct values (kardl_lm)", {#
+  skip_if_not_installed("kardl")#
+  skip_if(is.null(model.kardl_lm), "kardl_lm model could not be constructed")#
+  # Store results for testing#
+  kardl_lm.class <- check.model.class(model.kardl_lm)#
+  expect_equal( # the class is correct#
+    # Function output#
+    kardl_lm.class$model.class,#
+    # Expected output#
+    "kardl_lm"#
+  )#
+  expect_equal( # the class is supported#
+    # Function output#
+    kardl_lm.class$supported,#
+    # Expected output#
+    TRUE#
+  )#
+#
+  expect_equal( # the class is not panel#
+    # Function output#
+    kardl_lm.class$is.panel,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the class is not glm#
+    # Function output#
+    kardl_lm.class$is.glm,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the class is not a wrapper#
+    # Function output#
+    kardl_lm.class$is.wrapper,#
+    # Expected output#
+    FALSE#
+  )#
+#
+  expect_equal( # the link function is identity#
+    # Function output#
+    kardl_lm.class$link.fn,#
+    # Expected output#
+    "identity"#
+  )#
+#
+})#
+#
+######################################################################
+# get.model.coef#
+######################################################################
+#
+test_that("get.model.coef returns correct values (kardl_lm)", {#
+  skip_if_not_installed("kardl")#
+  skip_if(is.null(model.kardl_lm), "kardl_lm model could not be constructed")#
+  # get the coefficients#
+  kardl_lm.coef <- get.model.coef(model.kardl_lm)#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.numeric(kardl_lm.coef)) #
+  expect_true(is.vector(kardl_lm.coef))#
+  expect_true(!is.null(names(kardl_lm.coef)))#
+#
+  expect_equal( # number of coefficients#
+    # Function output#
+    length(kardl_lm.coef),#
+    # Expected output: kardl adds lagged differences of the order, presuming everything is a GECM lol#
+    11#
+  )#
+})  #
+#
+######################################################################
+# get.model.vcov#
+######################################################################
+#
+test_that("get.model.vcov returns correct values (kardl_lm)", {#
+  skip_if_not_installed("kardl")#
+  skip_if(is.null(model.kardl_lm), "kardl_lm model could not be constructed")#
+  # get the coefficients and vcov#
+  kardl_lm.coef <- get.model.coef(model.kardl_lm)  #
+  kardl_lm.vcov <- get.model.vcov(model.kardl_lm, check.model.class(model.kardl_lm), se.type = "const")#
+#
+  # test the qualities of the coefficient vector#
+  expect_true(is.matrix(kardl_lm.vcov)) #
+  expect_true(isSymmetric(kardl_lm.vcov)) #
+  expect_true(!is.null(rownames(kardl_lm.vcov)))#
+  expect_true(!is.null(colnames(kardl_lm.vcov)))#
+  # do the names match?#
+  expect_equal(names(kardl_lm.coef), rownames(kardl_lm.vcov))#
+  expect_equal(names(kardl_lm.coef), colnames(kardl_lm.vcov))#
+#
+})  #
+#
+######################################################################
+# get.model.data#
+######################################################################
+#
+test_that("get.model.data returns correct values (kardl_lm)", {#
+  skip_if_not_installed("kardl")#
+  skip_if(is.null(model.kardl_lm), "kardl_lm model could not be constructed")#
+  # get the coefficients and data#
+  kardl_lm.coef <- get.model.coef(model.kardl_lm)    #
+  kardl_lm.data <- get.model.data(model.kardl_lm, model.info = check.model.class(model.kardl_lm))#
+#
+  # Is it a dataframe?#
+  expect_true(is.data.frame(kardl_lm.data))#
+#
+  # are the coefficients in it?#
+  kardl_lm.coef.vars <- setdiff(names(kardl_lm.coef), "(Intercept)")#
+  expect_true(all(kardl_lm.coef.vars %in% names(kardl_lm.data)))  #
+#
+  # Expected output: correct number of rows/columns #
+  expect_equal( # same number of rows#
+    # Function output#
+    nrow(kardl_lm.data), #
+    # Expected output: kardl requires trimming off the rows for the lags (extra for the lagged differences)#
+    nrow(toy.ts.interaction.data) - 3#
+  ) #
+  # Some columns lol#
+  expect_true(ncol(kardl_lm.data) > 0)#
+#
+})  #
+#
+######################################################################
+# calculation#
+######################################################################
+#
+test_that("adl.plot calculates values correctly for method (kardl_lm)", {#
+  skip_if_not_installed("kardl")#
+  skip_if(is.null(model.kardl_lm), "kardl_lm model could not be constructed")#
+  # the model. this formula is wrong but we will just feed it the wrong thing in adl.plot too#
+  lrm.formula <- "(L1.x) / (1 - L1.y)"#
+  # raw calculations#
+  lrm.est.from.raw <- (coef(model.kardl)["L1.x"])/(1 - coef(model.kardl)["L1.y"])#
+  lrm.se.from.raw <- deltaMethod(coef(model.kardl_lm), g = lrm.formula, vcov. = vcov(model.kardl_lm))$SE#
+#
+  # tseffects calculations#
+#
+  adl.out <- adl.plot(model = model.kardl_lm, #
+    y.vrbl = c("L1.y" = 1), #
+    x.vrbl = c("L1.x" = 1), #
+    shock.history = "step", #
+    return.data = TRUE, return.plot = FALSE, return.formulae = FALSE)#
+#
+  expect_equal( # for the lrm estimate#
+    # Function output#
+    adl.out$GDRF[adl.out$Period == "LRM"],#
+    # Expected output#
+    unname(lrm.est.from.raw),#
+    tolerance = 1e-3#
+  )#
+  expect_equal( # for the lrm se#
+    # Function output#
+    adl.out$SE[adl.out$Period == "LRM"],#
+    # Expected output#
+    lrm.se.from.raw,#
+    tolerance = 1e-3#
+  )#
+})
+test_that("adl.plot calculates values correctly for method (kardl_lm)", {#
+  skip_if_not_installed("kardl")#
+  skip_if(is.null(model.kardl_lm), "kardl_lm model could not be constructed")#
+  # the model. this formula is wrong but we will just feed it the wrong thing in adl.plot too#
+  lrm.formula <- "(L1.x) / (1 - L1.y)"#
+  # raw calculations#
+  lrm.est.from.raw <- (coef(model.kardl)["L1.x"])/(1 - coef(model.kardl)["L1.y"])#
+  lrm.se.from.raw <- deltaMethod(coef(model.kardl_lm), g = lrm.formula, vcov. = vcov(model.kardl_lm))$SE#
+#
+  # tseffects calculations#
+#
+  adl.out <- adl.plot(model = model.kardl_lm, #
+    y.vrbl = c("L1.y" = 1), #
+    x.vrbl = c("L1.x" = 1), #
+    shock.history = "step", #
+    return.data = TRUE, return.plot = FALSE, return.formulae = FALSE)#
+#
+  expect_equal( # for the lrm estimate#
+    # Function output#
+    adl.out$GDRF[adl.out$Period == "LRM"],#
+    # Expected output#
+    unname(lrm.est.from.raw),#
+    tolerance = 1e-3#
+  )#
+  expect_equal( # for the lrm se#
+    # Function output#
+    adl.out$SE[adl.out$Period == "LRM"],#
+    # Expected output#
+    lrm.se.from.raw,#
+    tolerance = 1e-3#
+  )#
+})
+test_that("adl.plot calculates values correctly for method (kardl_lm)", {#
+  skip_if_not_installed("kardl")#
+  skip_if(is.null(model.kardl_lm), "kardl_lm model could not be constructed")#
+  # the model. this formula is wrong but we will just feed it the wrong thing in adl.plot too#
+  lrm.formula <- "(L1.x) / (1 - L1.y)"#
+  # raw calculations#
+  lrm.est.from.raw <- (coef(model.kardl_lm)["L1.x"])/(1 - coef(model.kardl_lm)["L1.y"])#
+  lrm.se.from.raw <- deltaMethod(coef(model.kardl_lm), g = lrm.formula, vcov. = vcov(model.kardl_lm))$SE#
+#
+  # tseffects calculations#
+#
+  adl.out <- adl.plot(model = model.kardl_lm, #
+    y.vrbl = c("L1.y" = 1), #
+    x.vrbl = c("L1.x" = 1), #
+    shock.history = "step", #
+    return.data = TRUE, return.plot = FALSE, return.formulae = FALSE)#
+#
+  expect_equal( # for the lrm estimate#
+    # Function output#
+    adl.out$GDRF[adl.out$Period == "LRM"],#
+    # Expected output#
+    unname(lrm.est.from.raw),#
+    tolerance = 1e-3#
+  )#
+  expect_equal( # for the lrm se#
+    # Function output#
+    adl.out$SE[adl.out$Period == "LRM"],#
+    # Expected output#
+    lrm.se.from.raw,#
+    tolerance = 1e-3#
+  )#
+})

@@ -398,7 +398,7 @@ test_that("yhat.calculator baseline construction is correct (d.y = 0, prediction
     ),
 
     # Expected output
-    "l_1_x not in prediction.values; mean of series used"
+    "l_1_x not in `prediction.values`; mean of series used"
   )
 
   expect_true( # baseline still contains the intercept term after mean fallback
@@ -897,7 +897,7 @@ test_that("yhat.calculator stops correctly on invalid inputs", {
     ),
 
     # Expected output
-    "No baseline or predicted values for y in levels for yhat.calculator"
+    "No baseline or predicted values for y in levels for `yhat.calculator`"
   )
 
   # d.y = 1, inferences.y = "levels", no baseline.y and no prediction.values: stops with an error
@@ -916,7 +916,7 @@ test_that("yhat.calculator stops correctly on invalid inputs", {
     ),
 
     # Expected output
-    "No baseline or predicted values for y in levels for yhat.calculator"
+    "No baseline or predicted values for y in levels for `yhat.calculator`"
   )
 
   # d.y = 0, prediction.values contains a z.vrbl name: stops with an error
@@ -936,7 +936,7 @@ test_that("yhat.calculator stops correctly on invalid inputs", {
     ),
 
     # Expected output
-    "Do not supply value for any z.vrbl in prediction.values. These come from z.val"
+    "Do not supply value for any `z.vrbl` in `prediction.values`. These come from"
   )
 
 })

@@ -22,6 +22,8 @@ GDRF.adl.plot(
   dM.level = 0.95,
   s.limit = 20,
   se.type = "const",
+  coef. = NULL,
+  vcov. = NULL,
   return.LRM = TRUE,
   return.data = FALSE,
   return.plot = TRUE,
@@ -30,7 +32,7 @@ GDRF.adl.plot(
 )
 }
 \arguments{
-\item{model}{the \code{lm} model containing the ADL estimates}
+\item{model}{a linear regression model object. Any model estimated by a package supported by the \code{insight} package can be used; explicitly tested models can be found in package documentation}
 
 \item{x.vrbl}{a named numeric vector in which the names correspond to an independent variable and its lags and the numbers correspond to the specific lag order of each variable}
 
@@ -62,7 +64,11 @@ GDRF.adl.plot(
 
 \item{s.limit}{an integer for the number of periods to determine the GDRF (beginning at s = 0)}
 
-\item{se.type}{a character string for the type of standard error to extract from the model. The default is \code{const}, but any argument to \code{vcovHC} from the \code{sandwich} package is accepted}
+\item{se.type}{a character string for the type of standard error to extract from the model; must be accepted by \code{insight::get_varcov()}. This includes arguments to \code{vcovHC} from the \code{sandwich} package (for instance: \code{HC0} is White's heteroskedasticity-consistent robust standard errors). Default is classic standard errors}
+
+\item{coef.}{an optional named numeric vector of coefficients to use directly, if evaluating effects from a model not supported by \code{insight::get_parameters()}. If \code{NULL} (the default), the coefficient vector is extracted automatically using \code{insight::get_parameters()}}
+
+\item{vcov.}{an optional pre-computed variance-covariance matrix to use directly, if evaluating effects from a model not supported by \code{insight::get_vcov()}. If \code{NULL} (the default), the variance-covariance matrix is extracted automatically using \code{insight::get_vcov()} with standard errors of type \code{se.type}}
 
 \item{return.LRM}{logical to return the LRM in the estimates and plots, should the LRM exist for that combination of \code{shock.history} and \code{cumulative}. The default is \code{TRUE}}
 
@@ -110,11 +116,12 @@ test.step <- GDRF.adl.plot(model = model.toydata,
 	shock.history = "step",
 	inferences.y = "levels",
 	inferences.x = "levels",
-	s.limit = 20)
+	s.limit = 20, return.data = TRUE)
 test.step$plot
 
 # Cumulative Impulse Response effect of x. For the dynamic linear model,
 #  this is equivalent to the step effect
+# If only return.plot = TRUE is selected, the object is the plot
 test.cumulative <- GDRF.adl.plot(model = model.toydata,
 	x.vrbl = c("x" = 0, "l_1_x" = 1),
 	y.vrbl = c("l_1_y" = 1),
@@ -125,7 +132,7 @@ test.cumulative <- GDRF.adl.plot(model = model.toydata,
 	inferences.y = "levels",
 	inferences.x = "levels",
 	s.limit = 20)
-test.cumulative$plot
+test.cumulative
 
 # Fitted values: steady state baseline from prediction.values
 GDRF.adl.plot(model = model.toydata,

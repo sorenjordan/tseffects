@@ -1,470 +1,3 @@
-get.model.coef(model = model.dynardl)
-is.vector(get.model.coef(model = model.dynardl) )
-get.model.coef(model.lm)
-insight::get_data(model.lm)
-is.data.frame(insight::get_data(model.lm))
-get.model.vcov(model.lm)
-###########################################
-# ----- (0.11a) check.model.class ------ ##
-###########################################
-#' Check and classify the model object passed to tseffects functions#
-#' @param model a fitted model object#
-#' @return a named list with the following elements:#
-#' \describe{#
-#'	\item{model.class}{character, the primary class of the model}#
-#'	\item{supported}{logical, \code{TRUE} if the class is in the tested list}#
-#'	\item{is.panel}{logical, \code{TRUE} if the model is a panel/TSCS model}#
-#'	\item{is.glm}{logical, \code{TRUE} if the model has a non-identity link function}#
-#'	\item{link.fn}{character, the link function family (e.g. \code{"identity"},#
-#'	\code{"logit"}, \code{"log"}). \code{"identity"} for non-GLM models}#
-#' }#
-#' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan#
-#' @keywords internal#
-#
-check.model.class <- function(model) {#
-	# classes that have been explicitly tested in tseffects#
-	tested.classes <- c(#
-		"lm"	, "dynardl"#
-	)#
-#
-	# classes where we will have to make some kind of adjustment when extracting coefficients#
-	wrapper.classes <- c(#
-		"dynardl"#
-	)#
-#
-	# panel classes: models where fixed effects should not be treated as#
-	#  substantive predictors by tseffects#
-	panel.classes <- c(#
-		"plm",#
-		"splm",#
-		"fixest"#
-	)#
-#
-	# glm family classes: models with a non-identity link function#
-	glm.classes <- c(#
-		"glm",#
-		"negbin",#
-		"glm.nb",#
-		"glmerMod"#
-	)#
-#
-	# grab the primary class#
-	model.class <- class(model)[1]#
-#
-	# determine properties#
-	is.supported <- model.class %in% tested.classes#
-	is.panel <- model.class %in% panel.classes#
-	is.glm <- model.class %in% glm.classes#
-	is.wrapper <- model.class %in% wrapper.classes#
-#
-	# Get the link function if it is a GLM, otherwise "identity"#
-	link.fn <- if(is.glm && !is.null(model$family)) {#
-		model$family$link#
-	} else {#
-		"identity"#
-	}#
-#
-	# Warn based on insight's own support detection#
-	if(!is.supported) {#
-		# if it is not a model (per insight)#
-		if(!insight::is_model(model)) {#
-			stop(paste0("Object of class '", model.class, "' does not appear to be a fitted model. tseffects requires a fitted model object"))#
-		} else if(!insight::is_model_supported(model)) {#
-			# if it is not a supported model (per insight), describe our default#
-			stop(paste0("Model class '", model.class, "' is not recognized by insight or tseffects"))#
-		} else {#
-			# insight supports it but tseffects hasn't tested it#
-			warning(paste0("Model class '", model.class, "' is supported by insight but has not been ",#
-				"explicitly tested in tseffects. Results may be incorrect. ",#
-				"Please verify coefficient names, standard errors, model frame, and results."))#
-		}#
-	}#
-#
-	# return the structured list#
-	out <- list(#
-		model.class = model.class,#
-		supported = is.supported,#
-		is.panel = is.panel,#
-		is.glm = is.glm,#
-		is.wrapper = is.wrapper,#
-		link.fn = link.fn#
-	)#
-	out#
-}#
-#
-###########################################
-# ------ (0.11b) get.model.vcov -------- ##
-###########################################
-#' Extract a variance-covariance matrix from a fitted model object (dispatches to \code{insight::get_varcov()} when possible)#
-#' @param model a fitted model object#
-#' @param model.info a named list as returned by \code{check.model.class}#
-#' @param se.type a character string for the type of standard error to use#
-#' @return a named numeric matrix of variances and covariances, with row and column names matching the coefficient names of the model#
-#' @importFrom insight get_varcov#
-#' @importFrom stats vcov#
-#' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan#
-#' @keywords internal#
-#
-get.model.vcov <- function(model, model.info, se.type = "const", vcov. = NULL) {#
-	UseMethod("get.model.vcov", model)#
-}#
-#
-#' @rdname get.model.vcov#
-#' @keywords internal#
-#
-get.model.vcov.dynardl <- function(model, model.info = NULL, se.type = "const", vcov. = NULL) {#
-	#####################################################################
-	# dynardl stores the fitted lm inside $model, not at the top level#
-	#####################################################################
-	# user-supplied matrix: use directly. this almost never seems like a good idea#
-	if(!is.null(vcov.)) {#
-		if(!is.matrix(vcov.)) {#
-			stop("`vcov.` must be a matrix")#
-		}#
-		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {#
-			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")#
-		}#
-		return(vcov.)#
-	}#
-	# translate se.type to what insight::get_varcov() expects#
-	#  "const" means conventional SEs: pass NULL so insight uses its default#
-	#  ifelse() is vectorized, so we use a separated condition here#
-	vcov.arg <- if(se.type == "const") NULL else se.type#
-#
-	# let insight do the heavy lifting. for dynamac, these are nested in model$model#
-	out <- insight::get_varcov(model$model, vcov = vcov.arg)#
-#
-	if (is.null(out)) {#
-		stop(paste0("`insight::get_varcov` could not extract a variance-covariance matrix from the dynardl model. Try supplying a pre-computed matrix via `vcov.`"))#
-	}#
-	out#
-}#
-#
-#' @rdname get.model.vcov#
-#' @keywords internal#
-#
-get.model.vcov.default <- function(model, model.info = NULL, se.type = "const", vcov. = NULL) {#
-	# user-supplied matrix: use directly. this almost never seems like a good idea#
-	if(!is.null(vcov.)) {#
-		if(!is.matrix(vcov.)) {#
-			stop("`vcov.` must be a matrix")#
-		}#
-		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {#
-			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")#
-		}#
-		return(vcov.)#
-	}#
-#
-	# translate se.type to what insight::get_varcov() expects#
-	#  "const" means conventional SEs: pass NULL so insight uses its default#
-	#  ifelse() is vectorized, so we use a separated condition here#
-#
-	# let insight do the heavy lifting#
-	out <- insight::get_varcov(model, vcov = vcov.arg)#
-#
-	if(is.null(out)) {#
-		stop(paste0("`insight::get_varcov` could not extract a variance-covariance matrix from the model of class '",#
-			model.info$model.class, "'. Try supplying a pre-computed matrix via `vcov.`"))#
-	}#
-	out#
-}#
-###########################################
-# ------ (0.11c) get.model.coef -------- ##
-###########################################
-#' Extract a named coefficient vector from a fitted model object (dispatches to \code{insight:: get_parameters()} when possible)#
-#' @param model a fitted model object#
-#' @param model.info a named list as returned by \code{check.model.class}#
-#' @return a named numeric vector of model coefficients, with names matching#
-#' the parameter names of the model as they appear in the model formula#
-#' @importFrom insight get_parameters#
-#' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan#
-#' @keywords internal#
-#
-get.model.coef <- function(model, model.info = NULL) {#
-	UseMethod("get.model.coef", model)#
-}#
-#
-#' @rdname get.model.coef#
-#' @keywords internal#
-#
-get.model.coef.dynardl <- function(model, model.info = NULL) {#
-	#####################################################################
-	# dynardl stores the fitted lm inside $model, not at the top level#
-	#####################################################################
-	params <- insight::get_parameters(model$model, component = "conditional", effects = "fixed")#
-	if(is.null(params) || nrow(params) == 0) {#
-		stop(paste0("`insight::get_parameters` could not extract coefficients from the dynardl model. Check that `model$model` is a valid fitted model object"))#
-	}#
-	setNames(params$Estimate, params$Parameter)#
-}#
-#
-#' @rdname get.model.coef#
-#' @keywords internal#
-#
-get.model.coef.default <- function(model, model.info = NULL) {#
-	if(is.null(model.info)) {#
-		model.info <- check.model.class(model)#
-	}#
-	params <- insight::get_parameters(model, component = "conditional", effects = "fixed")#
-	if(is.null(params) || nrow(params) == 0) {#
-		stop(paste0("`insight::get_parameters` could not extract coefficients from the model of class '",#
-			model.info$model.class, "'. Check that the model object is a valid fitted model"))#
-	}#
-	setNames(params$Estimate, params$Parameter)#
-}#
-###########################################
-# ------ (0.11d) get.model.data -------- ##
-###########################################
-#' Extract the model frame from a fitted model object (dispatches to \code{insight::get_data()} when possible)#
-#' @param model a fitted model object#
-#' @param model.info a named list as returned by \code{check.model.class}#
-#' If \code{NULL}, \code{check.model.class} is called internally#
-#' @return a data frame containing the data used to fit the model, with#
-#' named columns matching the variable names of the model#
-#' @importFrom insight get_data#
-#' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan#
-#' @keywords internal#
-#
-get.model.data <- function(model, model.info = NULL) {#
-	UseMethod("get.model.data", model)#
-}#
-#
-#' @rdname get.model.data#
-#' @keywords internal#
-#
-get.model.data.dynardl <- function(model, model.info = NULL) {#
-	#####################################################################
-	# dynardl stores the fitted lm inside $model, not at the top level#
-	#####################################################################
-	out <- insight::get_data(model$model)#
-	if(is.null(out) || nrow(out) == 0) {#
-    	stop(paste0("`insight::get_data` could not extract model data from the dynardl model. Check that `model$model` is a valid fitted model object"))#
-	}#
-	out#
-}#
-#
-#' @rdname get.model.data#
-#' @keywords internal#
-#
-get.model.data.default <- function(model, model.info = NULL) {#
-	if(is.null(model.info)) {#
-		model.info <- check.model.class(model)#
-	}#
-	out <- insight::get_data(model)#
-	if(is.null(out) || nrow(out) == 0) {#
-		stop(paste0("`insight::get_data` could not extract model data from model of class '",#
-			model.info$model.class, "'. Check that the model object contains the original data"))#
-	}#
-	out#
-}
-get.model.vcov(model.lm)
-get.model.vcov <- function(model, model.info, se.type = "const", vcov. = NULL) {#
-	UseMethod("get.model.vcov", model)#
-}#
-#
-#' @rdname get.model.vcov#
-#' @keywords internal#
-#
-get.model.vcov.dynardl <- function(model, model.info = NULL, se.type = "const", vcov. = NULL) {#
-	#####################################################################
-	# dynardl stores the fitted lm inside $model, not at the top level#
-	#####################################################################
-	# user-supplied matrix: use directly. this almost never seems like a good idea#
-	if(!is.null(vcov.)) {#
-		if(!is.matrix(vcov.)) {#
-			stop("`vcov.` must be a matrix")#
-		}#
-		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {#
-			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")#
-		}#
-		return(vcov.)#
-	}#
-	# translate se.type to what insight::get_varcov() expects#
-	#  "const" means conventional SEs: pass NULL so insight uses its default#
-	#  ifelse() is vectorized, so we use a separated condition here#
-	vcov.arg <- if(se.type == "const") NULL else se.type#
-#
-	# let insight do the heavy lifting. for dynamac, these are nested in model$model#
-	out <- insight::get_varcov(model$model, vcov = vcov.arg)#
-#
-	if (is.null(out)) {#
-		stop(paste0("`insight::get_varcov` could not extract a variance-covariance matrix from the dynardl model. Try supplying a pre-computed matrix via `vcov.`"))#
-	}#
-	out#
-}#
-#
-#' @rdname get.model.vcov#
-#' @keywords internal#
-#
-get.model.vcov.default <- function(model, model.info = NULL, se.type = "const", vcov. = NULL) {#
-	# user-supplied matrix: use directly. this almost never seems like a good idea#
-	if(!is.null(vcov.)) {#
-		if(!is.matrix(vcov.)) {#
-			stop("`vcov.` must be a matrix")#
-		}#
-		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {#
-			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")#
-		}#
-		return(vcov.)#
-	}#
-#
-	# translate se.type to what insight::get_varcov() expects#
-	#  "const" means conventional SEs: pass NULL so insight uses its default#
-	#  ifelse() is vectorized, so we use a separated condition here#
-#
-	# let insight do the heavy lifting#
-	out <- insight::get_varcov(model, vcov = vcov.arg)#
-#
-	if(is.null(out)) {#
-		stop(paste0("`insight::get_varcov` could not extract a variance-covariance matrix from the model of class '",#
-			model.info$model.class, "'. Try supplying a pre-computed matrix via `vcov.`"))#
-	}#
-	out#
-}#
-###########################################
-# ------ (0.11c) get.model.coef -------- ##
-###########################################
-#' Extract a named coefficient vector from a fitted model object (dispatches to \code{insight:: get_parameters()} when possible)#
-#' @param model a fitted model object#
-#' @param model.info a named list as returned by \code{check.model.class}#
-#' @return a named numeric vector of model coefficients, with names matching#
-#' the parameter names of the model as they appear in the model formula#
-#' @importFrom insight get_parameters#
-#' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan#
-#' @keywords internal#
-#
-get.model.coef <- function(model, model.info = NULL) {#
-	UseMethod("get.model.coef", model)#
-}#
-#
-#' @rdname get.model.coef#
-#' @keywords internal#
-#
-get.model.coef.dynardl <- function(model, model.info = NULL) {#
-	#####################################################################
-	# dynardl stores the fitted lm inside $model, not at the top level#
-	#####################################################################
-	params <- insight::get_parameters(model$model, component = "conditional", effects = "fixed")#
-	if(is.null(params) || nrow(params) == 0) {#
-		stop(paste0("`insight::get_parameters` could not extract coefficients from the dynardl model. Check that `model$model` is a valid fitted model object"))#
-	}#
-	setNames(params$Estimate, params$Parameter)#
-}#
-#
-#' @rdname get.model.coef#
-#' @keywords internal#
-#
-get.model.coef.default <- function(model, model.info = NULL) {#
-	params <- insight::get_parameters(model, component = "conditional", effects = "fixed")#
-	if(is.null(params) || nrow(params) == 0) {#
-		stop(paste0("`insight::get_parameters` could not extract coefficients from the model of class '",#
-			model.info$model.class, "'. Check that the model object is a valid fitted model"))#
-	}#
-	setNames(params$Estimate, params$Parameter)#
-}#
-###########################################
-# ------ (0.11d) get.model.data -------- ##
-###########################################
-#' Extract the model frame from a fitted model object (dispatches to \code{insight::get_data()} when possible)#
-#' @param model a fitted model object#
-#' @param model.info a named list as returned by \code{check.model.class}#
-#' If \code{NULL}, \code{check.model.class} is called internally#
-#' @return a data frame containing the data used to fit the model, with#
-#' named columns matching the variable names of the model#
-#' @importFrom insight get_data#
-#' @author Soren Jordan, Garrett N. Vande Kamp, and Reshi Rajan#
-#' @keywords internal#
-#
-get.model.data <- function(model, model.info = NULL) {#
-	UseMethod("get.model.data", model)#
-}#
-#
-#' @rdname get.model.data#
-#' @keywords internal#
-#
-get.model.data.dynardl <- function(model, model.info = NULL) {#
-	#####################################################################
-	# dynardl stores the fitted lm inside $model, not at the top level#
-	#####################################################################
-	out <- insight::get_data(model$model)#
-	if(is.null(out) || nrow(out) == 0) {#
-    	stop(paste0("`insight::get_data` could not extract model data from the dynardl model. Check that `model$model` is a valid fitted model object"))#
-	}#
-	out#
-}#
-#
-#' @rdname get.model.data#
-#' @keywords internal#
-#
-get.model.data.default <- function(model, model.info = NULL) {#
-	out <- insight::get_data(model)#
-	if(is.null(out) || nrow(out) == 0) {#
-		stop(paste0("`insight::get_data` could not extract model data from model of class '",#
-			model.info$model.class, "'. Check that the model object contains the original data"))#
-	}#
-	out#
-}
-insight::get_data(model.lm) # data.frame
-get.model.vcov(model.lm)
-#' @rdname get.model.vcov#
-#' @keywords internal#
-#
-get.model.vcov.default <- function(model, model.info = NULL, se.type = "const", vcov. = NULL) {#
-	# user-supplied matrix: use directly. this almost never seems like a good idea#
-	if(!is.null(vcov.)) {#
-		if(!is.matrix(vcov.)) {#
-			stop("`vcov.` must be a matrix")#
-		}#
-		if(is.null(rownames(vcov.)) || is.null(colnames(vcov.))) {#
-			stop("`vcov.` must have row and column names matching the names of the coefficients of the model")#
-		}#
-		return(vcov.)#
-	}#
-#
-	# translate se.type to what insight::get_varcov() expects#
-	#  "const" means conventional SEs: pass NULL so insight uses its default#
-	#  ifelse() is vectorized, so we use a separated condition here#
-	vcov.arg <- if(se.type == "const") NULL else se.type#
-#
-	# let insight do the heavy lifting#
-	out <- insight::get_varcov(model, vcov = vcov.arg)#
-#
-	if(is.null(out)) {#
-		stop(paste0("`insight::get_varcov` could not extract a variance-covariance matrix from the model of class '",#
-			model.info$model.class, "'. Try supplying a pre-computed matrix via `vcov.`"))#
-	}#
-	out#
-}
-get.model.vcov(model.lm)
-get.model.vcov(model.lm) # named symmetric
-get.model.coef(model.lm) # named vector
-get.model.data(model.lm)
-model.dynardl <- dynardl(y ~ x + z, levels = c("x", "z"), lags = list("x" = c(1, 2), "z" = c(1, 2), "y" = c(1)), data = toy.ts.interaction.data, simulate = FALSE)
-summary(model.dynardl)
-insight::get_varcov(model.dynardl) # fails
-insight::get_parameters(model.dynardl) # fails
-insight::get_data(model.dynardl) # data.frame
-get.model.vcov(model.dynardl) # named symmetric
-get.model.coef(model.dynardl) # named vector
-get.model.data(model.dynardl) # data.frame
-get.model.data(model = model.dynardl) # data.frame
-get.model.data.dynardl <- function(model, model.info = NULL) {#
-	#####################################################################
-	# dynardl stores the fitted lm inside $model, not at the top level#
-	#####################################################################
-	out <- suppressWarnings(insight::get_data(model$model))#
-	if(is.null(out) || nrow(out) == 0) {#
-    	stop(paste0("`insight::get_data` could not extract model data from the dynardl model. Check that `model$model` is a valid fitted model object"))#
-	}#
-	out#
-}
-get.model.data(model.dynardl) # data.frame
-insight::get_modelmatrix(model.lm)
-toy.ts.interaction.data$q <- rpois(50, 3)
-model.lm <- lm(y ~ l_1_y + x + l_1_x + l_2_x + z + l_1_z + l_2_z + as.factor(q), data = toy.ts.interaction.data)
-summary(model.lm)
-insight::get_data(model.lm) # data.frame
-insight::get_modelmatrix(model.lm) # data.frame
 is.data.frame(insight::get_modelmatrix(model.lm) )# data.frame
 is.data.frame(insight::get_modelmatrix(model.lm) )[[1]]# data.frame
 is.data.frame(insight::get_modelmatrix(model.lm) )[[1]]
@@ -1256,3 +789,198 @@ get.model.data(model.re.lme4) # data.frame#
 #
 adl.plot(model = model.re.lme4, x.vrbl = c("wks_work" = 0), shock.history = "step")
 is_mixed_model
+# required for package#
+library(tseffects)#
+library(tidyverse)#
+library(haven)#
+library(sandwich)#
+library(insight)#
+library(mpoly)#
+library(car)#
+library(ggplot2)#
+library(see)#
+library(colorspace)#
+library(stats)#
+library(sandwich)#
+library(utils)#
+# For Soren#
+# source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (archive)/tseffects/tseffects/tseffects-nextversion-beta.R")#
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (archive)/tseffects/tseffects/data/approval.rda")#
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (archive)/tseffects/tseffects/data/toy.ts.interaction.data.rda")
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/data/toy.ts.interaction.data.rda")
+adl.model <- lm(APPROVE ~ l_1_APPROVE + APPROVE_ECONOMY + l_1_APPROVE_ECONOMY, data = approval)
+# construct lags for estimation#
+approval$l_1_APPROVE <- c(NA, approval$APPROVE[-nrow(approval)])#
+approval$l_1_APPROVE_ECONOMY <- c(NA, approval$APPROVE_ECONOMY[-nrow(approval)])
+adl.model <- lm(APPROVE ~ l_1_APPROVE + APPROVE_ECONOMY + l_1_APPROVE_ECONOMY, data = approval)
+adl.model
+library(dynamac)
+adl.model.dynamac <- dynardl(APPROVE ~ APPROVE_ECONOMY, #
+                        lags = list("APPROVE" = 1, "APPROVE_ECONOMY" = 1),#
+                        levels = c("APPROVE_ECONOMY"), data = approval)
+adl.model.dynamac
+source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (archive)/tseffects/tseffects/tseffects-nextversion-beta.R")#
+l
+source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (archive)/tseffects/tseffects/tseffects-nextversion-beta.R")
+source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/tseffects-nextversion-beta.R")
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l_1_APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l_1_APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l_1_APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+adl.model.dynamac
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l.1.APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l.1.APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l_1_APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+GDRF.adl.plot(model = adl.model,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l_1_APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l_1_APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l_1_APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+library(dynamac)#
+#
+adl.model.dynamac <- dynardl(APPROVE ~ APPROVE_ECONOMY, #
+                        lags = list("APPROVE" = 1, "APPROVE_ECONOMY" = 1),#
+                        levels = c("APPROVE_ECONOMY"), data = approval)#
+#
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l.1.APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l.1.APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l_1_APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+library(teffects)
+library(tseffects)
+library(dynamac)#
+#
+adl.model.dynamac <- dynardl(APPROVE ~ APPROVE_ECONOMY, #
+                        lags = list("APPROVE" = 1, "APPROVE_ECONOMY" = 1),#
+                        levels = c("APPROVE_ECONOMY"), data = approval)#
+#
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l.1.APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l.1.APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l_1_APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+adl.model.dynamac
+library(dynamac)#
+#
+adl.model.dynamac <- dynardl(APPROVE ~ APPROVE_ECONOMY, #
+                        lags = list("APPROVE" = 1, "APPROVE_ECONOMY" = 1),#
+                        levels = c("APPROVE_ECONOMY"), data = approval)#
+#
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l.1.APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l.1.APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l.1.APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+library(dynamac)#
+#
+adl.model.dynamac <- dynardl(APPROVE ~ APPROVE_ECONOMY, #
+                        lags = list("APPROVE" = 1, "APPROVE_ECONOMY" = 1),#
+                        levels = c("APPROVE_ECONOMY"), data = approval)#
+#
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l_1_APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l_1_APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l.1.APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+library(dynamac)
+adl.model.dynamac <- dynardl(APPROVE ~ APPROVE_ECONOMY, #
+                        lags = list("APPROVE" = 1, "APPROVE_ECONOMY" = 1),#
+                        levels = c("APPROVE_ECONOMY"), data = approval)
+adl.model.dynamac
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l.1.APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l.1.APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l_1_APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
+# required for package#
+library(mpoly)#
+library(car)#
+library(ggplot2)#
+library(see)#
+library(colorspace)#
+library(stats)#
+library(sandwich)#
+library(utils)#
+# required for tester#
+library(tidyverse)#
+library(dynamac)#
+library(lmtest)#
+library(lattice)#
+library(ggpubr)#
+# Change these to DB path#
+source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal/unshared)/tseffects/tseffects/tseffects-nextversion-beta.R")#
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal/unshared)/tseffects/tseffects/data/approval.rda")#
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal/unshared)/tseffects/tseffects/data/toy.ts.interaction.data.rda")
+source("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/tseffects-nextversion-beta.R")
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal/unshared)/tseffects/tseffects/data/approval.rda")
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/data/approval.rda")
+load("/Users/sorenjordan/Dropbox/Myfiles/Research/Garrett-Soren (personal:unshared)/tseffects/tseffects/data/toy.ts.interaction.data.rda")
+library(dynamac)#
+#
+adl.model.dynamac <- dynardl(APPROVE ~ APPROVE_ECONOMY, #
+                        lags = list("APPROVE" = 1, "APPROVE_ECONOMY" = 1),#
+                        levels = c("APPROVE_ECONOMY"), data = approval)#
+#
+GDRF.adl.plot(model = adl.model.dynamac,#
+	x.vrbl = c("APPROVE_ECONOMY" = 0, "l.1.APPROVE_ECONOMY" = 1),#
+	y.vrbl = c("l.1.APPROVE" = 1),#
+	shock.history = "pulse",#
+	d.x = 0, d.y = 0,#
+	inferences.x = "levels", inferences.y = "levels",#
+	effect.type = "fitted",#
+	prediction.values = list("APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE),#
+		"l_1_APPROVE_ECONOMY" = mean(approval$APPROVE_ECONOMY, na.rm = TRUE)),#
+	shock.size = -5,#
+	s.limit = 20, return.data = TRUE)
